@@ -62,9 +62,9 @@ export const SkillRadarChart: React.FC<SkillRadarChartProps> = ({ data }) => {
           <Radar
             name="Your Competency"
             dataKey="current"
-            stroke="#4f46e5"
-            fill="#4f46e5"
-            fillOpacity={0.4}
+            stroke="#0F5C7A"
+            fill="#0F5C7A"
+            fillOpacity={0.35}
           />
         </RadarChart>
       </ResponsiveContainer>

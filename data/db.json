@@ -60,6 +60,18 @@
       "termsAccepted": true,
       "createdAt": "2026-11-14T05:00:22.092Z",
       "updatedAt": "2026-11-14T05:00:22.092Z"
+    },
+    {
+      "id": "user-16ebb290",
+      "name": "Jordan Lee",
+      "email": "student_1794633735338@test.edu",
+      "passwordHash": "$2a$10$EyoKth3Mn6wddaH61lESPeOwNFc8QrMce0Y/mXZKwOVwvmucZKzEy",
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T05:22:15.571Z",
+      "updatedAt": "2026-11-14T05:22:15.571Z"
     }
   ],
   "profiles": [
@@ -85,10 +97,10 @@
       "overallReadinessScore": 87,
       "profileCompletionPercentage": 100,
       "streakDays": 9,
-      "lastActiveDate": "2026-11-14T05:00:22.567Z",
-      "totalLearningHours": 28,
+      "lastActiveDate": "2026-11-14T05:22:15.867Z",
+      "totalLearningHours": 24,
       "completedTasksCount": 2,
-      "completedAssessmentsCount": 5
+      "completedAssessmentsCount": 6
     },
     {
       "userId": "user-26a6e7ed",
@@ -173,6 +185,27 @@
       "totalLearningHours": 0,
       "completedTasksCount": 0,
       "completedAssessmentsCount": 0
+    },
+    {
+      "userId": "user-16ebb290",
+      "completedOnboarding": false,
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [],
+      "learningPreferences": {
+        "hoursPerWeek": 10,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 1,
+      "overallReadinessScore": 0,
+      "profileCompletionPercentage": 35,
+      "streakDays": 1,
+      "lastActiveDate": "2026-11-14T05:22:15.571Z",
+      "totalLearningHours": 0,
+      "completedTasksCount": 0,
+      "completedAssessmentsCount": 0
     }
   ],
   "skills": [
@@ -184,10 +217,10 @@
       "proficiencyLevel": 5,
       "isVerified": true,
       "evidence": "Verified via standardized skill assessment with score of 100%.",
-      "lastAssessedAt": "2026-11-14T05:00:22.567Z",
+      "lastAssessedAt": "2026-11-14T05:22:15.867Z",
       "verifiedScore": 100,
       "createdAt": "2026-11-14T04:38:41.808Z",
-      "updatedAt": "2026-11-14T05:00:22.567Z"
+      "updatedAt": "2026-11-14T05:22:15.867Z"
     },
     {
       "id": "skill-demo-2",
@@ -282,6 +315,17 @@
       "evidence": "Built schema queries in demo app",
       "createdAt": "2026-11-14T05:00:22.458Z",
       "updatedAt": "2026-11-14T05:00:22.477Z"
+    },
+    {
+      "id": "skill-f3154536",
+      "userId": "user-demo-1001",
+      "skillName": "GraphQL_1794633735779",
+      "category": "frameworks",
+      "proficiencyLevel": 3,
+      "isVerified": false,
+      "evidence": "Built schema queries in demo app",
+      "createdAt": "2026-11-14T05:22:15.785Z",
+      "updatedAt": "2026-11-14T05:22:15.798Z"
     }
   ],
   "careerRoles": [
@@ -1081,7 +1125,7 @@
       "targetRoleTitle": "Full Stack Developer",
       "generatedBy": "agent",
       "generatedAt": "2026-11-14T04:38:41.808Z",
-      "lastAdjustedAt": "2026-11-14T05:00:22.568Z",
+      "lastAdjustedAt": "2026-11-14T05:22:15.867Z",
       "overallProgressPercentage": 43,
       "phases": [
         {
@@ -1110,7 +1154,7 @@
                   "type": "doc"
                 }
               ],
-              "completedAt": "2026-11-14T05:00:22.568Z"
+              "completedAt": "2026-11-14T05:22:15.867Z"
             },
             {
               "id": "task-1-2",
@@ -1264,6 +1308,39 @@
     }
   ],
   "roadmapAdjustments": [
+    {
+      "id": "adj-1f98ef91",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T05:22:15.867Z",
+      "trigger": "assessment_mastery",
+      "description": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "affectedSkills": [
+        "JavaScript"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [
+          "Deep dive into JS Event Loop & Microtasks"
+        ],
+        "reasoning": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status."
+      }
+    },
+    {
+      "id": "adj-3b512b19",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T05:22:15.822Z",
+      "trigger": "career_goal_change",
+      "description": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "affectedSkills": [
+        "Full Stack Developer"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [],
+        "roleSwitchedTo": "Full Stack Developer",
+        "reasoning": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus."
+      }
+    },
     {
       "id": "adj-64a01636",
       "userId": "user-demo-1001",
@@ -1612,6 +1689,33 @@
   ],
   "assessments": [
     {
+      "id": "attempt-12f3f481",
+      "userId": "user-demo-1001",
+      "assessmentId": "assessment-javascript",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "intermediate",
+      "totalQuestions": 1,
+      "correctAnswers": 1,
+      "scorePercentage": 100,
+      "passed": true,
+      "userAnswers": [
+        {
+          "questionId": "q-js-1",
+          "questionText": "What is the difference between \"==\" and \"===\" in JavaScript?",
+          "selectedOption": 1,
+          "correctOptionIndex": 1,
+          "isCorrect": true,
+          "explanation": "The double equals (==) operator performs abstract equality comparison with type coercion if the operands are of different types. The triple equals (===) operator performs strict equality comparison with no type coercion."
+        }
+      ],
+      "weakSubtopics": [
+        "None detected - flawless performance"
+      ],
+      "feedback": "Outstanding mastery demonstrated in JavaScript. Strong command of both theoretical invariants and implementation mechanics. Verified proficiency badge granted.",
+      "completedAt": "2026-11-14T05:22:15.867Z"
+    },
+    {
       "id": "attempt-aaea4ee7",
       "userId": "user-demo-1001",
       "assessmentId": "assessment-javascript",
@@ -1718,9 +1822,126 @@
         "referencedSkill": "JavaScript"
       },
       "createdAt": "2026-11-14T05:00:22.590Z"
+    },
+    {
+      "id": "msg-e5f02975",
+      "userId": "user-demo-1001",
+      "role": "user",
+      "content": "Explain closure in JS simply",
+      "metadata": {
+        "mode": "general"
+      },
+      "createdAt": "2026-11-14T05:22:15.883Z"
+    },
+    {
+      "id": "msg-adf5953d",
+      "userId": "user-demo-1001",
+      "role": "assistant",
+      "content": "### Understanding Closures in JavaScript\n\nA **closure** is a function that remembers and accesses variables from its outer (enclosing) lexical scope, even after that outer function has finished executing.\n\n```javascript\nfunction createCounter(initialValue = 0) {\n  let count = initialValue; // Kept in memory via closure\n  \n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    get: () => count\n  };\n}\n\nconst counter = createCounter(10);\nconsole.log(counter.increment()); // 11\nconsole.log(counter.get());       // 11\n```\n\n#### Key Takeaways:\n1. **Encapsulation**: State (`count`) is completely private; external code cannot mutate it except through the exposed API.\n2. **Memory Management**: Variables referenced in a closure remain in heap memory until the returned function reference is garbage collected.\n3. **Common Pitfall**: Creating closures inside unbounded loops without let/const or failing to clear intervals can cause memory retention.",
+      "metadata": {
+        "mode": "general",
+        "suggestedFollowUps": [
+          "What is the difference between microtasks and macrotasks?",
+          "How does \"this\" binding work in arrow functions?",
+          "Test my JavaScript skills with a quiz question"
+        ],
+        "referencedSkill": "JavaScript"
+      },
+      "createdAt": "2026-11-14T05:22:15.887Z"
     }
   ],
   "agentExecutions": [
+    {
+      "agentName": "Profile Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-profile-1794633735902",
+      "status": "completed",
+      "taskSummary": "Analyzed academic background, verified competencies, and pace preferences using SkillPath Heuristic Engine.",
+      "inputSummary": "Learner: Alex Rivera, Edu: N/A, Target: role-fullstack, Skills: 10 listed",
+      "outputSummary": "Generated persona \"Pragmatic Builder focused on hands-on full-stack development and practical engineering\" with 4 key strengths.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-243ae3bb",
+      "timestamp": "2026-11-14T05:22:15.903Z"
+    },
+    {
+      "agentName": "AI Mentor Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-mentor-1794633735883",
+      "status": "completed",
+      "taskSummary": "Delivered context-aware mentor response in mode: general.",
+      "inputSummary": "User: \"Explain closure in JS simply...\", Mode: general, Target: role-fullstack",
+      "outputSummary": "Rendered 969 chars of guidance referencing [JavaScript].",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-f21baa32",
+      "timestamp": "2026-11-14T05:22:15.885Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794633735867",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: mastery_accelerated.",
+      "inputSummary": "Trigger: assessment_completed, User: user-demo-1001, Current Progress: 29%",
+      "outputSummary": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-81504ba6",
+      "timestamp": "2026-11-14T05:22:15.868Z"
+    },
+    {
+      "agentName": "Assessment Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-assessment-1794633735863",
+      "status": "completed",
+      "taskSummary": "Diagnosed JavaScript assessment performance and pinpointed conceptual gaps.",
+      "inputSummary": "Topic: JavaScript, Questions: 1, Submissions: 1",
+      "outputSummary": "Score: 100%, Passed: true, Mastery: Level 5/5.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-97342b94",
+      "timestamp": "2026-11-14T05:22:15.863Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794633735821",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: career_recalculated.",
+      "inputSummary": "Trigger: career_goal_changed, User: user-demo-1001, Current Progress: 43%",
+      "outputSummary": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-665035ad",
+      "timestamp": "2026-11-14T05:22:15.822Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794633735818",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 10, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-4c70846f",
+      "timestamp": "2026-11-14T05:22:15.819Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794633735770",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 9, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-a32ea9ab",
+      "timestamp": "2026-11-14T05:22:15.771Z"
+    },
     {
       "agentName": "Profile Analyzer Agent",
       "userId": "user-demo-1001",
@@ -2122,6 +2343,22 @@
   ],
   "certificates": [
     {
+      "id": "cert-4f375cae",
+      "userId": "user-demo-1001",
+      "userName": "Alex Rivera",
+      "title": "Full Stack Engineering Specialization",
+      "credentialId": "SKILLPATH-D585D2D1",
+      "verificationHash": "5cf4d7a67aa44a1ba708b90073eb93cd",
+      "skillsCovered": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL"
+      ],
+      "issuedAt": "2026-11-14T05:22:15.958Z",
+      "gradePercentage": 96
+    },
+    {
       "id": "cert-232ffff1",
       "userId": "user-demo-1001",
       "userName": "Alex Rivera",
@@ -2171,6 +2408,36 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-5f37b791",
+      "userId": "user-demo-1001",
+      "title": "New Certificate Awarded!",
+      "message": "Congratulations! You earned the \"Full Stack Engineering Specialization\" credential.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:22:15.958Z",
+      "link": "/certificates"
+    },
+    {
+      "id": "notif-b26e051b",
+      "userId": "user-demo-1001",
+      "title": "Mastery Achieved! Roadmap Accelerated",
+      "message": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:22:15.867Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-aca2058c",
+      "userId": "user-demo-1001",
+      "title": "Roadmap Recalculated for New Target Career",
+      "message": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:22:15.822Z",
+      "link": "/roadmap"
+    },
     {
       "id": "notif-819231e3",
       "userId": "user-demo-1001",
@@ -2279,6 +2546,16 @@
       "type": "info",
       "read": false,
       "createdAt": "2026-11-14T05:00:22.092Z",
+      "link": "/onboarding"
+    },
+    {
+      "id": "notif-8a9b94fe",
+      "userId": "user-16ebb290",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Complete your initial onboarding profile to unlock your personalized learning roadmap.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-11-14T05:22:15.571Z",
       "link": "/onboarding"
     }
   ]

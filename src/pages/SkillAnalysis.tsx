@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { Skill, SkillCategory, ProficiencyLevel, SkillGapAnalysisResult } from '../types';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Modal } from '../components/ui/Modal';
-import { ProgressBar } from '../components/ui/ProgressBar';
+import { SkillRadarChart } from '../components/charts/SkillRadarChart';
 import {
-  BrainCircuit,
   Plus,
-  ShieldCheck,
   CheckCircle2,
-  AlertTriangle,
   Clock,
-  Sparkles,
   Edit2,
   Trash2,
-  TrendingUp,
-  FileText
+  ArrowUpDown,
+  Search,
+  Filter,
+  AlertCircle
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export const SkillAnalysis: React.FC = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [gapAnalysis, setGapAnalysis] = useState<SkillGapAnalysisResult | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'level' | 'category' | 'verified'>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isLoading, setIsLoading] = useState(true);
 
   // Modal State
@@ -39,12 +41,14 @@ export const SkillAnalysis: React.FC = () => {
 
   const loadData = async () => {
     try {
-      const [skillsRes, gapRes] = await Promise.all([
+      const [skillsRes, gapRes, analyticsRes] = await Promise.all([
         api.getSkills(),
-        api.getSkillGapAnalysis()
+        api.getSkillGapAnalysis(),
+        api.getAnalytics()
       ]);
-      setSkills(skillsRes.skills);
-      setGapAnalysis(gapRes.gapAnalysis);
+      setSkills(skillsRes.skills || []);
+      setGapAnalysis(gapRes.gapAnalysis || null);
+      setAnalyticsData(analyticsRes || null);
     } catch (err) {
       console.error(err);
     } finally {
@@ -115,240 +119,339 @@ export const SkillAnalysis: React.FC = () => {
     }
   };
 
+  const toggleSort = (field: 'name' | 'level' | 'category' | 'verified') => {
+    if (sortField === field) {
+      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
   const categories = [
-    { key: 'all', label: 'All Skills' },
+    { key: 'all', label: 'All' },
     { key: 'languages', label: 'Languages' },
     { key: 'frameworks', label: 'Frameworks' },
     { key: 'databases', label: 'Databases' },
     { key: 'cloud', label: 'Cloud / DevOps' },
-    { key: 'analytics', label: 'Analytics / AI' },
-    { key: 'soft_skills', label: 'Soft Skills' },
-    { key: 'other', label: 'Other' },
+    { key: 'analytics', label: 'Analytics & AI' },
+    { key: 'soft_skills', label: 'Soft Skills' }
   ];
 
-  const filteredSkills = selectedCategory === 'all'
-    ? skills
-    : skills.filter(s => s.category === selectedCategory);
+  const filteredAndSortedSkills = useMemo(() => {
+    return skills
+      .filter(s => {
+        const matchesCategory = selectedCategory === 'all' || s.category === selectedCategory;
+        const matchesSearch = s.skillName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          s.category.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        let comparison = 0;
+        if (sortField === 'name') {
+          comparison = a.skillName.localeCompare(b.skillName);
+        } else if (sortField === 'level') {
+          comparison = a.proficiencyLevel - b.proficiencyLevel;
+        } else if (sortField === 'category') {
+          comparison = a.category.localeCompare(b.category);
+        } else if (sortField === 'verified') {
+          comparison = (a.isVerified ? 1 : 0) - (b.isVerified ? 1 : 0);
+        }
+        return sortOrder === 'asc' ? comparison : -comparison;
+      });
+  }, [skills, selectedCategory, searchQuery, sortField, sortOrder]);
 
-  const getLevelLabel = (lvl: number) => {
-    const map = ['1 - Beginner', '2 - Elementary', '3 - Intermediate', '4 - Advanced', '5 - Expert'];
-    return map[lvl - 1] || `Level ${lvl}`;
-  };
+  const levelLabels = ['Beginner', 'Elementary', 'Intermediate', 'Advanced', 'Expert'];
+
+  const radarData = analyticsData?.radarData || [
+    { category: 'Languages', current: 75, benchmark: 90, fullMark: 100 },
+    { category: 'Frameworks', current: 65, benchmark: 85, fullMark: 100 },
+    { category: 'Databases', current: 50, benchmark: 75, fullMark: 100 },
+    { category: 'DevOps', current: 40, benchmark: 70, fullMark: 100 },
+    { category: 'System Design', current: 55, benchmark: 80, fullMark: 100 },
+    { category: 'Soft Skills', current: 80, benchmark: 80, fullMark: 100 }
+  ];
 
   if (isLoading) {
     return (
       <div className="h-96 flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-brand-600 border-t-transparent rounded-full animate-spin" />
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-charcoal-muted dark:text-slate-400 font-medium">Loading skill analysis...</p>
+        </div>
       </div>
     );
   }
 
+  const verifiedCount = skills.filter(s => s.isVerified).length;
+  const avgLevel = skills.length
+    ? (skills.reduce((acc, s) => acc + s.proficiencyLevel, 0) / skills.length).toFixed(1)
+    : '0';
+
   return (
-    <div className="space-y-6">
-      {/* Header with Title and Add Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Header bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
         <div>
-          <h1 className="text-xl font-bold text-charcoal">Skill Intelligence & Inventory</h1>
-          <p className="text-xs text-charcoal-muted">
-            Manage your verified credentials, self-reported skills, and real-time role gap analysis.
+          <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
+            Skill Analysis
+          </h1>
+          <p className="text-xs sm:text-sm text-charcoal-muted dark:text-slate-400 mt-1">
+            Radar competency evaluation, verified assessments, and sortable skill inventory.
           </p>
         </div>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={openAddModal}
-          leftIcon={<Plus className="w-4 h-4" />}
-        >
-          Add New Skill
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={openAddModal}
+            leftIcon={<Plus className="w-4 h-4" />}
+          >
+            Add Skill
+          </Button>
+        </div>
       </div>
 
-      {/* Interactive Skill Gap Report Banner */}
-      {gapAnalysis && (
-        <Card className="bg-gradient-to-r from-surface to-brand-50/40 border-brand-200 p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-xl">
-              <div className="flex items-center gap-2">
-                <BrainCircuit className="w-5 h-5 text-brand-600" />
-                <h3 className="font-bold text-charcoal text-base">
-                  Target Role Gap Report: {gapAnalysis.roleTitle}
-                </h3>
-              </div>
-              <p className="text-xs text-charcoal-muted leading-relaxed">
-                Your profile matches <strong>{gapAnalysis.matchedSkillsCount}</strong> of <strong>{gapAnalysis.totalRequiredSkills}</strong> benchmark competencies.
-                Verified assessment rate is <strong>{gapAnalysis.verifiedMatchPercentage}%</strong>.
+      {/* Row 1: Radar Chart + Summary Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Radar Chart (2 cols) */}
+        <Card className="lg:col-span-2 flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-3 border-b border-surface-border dark:border-surface-dark-border">
+            <div>
+              <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
+                Competency Radar Profile
+              </h2>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400">
+                Current proficiency vs. Full Stack Developer market benchmark
               </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <Badge variant="success" size="sm">
-                  {gapAnalysis.strengths.length} Benchmark Strengths
-                </Badge>
-                <Badge variant="warning" size="sm">
-                  {gapAnalysis.gaps.length} Actionable Gaps
-                </Badge>
-              </div>
             </div>
-
-            <div className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-surface-border shadow-xs min-w-[180px]">
-              <span className="text-3xl font-extrabold text-brand-700">
-                {gapAnalysis.overallReadinessScore}%
+            <div className="flex items-center gap-3 text-xs">
+              <span className="flex items-center gap-1.5 text-charcoal dark:text-slate-200">
+                <span className="w-2.5 h-2.5 rounded-sm bg-brand-600 dark:bg-brand-500 inline-block" />
+                Current Level
               </span>
-              <span className="text-[11px] font-medium text-charcoal-subtle uppercase tracking-wider mt-0.5">
-                Market Readiness
+              <span className="flex items-center gap-1.5 text-charcoal-muted dark:text-slate-400">
+                <span className="w-2.5 h-2.5 rounded-sm bg-slate-300 dark:bg-slate-600 inline-block" />
+                Benchmark
               </span>
-              <Link to="/careers" className="text-xs text-brand-600 hover:text-brand-700 font-semibold mt-2">
-                Change Target Role →
-              </Link>
             </div>
           </div>
 
-          {/* Actionable Gaps & Prioritized Plan Table */}
-          <div className="mt-6 pt-5 border-t border-brand-100 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Critical Gaps */}
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-charcoal-subtle mb-3 flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-status-warning" />
-                Top Identified Gaps to Address
-              </h4>
-              <div className="space-y-2">
-                {gapAnalysis.gaps.slice(0, 4).map((gap, i) => (
-                  <div key={i} className="p-3 bg-white rounded-lg border border-surface-border text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-charcoal">{gap.skillName}</span>
-                      <span className="text-[11px] font-semibold text-status-warning">
-                        Needs +{gap.delta} Lvl (Current: {gap.currentLevel} / Req: {gap.benchmarkLevel})
-                      </span>
-                    </div>
-                    <p className="text-charcoal-muted text-[11px] mt-1">{gap.recommendation}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Prioritized Improvement Sequence */}
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-charcoal-subtle mb-3 flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-brand-600" />
-                Agent Prioritized Improvement Sequence
-              </h4>
-              <div className="space-y-2">
-                {gapAnalysis.prioritizedPlan.map((plan, i) => (
-                  <div key={i} className="p-3 bg-white rounded-lg border border-surface-border text-xs flex items-start gap-2.5">
-                    <span className="w-5 h-5 rounded-full bg-brand-100 text-brand-800 font-bold flex items-center justify-center shrink-0 text-[10px]">
-                      {plan.step}
-                    </span>
-                    <div>
-                      <span className="font-semibold text-charcoal block">{plan.title} (~{plan.estimatedWeeks} wks)</span>
-                      <span className="text-[11px] text-charcoal-muted leading-relaxed block mt-0.5">{plan.description}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="py-4 flex-1 flex items-center justify-center">
+            <SkillRadarChart data={radarData} />
           </div>
 
-          {/* Strict Disclaimer */}
-          <div className="mt-4 p-3 bg-surface-subtle border border-surface-border rounded-lg text-[11px] text-charcoal-subtle">
-            {gapAnalysis.disclaimer}
+          <div className="pt-3 border-t border-surface-border dark:border-surface-dark-border flex flex-wrap items-center justify-between text-xs text-charcoal-muted dark:text-slate-400 gap-2">
+            <span>Primary strengths: JavaScript, React, Problem Solving</span>
+            <span>Key gaps: Node.js, PostgreSQL, Docker</span>
           </div>
         </Card>
-      )}
 
-      {/* Category Filter Tabs */}
-      <div className="flex flex-wrap gap-1.5 border-b border-surface-border pb-2">
-        {categories.map((c) => (
-          <button
-            key={c.key}
-            onClick={() => setSelectedCategory(c.key)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              selectedCategory === c.key
-                ? 'bg-brand-600 text-white shadow-xs font-semibold'
-                : 'text-charcoal-muted hover:text-charcoal hover:bg-surface-subtle'
-            }`}
-          >
-            {c.label}
-          </button>
-        ))}
+        {/* Inventory Statistics */}
+        <div className="space-y-4 flex flex-col justify-between">
+          <Card className="flex-1 flex flex-col justify-between">
+            <div className="text-xs font-semibold text-charcoal-subtle dark:text-slate-400 uppercase tracking-wider">
+              Inventory Overview
+            </div>
+            <div className="grid grid-cols-2 gap-3 my-3">
+              <div className="p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[11px] text-charcoal-muted dark:text-slate-400 block">Total Skills</span>
+                <span className="text-xl font-bold text-charcoal dark:text-slate-100">{skills.length}</span>
+              </div>
+              <div className="p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[11px] text-charcoal-muted dark:text-slate-400 block">Verified</span>
+                <span className="text-xl font-bold text-status-success">{verifiedCount}</span>
+              </div>
+              <div className="p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[11px] text-charcoal-muted dark:text-slate-400 block">Avg Level</span>
+                <span className="text-xl font-bold text-charcoal dark:text-slate-100">{avgLevel}/5</span>
+              </div>
+              <div className="p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[11px] text-charcoal-muted dark:text-slate-400 block">Self-Reported</span>
+                <span className="text-xl font-bold text-charcoal-muted dark:text-slate-300">
+                  {skills.length - verifiedCount}
+                </span>
+              </div>
+            </div>
+            <div className="text-[11px] text-charcoal-muted dark:text-slate-400">
+              Verified skills carry 2x weight in role readiness scoring.
+            </div>
+          </Card>
+
+          <Card className="border-l-4 border-l-amber-500 flex-1 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider pb-1">
+                <span>Top Gap Identified</span>
+                <AlertCircle className="w-3.5 h-3.5" />
+              </div>
+              <h3 className="text-sm font-bold text-charcoal dark:text-slate-100 mt-1">
+                Node.js Backend & Concurrency
+              </h3>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-1">
+                Current Level 2 vs. Target Level 4. Take the Node.js diagnostic assessment to verify and accelerate your roadmap.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-surface-border dark:border-surface-dark-border flex justify-end">
+              <Link to="/assessments">
+                <Button size="sm" variant="outline">
+                  Assess Node.js
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        </div>
       </div>
 
-      {/* Skills Table */}
-      <Card className="overflow-hidden p-0">
+      {/* Row 2: Sortable Skill Table */}
+      <Card className="space-y-4">
+        {/* Table Filters & Search */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-surface-border dark:border-surface-dark-border">
+          {/* Category Tabs */}
+          <div className="flex flex-wrap gap-1">
+            {categories.map(c => (
+              <button
+                key={c.key}
+                onClick={() => setSelectedCategory(c.key)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  selectedCategory === c.key
+                    ? 'bg-brand-600 text-white font-semibold'
+                    : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal dark:hover:text-slate-200 hover:bg-surface-subtle dark:hover:bg-slate-800'
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full md:w-64">
+            <Search className="w-3.5 h-3.5 text-charcoal-subtle dark:text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Filter skills..."
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal dark:text-slate-100 focus:outline-none focus:border-brand-600"
+            />
+          </div>
+        </div>
+
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-surface-subtle border-b border-surface-border text-charcoal-subtle font-semibold uppercase text-[10px] tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Skill & Category</th>
-                <th className="py-3 px-4">Proficiency Level</th>
-                <th className="py-3 px-4">Verification Status</th>
-                <th className="py-3 px-4">Evidence / Proof</th>
-                <th className="py-3 px-4">Last Assessed</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+            <thead>
+              <tr className="border-b border-surface-border dark:border-surface-dark-border text-charcoal-muted dark:text-slate-400">
+                <th
+                  onClick={() => toggleSort('name')}
+                  className="py-2.5 font-semibold cursor-pointer hover:text-charcoal dark:hover:text-slate-200 select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>Skill</span>
+                    <ArrowUpDown className="w-3 h-3 text-charcoal-subtle dark:text-slate-500" />
+                  </div>
+                </th>
+                <th
+                  onClick={() => toggleSort('category')}
+                  className="py-2.5 font-semibold cursor-pointer hover:text-charcoal dark:hover:text-slate-200 select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>Category</span>
+                    <ArrowUpDown className="w-3 h-3 text-charcoal-subtle dark:text-slate-500" />
+                  </div>
+                </th>
+                <th
+                  onClick={() => toggleSort('level')}
+                  className="py-2.5 font-semibold cursor-pointer hover:text-charcoal dark:hover:text-slate-200 select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>Proficiency Level</span>
+                    <ArrowUpDown className="w-3 h-3 text-charcoal-subtle dark:text-slate-500" />
+                  </div>
+                </th>
+                <th
+                  onClick={() => toggleSort('verified')}
+                  className="py-2.5 font-semibold cursor-pointer hover:text-charcoal dark:hover:text-slate-200 select-none"
+                >
+                  <div className="flex items-center gap-1">
+                    <span>Verification</span>
+                    <ArrowUpDown className="w-3 h-3 text-charcoal-subtle dark:text-slate-500" />
+                  </div>
+                </th>
+                <th className="py-2.5 font-semibold">Evidence / Notes</th>
+                <th className="py-2.5 font-semibold">Last Assessed</th>
+                <th className="py-2.5 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border">
-              {filteredSkills.length === 0 ? (
+            <tbody className="divide-y divide-surface-border dark:divide-surface-dark-border">
+              {filteredAndSortedSkills.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-charcoal-subtle">
-                    No skills found in this category. Click "Add New Skill" to add one.
+                  <td colSpan={7} className="py-8 text-center text-charcoal-muted dark:text-slate-400">
+                    No skills matched the current filters. Click "Add Skill" to record a new competency.
                   </td>
                 </tr>
               ) : (
-                filteredSkills.map((skill) => (
-                  <tr key={skill.id} className="hover:bg-surface-subtle/50 transition-colors">
-                    <td className="py-3 px-4 font-semibold text-charcoal">
-                      <div>
-                        <span>{skill.skillName}</span>
-                        <span className="block text-[10px] text-charcoal-subtle font-normal capitalize">
-                          {skill.category.replace('_', ' ')}
+                filteredAndSortedSkills.map(skill => (
+                  <tr key={skill.id} className="hover:bg-surface-subtle dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-3 font-semibold text-charcoal dark:text-slate-100">
+                      {skill.skillName}
+                    </td>
+                    <td className="py-3 text-charcoal-muted dark:text-slate-400 capitalize">
+                      {skill.category.replace('_', ' ')}
+                    </td>
+                    <td className="py-3">
+                      <div className="flex items-center gap-2">
+                        {/* 5-segment level bars */}
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map(lvl => (
+                            <span
+                              key={lvl}
+                              className={`w-3.5 h-2 rounded-[2px] ${
+                                lvl <= skill.proficiencyLevel
+                                  ? 'bg-brand-600 dark:bg-brand-500'
+                                  : 'bg-slate-200 dark:bg-slate-700'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-[11px] text-charcoal-muted dark:text-slate-400 font-medium">
+                          Lvl {skill.proficiencyLevel} ({levelLabels[skill.proficiencyLevel - 1]})
                         </span>
                       </div>
                     </td>
-                    <td className="py-3 px-4">
-                      <div className="space-y-1 w-32">
-                        <div className="flex justify-between text-[11px] font-medium text-charcoal">
-                          <span>Level {skill.proficiencyLevel}</span>
-                          <span className="text-charcoal-subtle">{getLevelLabel(skill.proficiencyLevel).split(' - ')[1]}</span>
-                        </div>
-                        <ProgressBar
-                          value={(skill.proficiencyLevel / 5) * 100}
-                          size="sm"
-                          color={skill.isVerified ? 'success' : 'brand'}
-                        />
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3">
                       {skill.isVerified ? (
-                        <Badge variant="success" size="sm" verified>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-status-success-bg dark:bg-emerald-950/40 text-status-success border border-emerald-200 dark:border-emerald-800/50">
+                          <CheckCircle2 className="w-3 h-3" />
                           Verified ({skill.verifiedScore ?? 100}%)
-                        </Badge>
+                        </span>
                       ) : (
-                        <div className="flex items-center gap-1.5">
-                          <Badge variant="neutral" size="sm">Self-Reported</Badge>
-                          <Link to="/assessments" className="text-[10px] text-brand-600 hover:underline">
-                            Verify Now
-                          </Link>
-                        </div>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-charcoal-muted dark:text-slate-400 border border-surface-border dark:border-surface-dark-border">
+                          Self-Reported
+                        </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 max-w-xs text-charcoal-muted truncate text-[11px]">
+                    <td className="py-3 text-charcoal-muted dark:text-slate-400 max-w-xs truncate text-[11px]">
                       {skill.evidence || '—'}
                     </td>
-                    <td className="py-3 px-4 text-charcoal-subtle text-[11px]">
+                    <td className="py-3 text-charcoal-subtle dark:text-slate-400 text-[11px]">
                       {skill.lastAssessedAt
                         ? new Date(skill.lastAssessedAt).toLocaleDateString()
-                        : 'Not yet tested'}
+                        : '—'}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
+                          type="button"
                           onClick={() => openEditModal(skill)}
-                          className="p-1 rounded text-charcoal-subtle hover:text-charcoal hover:bg-surface-muted"
+                          className="p-1 text-charcoal-subtle dark:text-slate-400 hover:text-charcoal dark:hover:text-slate-200 rounded hover:bg-surface-subtle dark:hover:bg-slate-800"
                           title="Edit Skill"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDeleteSkill(skill.id)}
-                          className="p-1 rounded text-charcoal-subtle hover:text-status-danger hover:bg-red-50"
+                          className="p-1 text-charcoal-subtle dark:text-slate-400 hover:text-red-600 rounded hover:bg-surface-subtle dark:hover:bg-slate-800"
                           title="Delete Skill"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -363,86 +466,105 @@ export const SkillAnalysis: React.FC = () => {
         </div>
       </Card>
 
-      {/* Add / Edit Skill Modal */}
+      {/* Add / Edit Modal */}
       <Modal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        title={editingSkill ? 'Edit Skill Profile' : 'Add New Skill to Profile'}
-        description="Declare or update technical competencies across 5 standardized levels."
+        title={editingSkill ? 'Edit Skill' : 'Add New Skill'}
       >
         <form onSubmit={handleSaveSkill} className="space-y-4">
           {formError && (
-            <div className="p-3 bg-status-danger-bg border border-red-200 rounded-lg text-xs text-status-danger">
+            <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg text-xs text-status-error">
               {formError}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-charcoal mb-1">Skill Name *</label>
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200 mb-1">
+              Skill Name
+            </label>
             <input
               type="text"
-              required
-              disabled={Boolean(editingSkill)}
               value={formSkillName}
-              onChange={(e) => setFormSkillName(e.target.value)}
-              placeholder="e.g. TypeScript, Docker, PostgreSQL"
-              className="w-full text-xs px-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:ring-2 focus:ring-brand-500"
+              onChange={e => setFormSkillName(e.target.value)}
+              placeholder="e.g. JavaScript, Docker, System Design"
+              disabled={!!editingSkill}
+              className="w-full px-3 py-2 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal dark:text-slate-100 focus:outline-none focus:border-brand-600 disabled:opacity-60"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-charcoal mb-1">Category</label>
-              <select
-                value={formCategory}
-                onChange={(e) => setFormCategory(e.target.value as SkillCategory)}
-                className="w-full text-xs px-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal"
-              >
-                <option value="languages">Languages</option>
-                <option value="frameworks">Frameworks</option>
-                <option value="databases">Databases</option>
-                <option value="cloud">Cloud / Infrastructure</option>
-                <option value="analytics">Analytics & Machine Learning</option>
-                <option value="soft_skills">Soft Skills</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+          <div>
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200 mb-1">
+              Category
+            </label>
+            <select
+              value={formCategory}
+              onChange={e => setFormCategory(e.target.value as SkillCategory)}
+              className="w-full px-3 py-2 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal dark:text-slate-100 focus:outline-none focus:border-brand-600"
+            >
+              <option value="languages">Languages</option>
+              <option value="frameworks">Frameworks</option>
+              <option value="databases">Databases</option>
+              <option value="cloud">Cloud / DevOps</option>
+              <option value="analytics">Analytics & AI</option>
+              <option value="soft_skills">Soft Skills</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-            <div>
-              <label className="block text-xs font-medium text-charcoal mb-1">Proficiency Level (1-5)</label>
-              <select
-                value={formLevel}
-                onChange={(e) => setFormLevel(Number(e.target.value) as ProficiencyLevel)}
-                className="w-full text-xs px-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal"
-              >
-                <option value={1}>1 - Beginner (Foundational syntax)</option>
-                <option value={2}>2 - Elementary (Basic scripts)</option>
-                <option value={3}>3 - Intermediate (Applied production apps)</option>
-                <option value={4}>4 - Advanced (Architecture & performance)</option>
-                <option value={5}>5 - Expert (System design & internals)</option>
-              </select>
+          <div>
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200 mb-1">
+              Proficiency Level (1 - 5)
+            </label>
+            <div className="grid grid-cols-5 gap-1.5">
+              {[1, 2, 3, 4, 5].map(lvl => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => setFormLevel(lvl as ProficiencyLevel)}
+                  className={`py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all ${
+                    formLevel === lvl
+                      ? 'border-brand-600 bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300'
+                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-400 hover:border-slate-300'
+                  }`}
+                >
+                  <span className="block text-sm font-bold">{lvl}</span>
+                  <span className="text-[10px] block font-normal truncate">
+                    {levelLabels[lvl - 1]}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-charcoal mb-1">
-              Evidence / Practical Experience (Projects, Repos, Certs)
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200 mb-1">
+              Evidence / Experience Notes (Optional)
             </label>
             <textarea
-              rows={3}
+              rows={2}
               value={formEvidence}
-              onChange={(e) => setFormEvidence(e.target.value)}
-              placeholder="e.g. Implemented REST API with PostgreSQL connection pooling and JWT auth..."
-              className="w-full text-xs p-3 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:ring-2 focus:ring-brand-500"
+              onChange={e => setFormEvidence(e.target.value)}
+              placeholder="e.g. 2 years building production REST APIs in Express & Fastify"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal dark:text-slate-100 focus:outline-none focus:border-brand-600 resize-none"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" size="sm" type="button" onClick={() => setIsAddModalOpen(false)}>
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-surface-border dark:border-surface-dark-border">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAddModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button variant="primary" size="sm" type="submit">
-              {editingSkill ? 'Save Changes' : 'Add to Inventory'}
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+            >
+              {editingSkill ? 'Save Changes' : 'Add Skill'}
             </Button>
           </div>
         </form>
@@ -450,3 +572,5 @@ export const SkillAnalysis: React.FC = () => {
     </div>
   );
 };
+
+export default SkillAnalysis;

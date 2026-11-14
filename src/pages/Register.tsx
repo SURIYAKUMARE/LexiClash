@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { Sparkles, Mail, Lock, User, GraduationCap, Building2, AlertCircle, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, GraduationCap, Building2, AlertCircle, Check } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -23,11 +22,9 @@ export const Register: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const educationLevels = [
-    'High School / Diploma',
     'Undergraduate Student',
     'Bachelor\'s Degree',
     'Master\'s Degree',
-    'PhD / Doctorate',
     'Self-Taught / Career Transitioner'
   ];
 
@@ -46,7 +43,7 @@ export const Register: React.FC = () => {
     }
 
     if (!formData.termsAccepted) {
-      setError('You must accept the terms of service to create an account.');
+      setError('You must accept the terms of service.');
       return;
     }
 
@@ -62,168 +59,203 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface-subtle flex items-center justify-center p-4 py-8">
-      <div className="w-full max-w-lg space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-violetAccent-600 items-center justify-center text-white shadow-md mb-2">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-charcoal">
-            Join <span className="text-brand-600">SkillPath AI</span>
-          </h1>
-          <p className="text-xs text-charcoal-muted">
-            Launch your personalized, agent-driven engineering career path
-          </p>
-        </div>
-
-        <Card className="p-6 sm:p-8 shadow-card">
-          {error && (
-            <div className="mb-4 p-3 bg-status-danger-bg border border-red-200 rounded-lg flex items-center gap-2 text-xs text-status-danger">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+    <div className="min-h-screen bg-surface-subtle dark:bg-surface-dark-subtle flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-5xl bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg shadow-subtle grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+        {/* Left Form */}
+        <div className="p-8 sm:p-10 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-6 h-6 rounded bg-brand-600 flex items-center justify-center text-white font-bold text-xs">
+                SP
+              </div>
+              <span className="font-bold text-base tracking-tight text-charcoal dark:text-white">
+                SkillPath
+              </span>
             </div>
-          )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-charcoal mb-1">
-                Full Name *
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+            <h1 className="text-xl font-bold tracking-tight text-charcoal dark:text-white">
+              Create an account
+            </h1>
+            <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-1">
+              Start building your verified engineering skillset.
+            </p>
+
+            {error && (
+              <div className="mt-4 p-3 bg-status-danger-bg dark:bg-red-950/40 border border-status-danger-border dark:border-red-900 rounded-lg flex items-center gap-2 text-xs text-status-danger dark:text-red-400">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="mt-5 space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                  Full Name *
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Sarah Jenkins"
-                  className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                  placeholder="Sarah Chen"
+                  className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-medium text-charcoal mb-1">
-                Email Address *
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+              <div>
+                <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                  Email Address *
+                </label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="sarah@university.edu"
-                  className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                  placeholder="name@company.com"
+                  className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-charcoal mb-1">
-                  Password (min 8 chars) *
-                </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                    Password *
+                  </label>
                   <input
                     type="password"
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-charcoal mb-1">
-                  Confirm Password *
-                </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+                <div>
+                  <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                    Confirm *
+                  </label>
                   <input
                     type="password"
                     required
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-charcoal mb-1">
-                  College / University (Optional)
-                </label>
-                <div className="relative">
-                  <Building2 className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                    College / Org
+                  </label>
                   <input
                     type="text"
                     value={formData.college}
                     onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                    placeholder="e.g. Berkeley, MIT"
-                    className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    placeholder="MIT, Berkeley"
+                    className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-charcoal mb-1">
-                  Education Level
-                </label>
-                <div className="relative">
-                  <GraduationCap className="w-4 h-4 text-charcoal-subtle absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div>
+                  <label className="block text-xs font-medium text-charcoal dark:text-slate-300 mb-1">
+                    Education Level
+                  </label>
                   <select
                     value={formData.educationLevel}
                     onChange={(e) => setFormData({ ...formData, educationLevel: e.target.value })}
-                    className="w-full text-xs pl-9 pr-3 py-2.5 bg-surface-subtle border border-surface-border rounded-lg text-charcoal focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full text-xs px-3 py-2 bg-surface dark:bg-surface-dark border border-surface-border dark:border-surface-dark-border rounded-lg text-charcoal dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-brand-600"
                   >
-                    {educationLevels.map((lvl) => (
+                    {educationLevels.map(lvl => (
                       <option key={lvl} value={lvl}>{lvl}</option>
                     ))}
                   </select>
                 </div>
               </div>
+
+              <div className="pt-1">
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={formData.termsAccepted}
+                    onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
+                    className="mt-0.5 rounded border-surface-border text-brand-600 focus:ring-brand-600"
+                  />
+                  <span className="text-[11px] text-charcoal-muted dark:text-slate-400 leading-tight">
+                    I accept the terms of service and privacy policy.
+                  </span>
+                </label>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full mt-2"
+                isLoading={isLoading}
+              >
+                Create Account
+              </Button>
+            </form>
+          </div>
+
+          <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-6 text-center sm:text-left">
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </div>
+
+        {/* Right Summary */}
+        <div className="bg-surface-subtle dark:bg-surface-dark-subtle border-t md:border-t-0 md:border-l border-surface-border dark:border-surface-dark-border p-8 sm:p-12 flex flex-col justify-between">
+          <div>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-charcoal-subtle dark:text-slate-400 block mb-2">
+              SkillPath Architecture
+            </span>
+            <h2 className="text-lg font-bold text-charcoal dark:text-white leading-snug">
+              Every dashboard element driven by verified user data.
+            </h2>
+            <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-2 leading-relaxed">
+              Target roles like Full Stack Developer, AI/ML Engineer, and DevOps include granular skill benchmarks. Your assessment attempts feed back into verified proficiency levels.
+            </p>
+
+            <div className="mt-8 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded border border-surface-border dark:border-surface-dark-border bg-surface dark:bg-surface-dark flex items-center justify-center shrink-0 mt-0.5 text-brand-600 dark:text-brand-400">
+                  <Check className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-charcoal dark:text-slate-200">
+                    Transparent skill gap delta
+                  </h3>
+                  <p className="text-[11px] text-charcoal-muted dark:text-slate-400 mt-0.5">
+                    Clear breakdown between self-reported and assessment-verified competencies.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded border border-surface-border dark:border-surface-dark-border bg-surface dark:bg-surface-dark flex items-center justify-center shrink-0 mt-0.5 text-brand-600 dark:text-brand-400">
+                  <Check className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-charcoal dark:text-slate-200">
+                    Adaptive learning loops
+                  </h3>
+                  <p className="text-[11px] text-charcoal-muted dark:text-slate-400 mt-0.5">
+                    Scores under 70% automatically inject remediation tasks; scores above 85% advance milestones.
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="pt-2">
-              <label className="flex items-start gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  required
-                  checked={formData.termsAccepted}
-                  onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
-                  className="mt-0.5 rounded border-surface-border text-brand-600 focus:ring-brand-500"
-                />
-                <span className="text-xs text-charcoal-muted leading-tight">
-                  I accept the <span className="text-brand-600 underline">Terms of Service</span> and acknowledge that skill readiness scores are algorithmic guidance metrics.
-                </span>
-              </label>
-            </div>
-
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full mt-4"
-              isLoading={isLoading}
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-            >
-              Create Account & Start Onboarding
-            </Button>
-          </form>
-        </Card>
-
-        <p className="text-center text-xs text-charcoal-muted">
-          Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-brand-600 hover:text-brand-700">
-            Sign In
-          </Link>
-        </p>
+          <div className="pt-6 mt-6 border-t border-surface-border dark:border-surface-dark-border text-[11px] text-charcoal-subtle dark:text-slate-500">
+            Professional SaaS interface • Single primary teal (#0F5C7A) • Clean flat surfaces
+          </div>
+        </div>
       </div>
     </div>
   );

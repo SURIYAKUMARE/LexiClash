@@ -8,7 +8,7 @@ export const Layout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-surface-subtle">
+    <div className="flex h-screen overflow-hidden bg-surface-subtle dark:bg-surface-dark-subtle transition-colors">
       {/* Desktop Sidebar */}
       <div className="hidden lg:block shrink-0 h-full">
         <Sidebar />

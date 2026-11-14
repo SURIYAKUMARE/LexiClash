@@ -39,8 +39,8 @@ export const CareerReadinessGauge: React.FC<CareerReadinessGaugeProps> = ({
     strokeColor = '#059669';
   } else if (clampedScore >= 60) {
     statusLabel = 'Intermediate Competency';
-    statusColor = 'text-brand-700 bg-brand-50 border-brand-200';
-    strokeColor = '#4f46e5';
+    statusColor = 'text-brand-700 bg-brand-50 border-brand-200 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-900';
+    strokeColor = '#0F5C7A';
   }
 
   return (

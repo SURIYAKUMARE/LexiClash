@@ -9,8 +9,8 @@ export const Card: React.FC<CardProps> = ({ children, className, hoverable = fal
   return (
     <div
       className={clsx(
-        'bg-surface rounded-xl border border-surface-border p-5 shadow-subtle transition-all',
-        hoverable && 'hover:shadow-card hover:border-brand-200',
+        'bg-surface dark:bg-surface-dark rounded-lg border border-surface-border dark:border-surface-dark-border p-5 transition-colors',
+        hoverable && 'hover:border-slate-300 dark:hover:border-slate-600',
         className
       )}
       {...props}

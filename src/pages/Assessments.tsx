@@ -5,21 +5,18 @@ import { Question, AssessmentAttempt } from '../types';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
-import { ProgressBar } from '../components/ui/ProgressBar';
 import {
-  CheckSquare,
   Clock,
   Play,
   RotateCcw,
   CheckCircle2,
   XCircle,
   AlertCircle,
-  HelpCircle,
-  Award,
-  Sparkles,
   ChevronRight,
-  TrendingUp,
-  History
+  ArrowRight,
+  Check,
+  History,
+  BookOpen
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -29,35 +26,35 @@ export const Assessments: React.FC = () => {
   const [topics] = useState([
     'JavaScript',
     'React',
-    'Python',
-    'SQL / Databases',
-    'Git & Version Control',
-    'Data Structures & Algorithms'
+    'Node.js',
+    'TypeScript',
+    'PostgreSQL',
+    'Docker'
   ]);
 
   const [selectedTopic, setSelectedTopic] = useState('JavaScript');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('intermediate');
-  const [isTimedMode, setIsTimedMode] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in timed mode
+  const [isTimedMode, setIsTimedMode] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
 
-  // Quiz Execution State
+  // Quiz Running State
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userSelections, setUserSelections] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Diagnostic Report State
+  // Result State
   const [diagnosisResult, setDiagnosisResult] = useState<any | null>(null);
 
   // History State
   const [history, setHistory] = useState<AssessmentAttempt[]>([]);
-  const [viewingTab, setViewingTab] = useState<'take' | 'history'>('take');
+  const [activeTab, setActiveTab] = useState<'assess' | 'history'>('assess');
 
   const loadHistory = async () => {
     try {
       const data = await api.getAssessmentHistory();
-      setHistory(data.history);
+      setHistory(data.history || []);
     } catch (err) {
       console.error(err);
     }
@@ -88,8 +85,8 @@ export const Assessments: React.FC = () => {
   const handleStartQuiz = async () => {
     try {
       const data = await api.getQuestions({ topic: selectedTopic, difficulty: selectedDifficulty });
-      if (data.questions.length === 0) {
-        alert('No questions found for this topic and difficulty.');
+      if (!data.questions || data.questions.length === 0) {
+        alert('No questions found for this topic and difficulty. Please try another selection.');
         return;
       }
       setQuestions(data.questions);
@@ -133,76 +130,97 @@ export const Assessments: React.FC = () => {
   };
 
   const currentQ = questions[currentIndex];
-  const answeredCount = Object.keys(userSelections).length;
+  const progressPercent = questions.length ? Math.round(((currentIndex + 1) / questions.length) * 100) : 0;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Header bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
         <div>
-          <h1 className="text-xl font-bold text-charcoal">Skill Proficiency Assessments</h1>
-          <p className="text-xs text-charcoal-muted">
-            Validate competencies through timed quizzes and coding diagnostics. Scores automatically update your verified badge.
+          <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
+            Skill Assessment
+          </h1>
+          <p className="text-xs sm:text-sm text-charcoal-muted dark:text-slate-400 mt-1">
+            Diagnostic evaluations to verify competencies, uncover weak areas, and adjust your roadmap.
           </p>
         </div>
 
-        {/* Tab Toggle */}
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Button
-            variant={viewingTab === 'take' ? 'primary' : 'outline'}
+            variant={activeTab === 'assess' ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => { setViewingTab('take'); setIsQuizActive(false); setDiagnosisResult(null); }}
+            onClick={() => {
+              setActiveTab('assess');
+              setIsQuizActive(false);
+              setDiagnosisResult(null);
+            }}
           >
-            Take Assessment
+            New Quiz
           </Button>
           <Button
-            variant={viewingTab === 'history' ? 'primary' : 'outline'}
+            variant={activeTab === 'history' ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => setViewingTab('history')}
+            onClick={() => {
+              setActiveTab('history');
+              setIsQuizActive(false);
+              setDiagnosisResult(null);
+            }}
             leftIcon={<History className="w-3.5 h-3.5" />}
           >
-            Attempts History ({history.length})
+            History ({history.length})
           </Button>
         </div>
       </div>
 
-      {viewingTab === 'history' ? (
-        /* History View */
+      {/* VIEW 1: HISTORY TAB */}
+      {activeTab === 'history' && (
         <Card className="space-y-4">
-          <h3 className="text-sm font-bold text-charcoal border-b border-surface-border pb-3">
-            Assessment Performance Log
-          </h3>
+          <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
+            <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
+              Assessment Attempt History
+            </h2>
+            <p className="text-xs text-charcoal-muted dark:text-slate-400">
+              Past scores and verified credentials recorded on your profile.
+            </p>
+          </div>
 
           {history.length === 0 ? (
-            <div className="py-12 text-center text-xs text-charcoal-subtle">
-              No previous assessment attempts recorded. Complete your first evaluation to see history.
+            <div className="py-12 text-center text-xs text-charcoal-muted dark:text-slate-400">
+              No previous assessment attempts recorded. Complete a diagnostic evaluation to see your results.
             </div>
           ) : (
-            <div className="space-y-3">
-              {history.map((att) => (
-                <div
-                  key={att.id}
-                  className="p-4 bg-surface-subtle border border-surface-border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs"
-                >
+            <div className="divide-y divide-surface-border dark:divide-surface-dark-border">
+              {history.map(att => (
+                <div key={att.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-charcoal text-sm">{att.topic}</span>
-                      <Badge variant={att.passed ? 'success' : 'danger'} size="sm">
-                        {att.passed ? 'Passed & Verified' : 'Needs Review'}
-                      </Badge>
-                      <span className="text-[10px] text-charcoal-subtle uppercase">
+                      <span className="font-bold text-charcoal dark:text-slate-100 text-sm">{att.topic}</span>
+                      <span className="text-[10px] uppercase font-semibold text-charcoal-subtle dark:text-slate-400">
                         {att.difficulty}
                       </span>
+                      {att.passed ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-status-success-bg dark:bg-emerald-950/40 text-status-success border border-emerald-200 dark:border-emerald-800/50">
+                          Passed & Verified
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
+                          Needs Review
+                        </span>
+                      )}
                     </div>
-                    <p className="text-xs text-charcoal-muted leading-relaxed max-w-xl">{att.feedback}</p>
-                    <span className="text-[10px] text-charcoal-subtle block">
-                      Completed: {new Date(att.completedAt).toLocaleString()}
+                    <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed max-w-lg">
+                      {att.feedback}
+                    </p>
+                    <span className="text-[11px] text-charcoal-subtle dark:text-slate-500 block">
+                      {new Date(att.completedAt).toLocaleString()}
                     </span>
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2 sm:pt-0 border-surface-border">
-                    <span className="text-2xl font-extrabold text-charcoal">{att.scorePercentage}%</span>
-                    <span className="text-[11px] text-charcoal-subtle">
+                  <div className="text-right shrink-0">
+                    <span className="text-2xl font-bold text-charcoal dark:text-slate-100 block">
+                      {att.scorePercentage}%
+                    </span>
+                    <span className="text-[11px] text-charcoal-subtle dark:text-slate-400">
                       {att.correctAnswers} of {att.totalQuestions} correct
                     </span>
                   </div>
@@ -211,20 +229,30 @@ export const Assessments: React.FC = () => {
             </div>
           )}
         </Card>
-      ) : isQuizActive ? (
-        /* ACTIVE QUIZ RUNNER */
-        <Card className="p-6 sm:p-8 space-y-6 shadow-card">
-          {/* Quiz Status Header */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+      )}
+
+      {/* VIEW 2: ACTIVE QUIZ RUNNER (Question with options, timer, progress) */}
+      {activeTab === 'assess' && isQuizActive && (
+        <Card className="space-y-6">
+          {/* Top Bar: Topic, Question #, Timer */}
+          <div className="flex items-center justify-between pb-3 border-b border-surface-border dark:border-surface-dark-border">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-charcoal text-sm">{selectedTopic} Assessment</span>
-              <Badge variant="brand" size="sm">{selectedDifficulty}</Badge>
+              <span className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">
+                {selectedTopic}
+              </span>
+              <span className="text-charcoal-subtle dark:text-slate-600">·</span>
+              <span className="text-xs font-medium text-charcoal-muted dark:text-slate-400 capitalize">
+                {selectedDifficulty}
+              </span>
             </div>
 
-            <div className="flex items-center gap-4 text-xs text-charcoal-subtle font-medium">
-              <span>Question {currentIndex + 1} of {questions.length}</span>
+            <div className="flex items-center gap-4">
+              <span className="text-xs font-medium text-charcoal dark:text-slate-200">
+                Question {currentIndex + 1} of {questions.length}
+              </span>
+
               {isTimedMode && (
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-700 rounded-full font-mono font-bold">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-mono text-xs font-bold">
                   <Clock className="w-3.5 h-3.5" />
                   <span>
                     {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
@@ -234,64 +262,70 @@ export const Assessments: React.FC = () => {
             </div>
           </div>
 
-          <ProgressBar
-            value={((currentIndex + 1) / questions.length) * 100}
-            size="sm"
-            color="brand"
-          />
+          {/* Progress Bar */}
+          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-surface-border dark:border-surface-dark-border">
+            <div
+              className="h-full bg-brand-600 dark:bg-brand-500 transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
 
-          {/* Current Question View */}
+          {/* Question Text & Options */}
           {currentQ && (
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-charcoal leading-snug">
+            <div className="space-y-5">
+              <h2 className="text-base font-semibold text-charcoal dark:text-slate-100 leading-snug">
                 {currentQ.question}
-              </h3>
+              </h2>
 
               {currentQ.codeSnippet && (
-                <div className="bg-charcoal text-white font-mono text-xs p-4 rounded-xl overflow-x-auto shadow-inner leading-relaxed">
+                <div className="p-4 bg-slate-900 text-slate-100 font-mono text-xs rounded-lg border border-slate-800 overflow-x-auto leading-relaxed">
                   <pre>{currentQ.codeSnippet}</pre>
                 </div>
               )}
 
-              {/* Options */}
+              {/* Options List */}
               <div className="space-y-2.5 pt-2">
-                {currentQ.options.map((opt, oIdx) => {
-                  const isSelected = userSelections[currentQ.id] === oIdx;
+                {currentQ.options.map((option, idx) => {
+                  const isSelected = userSelections[currentQ.id] === idx;
+                  const letter = String.fromCharCode(65 + idx);
 
                   return (
-                    <div
-                      key={oIdx}
-                      onClick={() => handleSelectOption(currentQ.id, oIdx)}
-                      className={`p-3.5 rounded-xl border text-xs cursor-pointer transition-all flex items-start gap-3 ${
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSelectOption(currentQ.id, idx)}
+                      className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all flex items-start gap-3 ${
                         isSelected
-                          ? 'border-brand-600 bg-brand-50/60 shadow-xs font-medium text-charcoal'
-                          : 'border-surface-border bg-surface hover:bg-surface-subtle text-charcoal'
+                          ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-charcoal dark:text-slate-100 font-medium'
+                          : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       <span
-                        className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 ${
-                          isSelected ? 'bg-brand-600 text-white' : 'bg-surface-muted text-charcoal-subtle'
+                        className={`w-5 h-5 rounded flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 border ${
+                          isSelected
+                            ? 'bg-brand-600 border-brand-600 text-white'
+                            : 'border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-slate-800 text-charcoal-muted dark:text-slate-400'
                         }`}
                       >
-                        {String.fromCharCode(65 + oIdx)}
+                        {letter}
                       </span>
-                      <span className="leading-relaxed">{opt}</span>
-                    </div>
+                      <span className="leading-relaxed flex-1">{option}</span>
+                    </button>
                   );
                 })}
               </div>
             </div>
           )}
 
-          {/* Quiz Navigation Buttons */}
-          <div className="flex items-center justify-between pt-4 border-t border-surface-border">
+          {/* Navigation Controls */}
+          <div className="flex items-center justify-between pt-4 border-t border-surface-border dark:border-surface-dark-border">
             <Button
               variant="outline"
               size="sm"
               disabled={currentIndex === 0}
               onClick={() => setCurrentIndex(prev => prev - 1)}
             >
-              Previous Question
+              Previous
             </Button>
 
             {currentIndex < questions.length - 1 ? (
@@ -299,236 +333,202 @@ export const Assessments: React.FC = () => {
                 variant="primary"
                 size="sm"
                 onClick={() => setCurrentIndex(prev => prev + 1)}
-                rightIcon={<ChevronRight className="w-4 h-4" />}
+                rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
               >
-                Next Question
+                Next
               </Button>
             ) : (
               <Button
-                variant="success"
-                size="md"
+                variant="primary"
+                size="sm"
                 onClick={handleSubmitAssessment}
-                isLoading={isSubmitting}
-                rightIcon={<CheckSquare className="w-4 h-4" />}
+                disabled={isSubmitting}
+                rightIcon={<Check className="w-3.5 h-3.5" />}
               >
-                Submit & Evaluate Diagnosis
+                {isSubmitting ? 'Evaluating...' : 'Submit Assessment'}
               </Button>
             )}
           </div>
         </Card>
-      ) : diagnosisResult ? (
-        /* COMPREHENSIVE DIAGNOSTIC REPORT */
-        <div className="space-y-6 animate-in fade-in">
-          <Card className="p-6 sm:p-8 shadow-card border-brand-200">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-surface-border">
-              <div className="space-y-2 text-center sm:text-left">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-50 rounded-full text-xs font-semibold text-brand-700">
-                  <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-                  <span>Assessment Agent Diagnostic Evaluation</span>
-                </div>
-                <h2 className="text-xl font-bold text-charcoal">
-                  Evaluation Report: {diagnosisResult.attempt.topic}
-                </h2>
-                <p className="text-xs text-charcoal-muted max-w-xl leading-relaxed">
-                  {diagnosisResult.diagnosis.diagnosticFeedback}
-                </p>
-              </div>
+      )}
 
-              <div className="flex flex-col items-center justify-center p-5 bg-surface-subtle border border-surface-border rounded-2xl min-w-[160px]">
-                <span className={`text-4xl font-extrabold ${diagnosisResult.attempt.passed ? 'text-status-success' : 'text-amber-600'}`}>
+      {/* VIEW 3: RESULT SCREEN */}
+      {activeTab === 'assess' && !isQuizActive && diagnosisResult && (
+        <Card className="space-y-6">
+          {/* Result Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
+            <div>
+              <span className="text-xs font-semibold text-charcoal-subtle dark:text-slate-400 uppercase tracking-wider">
+                Assessment Results
+              </span>
+              <h2 className="text-xl font-bold text-charcoal dark:text-slate-100 mt-1">
+                {diagnosisResult.attempt.topic} Diagnostic Report
+              </h2>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
+                Evaluation completed on {new Date().toLocaleDateString()}.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <span className="text-3xl font-extrabold text-charcoal dark:text-slate-100 block">
                   {diagnosisResult.attempt.scorePercentage}%
                 </span>
-                <span className="text-[11px] font-semibold text-charcoal uppercase tracking-wider mt-1">
-                  {diagnosisResult.attempt.passed ? 'Verified Mastery' : 'Needs Review'}
+                <span className="text-[11px] text-charcoal-subtle dark:text-slate-400">
+                  {diagnosisResult.attempt.correctAnswers} / {diagnosisResult.attempt.totalQuestions} Correct
                 </span>
               </div>
+              {diagnosisResult.attempt.passed ? (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-status-success-bg dark:bg-emerald-950/40 text-status-success border border-emerald-200 dark:border-emerald-800/50">
+                  Verified
+                </span>
+              ) : (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
+                  Needs Review
+                </span>
+              )}
             </div>
+          </div>
 
-            {/* Error Classification & Weak Subtopics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-              <div className="p-4 bg-surface-subtle rounded-xl border border-surface-border space-y-2 text-xs">
-                <h4 className="font-bold text-charcoal uppercase tracking-wider text-[11px]">Error Classifications</h4>
-                <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-                  <div className="p-2 bg-white rounded-lg border border-surface-border">
-                    <span className="block text-xs font-bold text-charcoal">{diagnosisResult.diagnosis.errorClassification.conceptual}</span>
-                    <span className="text-[10px] text-charcoal-subtle">Conceptual</span>
-                  </div>
-                  <div className="p-2 bg-white rounded-lg border border-surface-border">
-                    <span className="block text-xs font-bold text-charcoal">{diagnosisResult.diagnosis.errorClassification.syntaxOrApi}</span>
-                    <span className="text-[10px] text-charcoal-subtle">Syntax/API</span>
-                  </div>
-                  <div className="p-2 bg-white rounded-lg border border-surface-border">
-                    <span className="block text-xs font-bold text-charcoal">{diagnosisResult.diagnosis.errorClassification.edgeCase}</span>
-                    <span className="text-[10px] text-charcoal-subtle">Edge Cases</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 bg-surface-subtle rounded-xl border border-surface-border space-y-2 text-xs">
-                <h4 className="font-bold text-charcoal uppercase tracking-wider text-[11px]">Recommended Remediation</h4>
-                <ul className="space-y-1.5 text-[11px] text-charcoal-muted">
-                  {diagnosisResult.diagnosis.recommendedRemediation.map((rem: string, i: number) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 shrink-0 mt-0.5" />
-                      <span>{rem}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Adaptive Learning Trigger Feedback */}
-            {diagnosisResult.adaptiveResult && (
-              <div className="p-4 bg-brand-50 border border-brand-200 rounded-xl space-y-2 text-xs mb-6">
-                <div className="flex items-center gap-2 text-brand-900 font-bold">
-                  <TrendingUp className="w-4 h-4 text-brand-600" />
-                  <span>Adaptive System Action: {diagnosisResult.adaptiveResult.adjustmentType.replace('_', ' ').toUpperCase()}</span>
-                </div>
-                <p className="text-brand-800 leading-relaxed text-[11px]">
-                  {diagnosisResult.adaptiveResult.explanation}
-                </p>
-                <Link to="/roadmap" className="inline-block text-brand-700 font-semibold hover:underline text-[11px]">
-                  View updated roadmap tasks →
-                </Link>
-              </div>
-            )}
-
-            {/* Detailed Explanations for Each Question */}
-            <div className="space-y-3 pt-4 border-t border-surface-border">
-              <h4 className="text-sm font-bold text-charcoal mb-2">Question-by-Question Diagnostic Review</h4>
-              {diagnosisResult.detailedAnswers.map((item: any, i: number) => (
-                <div key={i} className="p-4 bg-white rounded-xl border border-surface-border space-y-2 text-xs">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="font-semibold text-charcoal">
-                      Q{i + 1}: {item.questionText}
-                    </span>
-                    {item.isCorrect ? (
-                      <Badge variant="success" size="sm">Correct</Badge>
-                    ) : (
-                      <Badge variant="danger" size="sm">Incorrect</Badge>
-                    )}
-                  </div>
-                  <p className="text-charcoal-muted text-[11px] leading-relaxed bg-surface-subtle p-2.5 rounded-lg border border-surface-border">
-                    <strong>Explanation:</strong> {item.explanation}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-6 flex justify-between items-center">
-              <Button variant="outline" size="sm" onClick={() => setDiagnosisResult(null)}>
-                Take Another Assessment
-              </Button>
-              <Link to="/roadmap">
-                <Button variant="primary" size="sm">
-                  Go to Learning Roadmap
-                </Button>
-              </Link>
-            </div>
-          </Card>
-        </div>
-      ) : (
-        /* QUIZ SETUP CONFIGURATION CARD */
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 p-6 sm:p-8 space-y-6">
-            <h3 className="text-base font-bold text-charcoal border-b border-surface-border pb-3">
-              Configure Your Assessment Session
+          {/* Diagnostic Breakdown */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider">
+              Diagnostic Summary & Recommendations
             </h3>
+            <p className="text-xs text-charcoal-muted dark:text-slate-300 leading-relaxed p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
+              {diagnosisResult.diagnosis?.diagnosticFeedback || diagnosisResult.attempt.feedback}
+            </p>
+          </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-charcoal mb-2">
-                1. Select Topic Domain
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {topics.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setSelectedTopic(t)}
-                    className={`p-3 rounded-xl border text-xs text-left font-medium transition-all ${
-                      selectedTopic === t
-                        ? 'border-brand-600 bg-brand-50/60 text-brand-900 font-bold shadow-xs'
-                        : 'border-surface-border bg-surface hover:bg-surface-subtle text-charcoal'
-                    }`}
+          {/* Weak Topics to Focus On */}
+          {diagnosisResult.diagnosis?.weakSubtopics && diagnosisResult.diagnosis.weakSubtopics.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-xs font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider">
+                Target Topics for Improvement:
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {diagnosisResult.diagnosis.weakSubtopics.map((sub: string, i: number) => (
+                  <span
+                    key={i}
+                    className="px-2.5 py-1 rounded text-xs bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 font-medium"
                   >
-                    {t}
-                  </button>
+                    {sub}
+                  </span>
                 ))}
               </div>
             </div>
+          )}
 
-            <div>
-              <label className="block text-xs font-semibold text-charcoal mb-2">
-                2. Difficulty Level
-              </label>
-              <div className="grid grid-cols-3 gap-2.5">
-                {(['beginner', 'intermediate', 'advanced'] as const).map((diff) => (
-                  <button
-                    key={diff}
-                    type="button"
-                    onClick={() => setSelectedDifficulty(diff)}
-                    className={`p-3 rounded-xl border text-xs text-center capitalize transition-all ${
-                      selectedDifficulty === diff
-                        ? 'border-brand-600 bg-brand-50 text-brand-900 font-bold shadow-xs'
-                        : 'border-surface-border bg-surface hover:bg-surface-subtle text-charcoal'
-                    }`}
-                  >
-                    {diff}
-                  </button>
-                ))}
-              </div>
-            </div>
+          {/* Actions: Retake or View Roadmap */}
+          <div className="flex items-center justify-between pt-4 border-t border-surface-border dark:border-surface-dark-border">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleStartQuiz}
+              leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+            >
+              Retake Quiz
+            </Button>
 
-            <div>
-              <label className="flex items-center gap-3 cursor-pointer p-3 bg-surface-subtle rounded-xl border border-surface-border">
-                <input
-                  type="checkbox"
-                  checked={isTimedMode}
-                  onChange={(e) => setIsTimedMode(e.target.checked)}
-                  className="rounded border-surface-border text-brand-600 focus:ring-brand-500"
-                />
-                <div>
-                  <span className="text-xs font-bold text-charcoal block">Timed Exam Mode (5 Minutes)</span>
-                  <span className="text-[11px] text-charcoal-muted">Simulate actual engineering interview pressure and test speed under constraints.</span>
-                </div>
-              </label>
-            </div>
-
-            <div className="pt-2">
+            <Link to="/roadmap">
               <Button
                 variant="primary"
-                size="lg"
-                className="w-full"
-                onClick={handleStartQuiz}
-                leftIcon={<Play className="w-4 h-4 fill-white" />}
+                size="sm"
+                rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
-                Begin Assessment Session
+                Return to Roadmap
               </Button>
-            </div>
-          </Card>
+            </Link>
+          </div>
+        </Card>
+      )}
 
-          {/* Assessment Guidelines */}
-          <Card className="space-y-4">
-            <h4 className="text-sm font-bold text-charcoal border-b border-surface-border pb-2">
-              Assessment Standards
-            </h4>
-            <ul className="space-y-3 text-xs text-charcoal-muted">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-status-success shrink-0 mt-0.5" />
-                <span><strong>Verification Benchmark:</strong> Scoring 75%+ grants a verified credential badge on your skill profile.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
-                <span><strong>Mastery Acceleration:</strong> Scoring 85%+ skips redundant beginner milestones on your roadmap.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <span><strong>Adaptive Remediation:</strong> Scoring &lt;70% generates targeted review tasks to seal weak subtopics.</span>
-              </li>
-            </ul>
-          </Card>
-        </div>
+      {/* VIEW 4: QUIZ SELECTOR (Initial State) */}
+      {activeTab === 'assess' && !isQuizActive && !diagnosisResult && (
+        <Card className="space-y-5">
+          <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
+            <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
+              Configure Diagnostic Assessment
+            </h2>
+            <p className="text-xs text-charcoal-muted dark:text-slate-400">
+              Select a core skill domain and difficulty level to test your technical competency.
+            </p>
+          </div>
+
+          {/* Topic Picker */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200">
+              Skill Topic
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {topics.map(topic => (
+                <button
+                  key={topic}
+                  type="button"
+                  onClick={() => setSelectedTopic(topic)}
+                  className={`p-3 rounded-lg border text-xs text-left font-medium transition-all ${
+                    selectedTopic === topic
+                      ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 font-semibold'
+                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-400 hover:border-slate-300'
+                  }`}
+                >
+                  {topic}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Difficulty Picker */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold text-charcoal dark:text-slate-200">
+              Proficiency Benchmark
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['beginner', 'intermediate', 'advanced'] as const).map(diff => (
+                <button
+                  key={diff}
+                  type="button"
+                  onClick={() => setSelectedDifficulty(diff)}
+                  className={`py-2 px-3 rounded-lg border text-xs font-medium capitalize text-center transition-all ${
+                    selectedDifficulty === diff
+                      ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 font-semibold'
+                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-400 hover:border-slate-300'
+                  }`}
+                >
+                  {diff}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Timed Mode Checkbox */}
+          <div className="pt-2 border-t border-surface-border dark:border-surface-dark-border">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-charcoal dark:text-slate-200">
+              <input
+                type="checkbox"
+                checked={isTimedMode}
+                onChange={e => setIsTimedMode(e.target.checked)}
+                className="rounded border-slate-300 dark:border-slate-600 text-brand-600 focus:ring-0"
+              />
+              <span>Timed Mode (5 minutes · Simulated exam conditions)</span>
+            </label>
+          </div>
+
+          {/* Start Button */}
+          <div className="pt-3 border-t border-surface-border dark:border-surface-dark-border flex justify-end">
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleStartQuiz}
+              leftIcon={<Play className="w-4 h-4" />}
+            >
+              Start {selectedTopic} Assessment
+            </Button>
+          </div>
+        </Card>
       )}
     </div>
   );
 };
+
+export default Assessments;

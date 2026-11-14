@@ -21,21 +21,21 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-brand-600 disabled:opacity-50 disabled:cursor-not-allowed select-none text-xs';
 
   const variantClasses = {
-    primary: 'bg-brand-600 hover:bg-brand-700 text-white shadow-sm focus:ring-brand-500 active:bg-brand-800',
-    secondary: 'bg-violetAccent-600 hover:bg-violetAccent-700 text-white shadow-sm focus:ring-violetAccent-500 active:bg-violetAccent-800',
-    outline: 'border border-surface-border bg-white text-charcoal hover:bg-surface-subtle focus:ring-brand-500',
-    danger: 'bg-status-danger hover:bg-red-700 text-white focus:ring-red-500',
-    ghost: 'text-charcoal-muted hover:text-charcoal hover:bg-surface-muted focus:ring-brand-500',
-    success: 'bg-status-success hover:bg-emerald-700 text-white focus:ring-emerald-500',
+    primary: 'bg-brand-600 hover:bg-brand-700 text-white border border-brand-700 active:bg-brand-800 shadow-xs',
+    secondary: 'bg-surface-muted dark:bg-surface-dark-muted hover:bg-slate-200 dark:hover:bg-slate-700 text-charcoal dark:text-slate-200 border border-surface-border dark:border-surface-dark-border',
+    outline: 'border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal dark:text-slate-200 hover:bg-surface-subtle dark:hover:bg-surface-dark-muted',
+    danger: 'bg-status-danger hover:bg-red-700 text-white border border-red-700 shadow-xs',
+    ghost: 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal dark:hover:text-white hover:bg-surface-muted dark:hover:bg-surface-dark-muted',
+    success: 'bg-status-success hover:bg-emerald-700 text-white border border-emerald-700 shadow-xs',
   };
 
   const sizeClasses = {
-    sm: 'text-xs px-2.5 py-1.5 gap-1.5',
-    md: 'text-sm px-4 py-2 gap-2',
-    lg: 'text-base px-5 py-2.5 gap-2.5',
+    sm: 'px-2.5 py-1.5 gap-1.5 text-xs',
+    md: 'px-3.5 py-2 gap-2 text-xs',
+    lg: 'px-4 py-2.5 gap-2.5 text-sm',
   };
 
   return (
@@ -45,7 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
       ) : (
         leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>
       )}

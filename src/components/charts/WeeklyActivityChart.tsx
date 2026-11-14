@@ -51,7 +51,7 @@ export const WeeklyActivityChart: React.FC<WeeklyActivityChartProps> = ({ data }
               boxShadow: '0 4px 6px -1px rgba(15, 23, 42, 0.08)'
             }}
           />
-          <Bar dataKey="hours" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={28} />
+          <Bar dataKey="hours" fill="#0F5C7A" radius={[4, 4, 0, 0]} barSize={26} />
         </BarChart>
       </ResponsiveContainer>
     </div>

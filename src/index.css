@@ -4,28 +4,38 @@
 
 @layer base {
   :root {
-    --brand-primary: #4f46e5;
-    --brand-dark: #312e81;
-    --brand-bg: #f8fafc;
+    --brand-primary: #0F5C7A;
+    --brand-dark: #08303F;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   body {
     @apply bg-surface-subtle text-charcoal font-sans antialiased selection:bg-brand-100 selection:text-brand-900;
   }
+
+  html.dark body {
+    @apply bg-surface-dark-subtle text-slate-100 selection:bg-brand-900 selection:text-brand-100;
+  }
 }
 
-/* Custom subtle scrollbar */
+/* Custom minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: #E5E7EB;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #9CA3AF;
 }

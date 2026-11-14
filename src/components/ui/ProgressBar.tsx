@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 
 export interface ProgressBarProps {
   value: number; // 0 to 100
-  color?: 'brand' | 'violet' | 'success' | 'warning' | 'danger';
+  color?: 'brand' | 'success' | 'warning' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;
@@ -20,7 +20,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const colorClasses = {
     brand: 'bg-brand-600',
-    violet: 'bg-violetAccent-600',
     success: 'bg-status-success',
     warning: 'bg-status-warning',
     danger: 'bg-status-danger',
@@ -28,22 +27,22 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const sizeClasses = {
     sm: 'h-1.5',
-    md: 'h-2.5',
-    lg: 'h-4',
+    md: 'h-2',
+    lg: 'h-3',
   };
 
   return (
     <div className={clsx('w-full', className)}>
-      <div className={clsx('w-full bg-surface-muted rounded-full overflow-hidden', sizeClasses[size])}>
+      <div className={clsx('w-full bg-surface-muted dark:bg-surface-dark-muted rounded overflow-hidden', sizeClasses[size])}>
         <div
-          className={clsx('h-full transition-all duration-500 rounded-full', colorClasses[color])}
+          className={clsx('h-full transition-all duration-300 rounded', colorClasses[color])}
           style={{ width: `${clamped}%` }}
         />
       </div>
       {showLabel && (
-        <div className="flex justify-between items-center text-xs text-charcoal-muted mt-1.5">
+        <div className="flex justify-between items-center text-[11px] text-charcoal-muted dark:text-slate-400 mt-1">
           <span>Progress</span>
-          <span className="font-semibold text-charcoal">{clamped}%</span>
+          <span className="font-semibold text-charcoal dark:text-slate-200">{clamped}%</span>
         </div>
       )}
     </div>
