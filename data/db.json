@@ -1,0 +1,2285 @@
+{
+  "users": [
+    {
+      "id": "user-demo-1001",
+      "name": "Alex Rivera",
+      "email": "demo@skillpath.ai",
+      "passwordHash": "$2a$10$xtoEAc8HBPJttmecmMdt6uzhzsnJ.p4uoIw/QY7qKrkJA9vpYzisy",
+      "college": "Stanford University",
+      "educationLevel": "Bachelor's Degree",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "user-26a6e7ed",
+      "name": "Jordan Lee",
+      "email": "student_1794632165818@test.edu",
+      "passwordHash": "$2a$10$Vlg3XRgQ24mOWRwAklF3qeWG8sfil4/NUeItJmUvUo7BHyioQr7qG",
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T04:56:05.963Z",
+      "updatedAt": "2026-11-14T04:56:05.963Z"
+    },
+    {
+      "id": "user-680465c2",
+      "name": "Jordan Lee",
+      "email": "student_1794632365018@test.edu",
+      "passwordHash": "$2a$10$4QEw.l8ohVk/Z9RR4ZpfK.aLpyWl7oEX7gy4Q.15qPCMNL1BsWByG",
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T04:59:25.184Z",
+      "updatedAt": "2026-11-14T04:59:25.184Z"
+    },
+    {
+      "id": "user-05c44794",
+      "name": "Jordan Lee",
+      "email": "student_1794632395558@test.edu",
+      "passwordHash": "$2a$10$gMuaDzhv9gz3fMq1QTedjeBCthM//gGFodSKIeBsp8y8ZilMvYgTe",
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T04:59:55.782Z",
+      "updatedAt": "2026-11-14T04:59:55.782Z"
+    },
+    {
+      "id": "user-d3a0b572",
+      "name": "Jordan Lee",
+      "email": "student_1794632421879@test.edu",
+      "passwordHash": "$2a$10$9U9Q7aRajTXPdHTezO0d8etfo2dkSy/vuRJwXK1zjDB8AtxycPoPS",
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "role": "student",
+      "termsAccepted": true,
+      "createdAt": "2026-11-14T05:00:22.092Z",
+      "updatedAt": "2026-11-14T05:00:22.092Z"
+    }
+  ],
+  "profiles": [
+    {
+      "userId": "user-demo-1001",
+      "completedOnboarding": true,
+      "degree": "Computer Science B.S.",
+      "college": "Stanford University",
+      "graduationYear": "2025",
+      "bio": "Passionate aspiring full-stack engineer focused on modern React web apps, TypeScript, and distributed systems.",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [
+        "Full Stack Development",
+        "Cloud Systems",
+        "AI Applications"
+      ],
+      "learningPreferences": {
+        "hoursPerWeek": 12,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 3,
+      "overallReadinessScore": 87,
+      "profileCompletionPercentage": 100,
+      "streakDays": 9,
+      "lastActiveDate": "2026-11-14T05:00:22.567Z",
+      "totalLearningHours": 28,
+      "completedTasksCount": 2,
+      "completedAssessmentsCount": 5
+    },
+    {
+      "userId": "user-26a6e7ed",
+      "completedOnboarding": false,
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [],
+      "learningPreferences": {
+        "hoursPerWeek": 10,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 1,
+      "overallReadinessScore": 0,
+      "profileCompletionPercentage": 35,
+      "streakDays": 1,
+      "lastActiveDate": "2026-11-14T04:56:05.963Z",
+      "totalLearningHours": 0,
+      "completedTasksCount": 0,
+      "completedAssessmentsCount": 0
+    },
+    {
+      "userId": "user-680465c2",
+      "completedOnboarding": false,
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [],
+      "learningPreferences": {
+        "hoursPerWeek": 10,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 1,
+      "overallReadinessScore": 0,
+      "profileCompletionPercentage": 35,
+      "streakDays": 1,
+      "lastActiveDate": "2026-11-14T04:59:25.184Z",
+      "totalLearningHours": 0,
+      "completedTasksCount": 0,
+      "completedAssessmentsCount": 0
+    },
+    {
+      "userId": "user-05c44794",
+      "completedOnboarding": false,
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [],
+      "learningPreferences": {
+        "hoursPerWeek": 10,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 1,
+      "overallReadinessScore": 0,
+      "profileCompletionPercentage": 35,
+      "streakDays": 1,
+      "lastActiveDate": "2026-11-14T04:59:55.782Z",
+      "totalLearningHours": 0,
+      "completedTasksCount": 0,
+      "completedAssessmentsCount": 0
+    },
+    {
+      "userId": "user-d3a0b572",
+      "completedOnboarding": false,
+      "college": "MIT",
+      "educationLevel": "Undergraduate Student",
+      "targetCareerRoleId": "role-fullstack",
+      "careerInterests": [],
+      "learningPreferences": {
+        "hoursPerWeek": 10,
+        "style": "practical",
+        "pace": "moderate"
+      },
+      "overallMasteryLevel": 1,
+      "overallReadinessScore": 0,
+      "profileCompletionPercentage": 35,
+      "streakDays": 1,
+      "lastActiveDate": "2026-11-14T05:00:22.092Z",
+      "totalLearningHours": 0,
+      "completedTasksCount": 0,
+      "completedAssessmentsCount": 0
+    }
+  ],
+  "skills": [
+    {
+      "id": "skill-demo-1",
+      "userId": "user-demo-1001",
+      "skillName": "JavaScript",
+      "category": "languages",
+      "proficiencyLevel": 5,
+      "isVerified": true,
+      "evidence": "Verified via standardized skill assessment with score of 100%.",
+      "lastAssessedAt": "2026-11-14T05:00:22.567Z",
+      "verifiedScore": 100,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T05:00:22.567Z"
+    },
+    {
+      "id": "skill-demo-2",
+      "userId": "user-demo-1001",
+      "skillName": "React",
+      "category": "frameworks",
+      "proficiencyLevel": 4,
+      "isVerified": true,
+      "evidence": "Interactive dashboard project with custom hooks",
+      "lastAssessedAt": "2026-11-14T04:38:41.808Z",
+      "verifiedScore": 92,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-demo-3",
+      "userId": "user-demo-1001",
+      "skillName": "TypeScript",
+      "category": "languages",
+      "proficiencyLevel": 3,
+      "isVerified": false,
+      "evidence": "Migrated personal portfolio to TypeScript",
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-demo-4",
+      "userId": "user-demo-1001",
+      "skillName": "SQL / PostgreSQL",
+      "category": "databases",
+      "proficiencyLevel": 3,
+      "isVerified": true,
+      "evidence": "Completed database querying quiz with 85%",
+      "lastAssessedAt": "2026-11-14T04:38:41.808Z",
+      "verifiedScore": 85,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-demo-5",
+      "userId": "user-demo-1001",
+      "skillName": "Node.js",
+      "category": "frameworks",
+      "proficiencyLevel": 3,
+      "isVerified": false,
+      "evidence": "Built REST APIs with Express & JWT auth",
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-demo-6",
+      "userId": "user-demo-1001",
+      "skillName": "Git & Version Control",
+      "category": "other",
+      "proficiencyLevel": 3,
+      "isVerified": true,
+      "evidence": "Active GitHub workflow with feature branches and PRs",
+      "lastAssessedAt": "2026-11-14T04:38:41.808Z",
+      "verifiedScore": 95,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-demo-7",
+      "userId": "user-demo-1001",
+      "skillName": "Docker",
+      "category": "cloud",
+      "proficiencyLevel": 2,
+      "isVerified": false,
+      "evidence": "Containerized Node.js service for local dev",
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "updatedAt": "2026-11-14T04:38:41.808Z"
+    },
+    {
+      "id": "skill-089e2c79",
+      "userId": "user-demo-1001",
+      "skillName": "GraphQL_1794632395992",
+      "category": "frameworks",
+      "proficiencyLevel": 3,
+      "isVerified": false,
+      "evidence": "Built schema queries in demo app",
+      "createdAt": "2026-11-14T04:59:55.995Z",
+      "updatedAt": "2026-11-14T04:59:56.002Z"
+    },
+    {
+      "id": "skill-6942034a",
+      "userId": "user-demo-1001",
+      "skillName": "GraphQL_1794632422445",
+      "category": "frameworks",
+      "proficiencyLevel": 3,
+      "isVerified": false,
+      "evidence": "Built schema queries in demo app",
+      "createdAt": "2026-11-14T05:00:22.458Z",
+      "updatedAt": "2026-11-14T05:00:22.477Z"
+    }
+  ],
+  "careerRoles": [
+    {
+      "id": "role-fullstack",
+      "title": "Full Stack Developer",
+      "category": "Software Engineering",
+      "description": "Builds end-to-end web applications, designing interactive client frontends, scalable server APIs, and database architectures.",
+      "shortDescription": "Master modern frontend & backend architectures to build full-scale web applications.",
+      "marketDemand": "Very High",
+      "salaryRange": "$85,000 - $145,000",
+      "typicalRoles": [
+        "Junior Full Stack Engineer",
+        "Full Stack Software Engineer",
+        "Web Applications Developer"
+      ],
+      "dailyResponsibilities": [
+        "Architect and build responsive user interfaces in React or Next.js",
+        "Design RESTful and GraphQL APIs with Node.js/Express or Python/FastAPI",
+        "Model and query relational and NoSQL databases with PostgreSQL and MongoDB",
+        "Implement authentication, authorization, and secure state management",
+        "Deploy applications using Docker, CI/CD pipelines, and cloud hosting"
+      ],
+      "prerequisites": [
+        "Basic HTML/CSS/JS knowledge",
+        "General programming logic"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "JavaScript",
+          "category": "languages",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "TypeScript",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "important"
+        },
+        {
+          "skillName": "React",
+          "category": "frameworks",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Node.js",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "SQL / PostgreSQL",
+          "category": "databases",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "important"
+        },
+        {
+          "skillName": "Git & Version Control",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "critical"
+        },
+        {
+          "skillName": "REST API Design",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Docker",
+          "category": "cloud",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Tailwind CSS",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Testing (Jest/Vitest)",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "GraphQL",
+          "category": "frameworks",
+          "benchmarkLevel": 2,
+          "weight": 1,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-aiml",
+      "title": "AI/ML Engineer",
+      "category": "Artificial Intelligence",
+      "description": "Designs, trains, deploys, and monitors machine learning models and generative AI systems in production.",
+      "shortDescription": "Train deep learning models, fine-tune LLMs, and deploy AI systems to production.",
+      "marketDemand": "Very High",
+      "salaryRange": "$110,000 - $185,000",
+      "typicalRoles": [
+        "Machine Learning Engineer",
+        "Applied AI Researcher",
+        "LLM Application Engineer"
+      ],
+      "dailyResponsibilities": [
+        "Process, clean, and engineer features from massive tabular, text, and image datasets",
+        "Train supervised and unsupervised models using PyTorch, TensorFlow, and Scikit-learn",
+        "Build RAG pipelines, prompt systems, and fine-tune LLM embeddings",
+        "Serve models with low latency using FastAPI, Triton, or ONNX runtime",
+        "Monitor model drift, hallucination metrics, and inference costs"
+      ],
+      "prerequisites": [
+        "Linear algebra & calculus",
+        "Python programming proficiency"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Python",
+          "category": "languages",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Machine Learning (Scikit-Learn)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Deep Learning (PyTorch)",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Data Analysis (Pandas & NumPy)",
+          "category": "analytics",
+          "benchmarkLevel": 4,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Mathematics & Statistics",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Model Deployment & APIs",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Docker & Kubernetes",
+          "category": "cloud",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "LangChain & Vector DBs",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "MLOps (MLflow, Weights & Biases)",
+          "category": "other",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-data-analyst",
+      "title": "Data Analyst",
+      "category": "Data & Analytics",
+      "description": "Transforms raw business data into actionable dashboards, KPIs, statistical findings, and strategic recommendations.",
+      "shortDescription": "Uncover business insights, query massive datasets, and craft compelling visual narratives.",
+      "marketDemand": "High",
+      "salaryRange": "$65,000 - $105,000",
+      "typicalRoles": [
+        "Business Data Analyst",
+        "Operations Analyst",
+        "Product Intelligence Analyst"
+      ],
+      "dailyResponsibilities": [
+        "Write complex SQL queries, window functions, and aggregations across enterprise data warehouses",
+        "Create interactive executive dashboards in Tableau, PowerBI, or Metabase",
+        "Perform exploratory data analysis and hypothesis testing in Python or R",
+        "Partner with cross-functional stakeholders to translate business questions into data models",
+        "Automate regular metrics reporting and anomaly detection pipelines"
+      ],
+      "prerequisites": [
+        "Basic math & statistics",
+        "Familiarity with spreadsheets"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "SQL / PostgreSQL",
+          "category": "databases",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Data Visualization (Tableau/PowerBI)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Python",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Data Analysis (Pandas & NumPy)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Statistical Analysis",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Communication & Storytelling",
+          "category": "soft_skills",
+          "benchmarkLevel": 4,
+          "weight": 2,
+          "importance": "critical"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "dbt (Data Build Tool)",
+          "category": "analytics",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Excel / Google Sheets Modeling",
+          "category": "analytics",
+          "benchmarkLevel": 4,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "BigQuery / Snowflake",
+          "category": "cloud",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-data-scientist",
+      "title": "Data Scientist",
+      "category": "Data & Analytics",
+      "description": "Combines computer science, predictive modeling, experimental design, and statistics to solve complex analytical problems.",
+      "shortDescription": "Harness predictive statistics, A/B testing, and machine learning to build data-driven algorithms.",
+      "marketDemand": "High",
+      "salaryRange": "$100,000 - $160,000",
+      "typicalRoles": [
+        "Applied Data Scientist",
+        "Decision Scientist",
+        "Product Data Scientist"
+      ],
+      "dailyResponsibilities": [
+        "Formulate analytical hypotheses, design robust A/B tests, and analyze causal inference",
+        "Build predictive classification, regression, and clustering algorithms in Python",
+        "Work with engineers to productionize data features and pipeline transformations",
+        "Present mathematical findings to executives with clear business impact statements"
+      ],
+      "prerequisites": [
+        "Multivariate calculus & probability",
+        "Strong programming foundation"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Python",
+          "category": "languages",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "SQL / PostgreSQL",
+          "category": "databases",
+          "benchmarkLevel": 4,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Statistical Modeling & Hypothesis Testing",
+          "category": "analytics",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Machine Learning (Scikit-Learn)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Data Analysis (Pandas & NumPy)",
+          "category": "analytics",
+          "benchmarkLevel": 4,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Deep Learning (PyTorch)",
+          "category": "frameworks",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Spark / Big Data",
+          "category": "analytics",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "A/B Experimentation",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ]
+    },
+    {
+      "id": "role-cloud-engineer",
+      "title": "Cloud Engineer",
+      "category": "Cloud & Infrastructure",
+      "description": "Architects, secures, deploys, and optimizes scalable multi-cloud infrastructure and distributed server architectures.",
+      "shortDescription": "Design scalable, highly-available infrastructure across AWS, Azure, and Google Cloud.",
+      "marketDemand": "Very High",
+      "salaryRange": "$95,000 - $155,000",
+      "typicalRoles": [
+        "Cloud Solutions Architect",
+        "Cloud Infrastructure Engineer",
+        "Cloud Systems Admin"
+      ],
+      "dailyResponsibilities": [
+        "Provision cloud infrastructure with Terraform and CloudFormation",
+        "Configure VPCs, IAM policies, security groups, subnets, and routing tables",
+        "Optimize compute costs and establish high-availability multi-region failovers",
+        "Manage container orchestration clusters using Kubernetes (EKS/GKE)"
+      ],
+      "prerequisites": [
+        "Networking fundamentals (TCP/IP, DNS, SSL)",
+        "Linux CLI proficiency"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "AWS / Cloud Architecture",
+          "category": "cloud",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Linux & Bash Scripting",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Infrastructure as Code (Terraform)",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Docker & Containerization",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "important"
+        },
+        {
+          "skillName": "Cloud Security & Networking",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Kubernetes",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Python Scripting",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "CI/CD Pipelines",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-cybersecurity",
+      "title": "Cybersecurity Analyst",
+      "category": "Security",
+      "description": "Safeguards organizations against cyber threats, conducts vulnerability assessments, investigates security incidents, and enforces compliance.",
+      "shortDescription": "Defend systems from intrusion, audit vulnerabilities, and ensure resilient security postures.",
+      "marketDemand": "Very High",
+      "salaryRange": "$85,000 - $140,000",
+      "typicalRoles": [
+        "SOC Analyst",
+        "Information Security Specialist",
+        "Penetration Tester"
+      ],
+      "dailyResponsibilities": [
+        "Monitor SIEM logs, firewalls, and intrusion detection systems for active threats",
+        "Perform regular vulnerability scans and penetration tests on networks and web apps",
+        "Coordinate incident response protocols and forensic evidence collection",
+        "Implement zero-trust access policies, multi-factor auth, and encryption standards"
+      ],
+      "prerequisites": [
+        "Operating systems & protocols",
+        "Ethical hacking concepts"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Network Security & Protocols",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Linux & Terminal Operations",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Vulnerability Assessment & Penetration Testing",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "SIEM & Log Analysis (Splunk/ELK)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Security Compliance (OWASP, NIST)",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Python for Security Scripting",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Cloud Security (AWS IAM)",
+          "category": "cloud",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Cryptography Fundamentals",
+          "category": "other",
+          "benchmarkLevel": 2,
+          "weight": 1,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-devops",
+      "title": "DevOps Engineer",
+      "category": "Cloud & Infrastructure",
+      "description": "Unifies software development and IT operations by building automated CI/CD pipelines, container orchestration, and real-time observability.",
+      "shortDescription": "Automate build pipelines, orchestrate Kubernetes clusters, and maximize release velocity.",
+      "marketDemand": "Very High",
+      "salaryRange": "$100,000 - $160,000",
+      "typicalRoles": [
+        "Site Reliability Engineer (SRE)",
+        "Build & Release Engineer",
+        "DevOps Specialist"
+      ],
+      "dailyResponsibilities": [
+        "Build and maintain robust CI/CD pipelines with GitHub Actions or GitLab CI",
+        "Manage microservice deployments across Kubernetes clusters with Helm and ArgoCD",
+        "Implement observability stacks using Prometheus, Grafana, and OpenTelemetry",
+        "Automate environment provisioning and drift remediation with Ansible and Terraform"
+      ],
+      "prerequisites": [
+        "Linux administration",
+        "Basic coding/scripting"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Linux & Bash Scripting",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Docker & Containerization",
+          "category": "cloud",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Kubernetes",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "CI/CD Pipelines (GitHub Actions)",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Infrastructure as Code (Terraform)",
+          "category": "cloud",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Monitoring & Observability (Prometheus/Grafana)",
+          "category": "analytics",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "Python or Go Scripting",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "GitOps (ArgoCD)",
+          "category": "cloud",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-uiux",
+      "title": "UI/UX Designer",
+      "category": "Design & Product",
+      "description": "Crafts intuitive, accessible, and delightful digital user experiences through user research, wireframing, design systems, and usability testing.",
+      "shortDescription": "Design user-centric interfaces, interactive prototypes, and production design systems.",
+      "marketDemand": "High",
+      "salaryRange": "$75,000 - $130,000",
+      "typicalRoles": [
+        "Product Designer",
+        "User Experience Architect",
+        "Design Systems Specialist"
+      ],
+      "dailyResponsibilities": [
+        "Conduct user interviews, surveys, and usability testing sessions",
+        "Build wireframes, interactive Figma prototypes, and component libraries",
+        "Establish unified design tokens, typography scales, and accessibility standards (WCAG)",
+        "Collaborate closely with frontend engineers to ensure pixel-perfect implementation"
+      ],
+      "prerequisites": [
+        "Empathy & visual awareness",
+        "Basic design fundamentals"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Figma & Prototyping",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "User Research & Usability Testing",
+          "category": "soft_skills",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Design Systems & Component Architecture",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Information Architecture & Wireframing",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Accessibility & WCAG Compliance",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "HTML & CSS Fundamentals",
+          "category": "frameworks",
+          "benchmarkLevel": 3,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        },
+        {
+          "skillName": "Micro-animations & Motion Design",
+          "category": "other",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    },
+    {
+      "id": "role-software-eng",
+      "title": "Software Engineer",
+      "category": "Software Engineering",
+      "description": "Applies engineering principles, algorithms, and software design patterns to develop reliable, maintainable enterprise systems.",
+      "shortDescription": "Write clean, scalable code, optimize algorithms, and engineer robust software architectures.",
+      "marketDemand": "Very High",
+      "salaryRange": "$90,000 - $150,000",
+      "typicalRoles": [
+        "Core Software Engineer",
+        "Backend Developer",
+        "Systems Engineer"
+      ],
+      "dailyResponsibilities": [
+        "Design clean, object-oriented or functional software architectures",
+        "Analyze computational complexity and optimize algorithm bottlenecks",
+        "Write comprehensive unit, integration, and regression test suites",
+        "Conduct rigorous code reviews and adhere to continuous integration workflows"
+      ],
+      "prerequisites": [
+        "Computer science principles",
+        "Comfort with at least one programming language"
+      ],
+      "requiredSkills": [
+        {
+          "skillName": "Data Structures & Algorithms",
+          "category": "other",
+          "benchmarkLevel": 4,
+          "weight": 3,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Object-Oriented & Functional Design",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Git & Version Control",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "critical"
+        },
+        {
+          "skillName": "Software Testing & Debugging",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2.5,
+          "importance": "important"
+        },
+        {
+          "skillName": "SQL / Databases",
+          "category": "databases",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        }
+      ],
+      "optionalSkills": [
+        {
+          "skillName": "System Design Fundamentals",
+          "category": "other",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Java, C++, or Go",
+          "category": "languages",
+          "benchmarkLevel": 3,
+          "weight": 2,
+          "importance": "important"
+        },
+        {
+          "skillName": "Concurrency & Multithreading",
+          "category": "other",
+          "benchmarkLevel": 2,
+          "weight": 1.5,
+          "importance": "nice_to_have"
+        }
+      ]
+    }
+  ],
+  "roadmaps": [
+    {
+      "id": "roadmap-demo-1",
+      "userId": "user-demo-1001",
+      "targetRoleId": "role-fullstack",
+      "targetRoleTitle": "Full Stack Developer",
+      "generatedBy": "agent",
+      "generatedAt": "2026-11-14T04:38:41.808Z",
+      "lastAdjustedAt": "2026-11-14T05:00:22.568Z",
+      "overallProgressPercentage": 43,
+      "phases": [
+        {
+          "id": "phase-1",
+          "phaseNumber": 1,
+          "title": "Phase 1: Foundations & Type Safety",
+          "description": "Master core JavaScript runtime behavior, ES6+, and strict TypeScript development patterns.",
+          "durationWeeks": 3,
+          "status": "completed",
+          "tasks": [
+            {
+              "id": "task-1-1",
+              "phaseId": "phase-1",
+              "order": 1,
+              "title": "Deep dive into JS Event Loop & Microtasks",
+              "description": "Understand promises, call stack, macrotasks, and async/await mechanics.",
+              "estimatedHours": 4,
+              "completed": true,
+              "category": "languages",
+              "associatedSkill": "JavaScript",
+              "criteria": "Pass the JS asynchronous runtime challenge quiz.",
+              "resourceLinks": [
+                {
+                  "title": "MDN Event Loop Guide",
+                  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop",
+                  "type": "doc"
+                }
+              ],
+              "completedAt": "2026-11-14T05:00:22.568Z"
+            },
+            {
+              "id": "task-1-2",
+              "phaseId": "phase-1",
+              "order": 2,
+              "title": "TypeScript Generics & Utility Types",
+              "description": "Implement mapped types, conditional types, and utility types (Pick, Omit, Record).",
+              "estimatedHours": 5,
+              "completed": true,
+              "completedAt": "2026-11-14T04:38:41.808Z",
+              "category": "languages",
+              "associatedSkill": "TypeScript",
+              "criteria": "Build a generic type-safe API client wrapper.",
+              "resourceLinks": [
+                {
+                  "title": "TypeScript Handbook: Generics",
+                  "url": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
+                  "type": "doc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-2",
+          "phaseNumber": 2,
+          "title": "Phase 2: Modern React & State Architecture",
+          "description": "Build performant UI systems, custom hooks, and scalable client state management.",
+          "durationWeeks": 4,
+          "status": "in_progress",
+          "tasks": [
+            {
+              "id": "task-2-1",
+              "phaseId": "phase-2",
+              "order": 1,
+              "title": "Advanced React Hooks & Performance Profiling",
+              "description": "Profile re-renders with React DevTools, useMemo, useCallback, and React.memo.",
+              "estimatedHours": 6,
+              "completed": true,
+              "completedAt": "2026-11-14T04:38:41.808Z",
+              "category": "frameworks",
+              "associatedSkill": "React",
+              "criteria": "Optimize a virtualized feed with 10k items.",
+              "resourceLinks": [
+                {
+                  "title": "React.dev: Memoization",
+                  "url": "https://react.dev/reference/react/useMemo",
+                  "type": "doc"
+                }
+              ]
+            },
+            {
+              "id": "task-2-2",
+              "phaseId": "phase-2",
+              "order": 2,
+              "title": "Clean API Client with TanStack Query / SWR",
+              "description": "Implement optimistic updates, retry policies, and cache invalidation.",
+              "estimatedHours": 5,
+              "completed": false,
+              "category": "frameworks",
+              "associatedSkill": "React",
+              "criteria": "Connect React dashboard with real-time server mutations.",
+              "resourceLinks": [
+                {
+                  "title": "MDN Fetch API Reference",
+                  "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+                  "type": "doc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-3",
+          "phaseNumber": 3,
+          "title": "Phase 3: Backend Services & Database Modeling",
+          "description": "Design production-grade REST APIs, relational schema migrations, and indexing strategies.",
+          "durationWeeks": 4,
+          "status": "not_started",
+          "tasks": [
+            {
+              "id": "task-3-1",
+              "phaseId": "phase-3",
+              "order": 1,
+              "title": "PostgreSQL Advanced Indexing & Query Tuning",
+              "description": "Analyze EXPLAIN plans, implement B-tree and GIN indexes, and avoid N+1 queries.",
+              "estimatedHours": 6,
+              "completed": false,
+              "category": "databases",
+              "associatedSkill": "SQL / PostgreSQL",
+              "criteria": "Optimize slow queries on a 1-million row dataset.",
+              "resourceLinks": [
+                {
+                  "title": "PostgreSQL Indexing Tutorial",
+                  "url": "https://www.postgresqltutorial.com/postgresql-indexes/",
+                  "type": "tutorial"
+                }
+              ]
+            },
+            {
+              "id": "task-3-2",
+              "phaseId": "phase-3",
+              "order": 2,
+              "title": "Microservices & Containerization with Docker",
+              "description": "Write multi-stage Dockerfiles and orchestrate multi-container setups with Docker Compose.",
+              "estimatedHours": 8,
+              "completed": false,
+              "category": "cloud",
+              "associatedSkill": "Docker",
+              "criteria": "Deploy full-stack app with frontend, backend, and postgres services.",
+              "resourceLinks": [
+                {
+                  "title": "Docker Official Documentation",
+                  "url": "https://docker-curriculum.com/",
+                  "type": "tutorial"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "phase-4",
+          "phaseNumber": 4,
+          "title": "Phase 4: Capstone Project & Technical Interview Prep",
+          "description": "Build a production SaaS portfolio project and pass full-stack system design interviews.",
+          "durationWeeks": 3,
+          "status": "not_started",
+          "tasks": [
+            {
+              "id": "task-4-1",
+              "phaseId": "phase-4",
+              "order": 1,
+              "title": "Full Stack Capstone Application Deployment",
+              "description": "Deploy production SaaS with CI/CD, SSL, database backups, and health checks.",
+              "estimatedHours": 12,
+              "completed": false,
+              "category": "frameworks",
+              "associatedSkill": "REST API Design",
+              "criteria": "Submit public GitHub repo and live production URL.",
+              "resourceLinks": [
+                {
+                  "title": "Pro Git Workflow Guide",
+                  "url": "https://git-scm.com/book/en/v2",
+                  "type": "doc"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roadmapAdjustments": [
+    {
+      "id": "adj-64a01636",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T05:00:22.568Z",
+      "trigger": "assessment_mastery",
+      "description": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "affectedSkills": [
+        "JavaScript"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [
+          "Deep dive into JS Event Loop & Microtasks"
+        ],
+        "reasoning": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status."
+      }
+    },
+    {
+      "id": "adj-c0ae0b46",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T05:00:22.510Z",
+      "trigger": "career_goal_change",
+      "description": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "affectedSkills": [
+        "Full Stack Developer"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [],
+        "roleSwitchedTo": "Full Stack Developer",
+        "reasoning": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus."
+      }
+    },
+    {
+      "id": "adj-06e13e1a",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T04:59:56.033Z",
+      "trigger": "assessment_mastery",
+      "description": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "affectedSkills": [
+        "JavaScript"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [
+          "Deep dive into JS Event Loop & Microtasks"
+        ],
+        "reasoning": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status."
+      }
+    },
+    {
+      "id": "adj-04404891",
+      "userId": "user-demo-1001",
+      "timestamp": "2026-11-14T04:59:56.012Z",
+      "trigger": "career_goal_change",
+      "description": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "affectedSkills": [
+        "Full Stack Developer"
+      ],
+      "adjustmentDetails": {
+        "tasksAdded": [],
+        "tasksSkipped": [],
+        "roleSwitchedTo": "Full Stack Developer",
+        "reasoning": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-js-1",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "beginner",
+      "type": "multiple_choice",
+      "question": "What is the difference between \"==\" and \"===\" in JavaScript?",
+      "options": [
+        "They are completely identical and interchangeable",
+        "\"==\" checks value only with type coercion, while \"===\" checks value and type without coercion",
+        "\"===\" is used exclusively for comparing objects and arrays",
+        "\"==\" is faster than \"===\" in all JavaScript engines"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "The double equals (==) operator performs abstract equality comparison with type coercion if the operands are of different types. The triple equals (===) operator performs strict equality comparison with no type coercion."
+    },
+    {
+      "id": "q-js-2",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "intermediate",
+      "type": "code_snippet",
+      "question": "What will be output to the console when the following code executes?",
+      "codeSnippet": "console.log(1);\nsetTimeout(() => console.log(2), 0);\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);",
+      "options": [
+        "1, 2, 3, 4",
+        "1, 4, 2, 3",
+        "1, 4, 3, 2",
+        "1, 3, 4, 2"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "Synchronous statements run first (1, 4). Then the microtask queue (Promise.then) runs before the macrotask queue (setTimeout callback), producing 1, 4, 3, 2."
+    },
+    {
+      "id": "q-js-3",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "intermediate",
+      "type": "multiple_choice",
+      "question": "In JavaScript closures, what does an inner function retain access to?",
+      "options": [
+        "Only global variables declared with var",
+        "Its own scope, the outer enclosing function's lexical scope, and the global scope",
+        "Only the parameters explicitly passed into the inner function",
+        "A cloned snapshot of primitive values at execution time"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "A closure is the combination of a function bundled together with references to its surrounding state (the lexical environment). An inner function has access to variables in its own scope, its outer functions, and global scope."
+    },
+    {
+      "id": "q-js-4",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "advanced",
+      "type": "code_snippet",
+      "question": "What does this JavaScript generator expression evaluate to?",
+      "codeSnippet": "function* idGen() {\n  let id = 1;\n  while (true) {\n    yield id++;\n  }\n}\nconst gen = idGen();\nconsole.log(gen.next().value, gen.next().value);",
+      "options": [
+        "1 1",
+        "1 2",
+        "undefined undefined",
+        "Throws an infinite loop memory error"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "Generators execute lazily. Each call to gen.next() runs the generator function until the next yield statement, returning the value and pausing execution. The first call yields 1, and the second yields 2."
+    },
+    {
+      "id": "q-react-1",
+      "topic": "React",
+      "skillName": "React",
+      "difficulty": "beginner",
+      "type": "multiple_choice",
+      "question": "Why should keys in React lists be unique and stable across renders?",
+      "options": [
+        "To prevent CSS styles from clashing on adjacent list items",
+        "To help React identify which items have changed, been added, or been removed during reconciliation",
+        "React will throw a fatal compile-time syntax error without them",
+        "Keys are used by the browser to allocate DOM memory"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "Keys provide a permanent identity to each element so React's virtual DOM diffing algorithm can accurately preserve component state and avoid re-rendering unmutated sibling nodes."
+    },
+    {
+      "id": "q-react-2",
+      "topic": "React",
+      "skillName": "React",
+      "difficulty": "intermediate",
+      "type": "code_snippet",
+      "question": "What is the issue with this React useEffect implementation?",
+      "codeSnippet": "useEffect(() => {\n  const timer = setInterval(() => {\n    setCount(c => c + 1);\n  }, 1000);\n}, []);",
+      "options": [
+        "It has a memory leak because it does not return a cleanup function to clearInterval on unmount",
+        "The dependency array cannot be empty in React 18",
+        "setCount cannot accept a function argument",
+        "setInterval does not work inside useEffect"
+      ],
+      "correctOptionIndex": 0,
+      "explanation": "Subscribing to timers or listeners inside useEffect must return a cleanup function (e.g., () => clearInterval(timer)) to prevent memory leaks and zombie intervals when the component unmounts."
+    },
+    {
+      "id": "q-react-3",
+      "topic": "React",
+      "skillName": "React",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "question": "When is useMemo genuinely beneficial for performance optimization?",
+      "options": [
+        "Wrap every single string and number variable in useMemo by default",
+        "When recalculating expensive computational operations or preserving referential equality for dependency arrays of child components wrapped in memo",
+        "Only when making asynchronous fetch API requests",
+        "It replaces the need for useState in functional components"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "useMemo has memory and invocation overhead. It is beneficial when performing genuinely expensive calculations (e.g., sorting 10k items) or passing object/array references to memoized children to prevent unnecessary re-renders."
+    },
+    {
+      "id": "q-py-1",
+      "topic": "Python",
+      "skillName": "Python",
+      "difficulty": "beginner",
+      "type": "multiple_choice",
+      "question": "What is the primary difference between a Python list and a tuple?",
+      "options": [
+        "Tuples can hold strings while lists can only hold numbers",
+        "Lists are mutable (can be changed after creation), whereas tuples are immutable",
+        "Tuples are indexed from 1, whereas lists are indexed from 0",
+        "Lists cannot contain nested structures"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "In Python, lists are mutable sequences defined with square brackets [], whereas tuples are immutable sequences defined with parentheses (), meaning items cannot be added, removed, or reassigned after instantiation."
+    },
+    {
+      "id": "q-py-2",
+      "topic": "Python",
+      "skillName": "Python",
+      "difficulty": "intermediate",
+      "type": "code_snippet",
+      "question": "What does the following Python list comprehension produce?",
+      "codeSnippet": "data = [1, 2, 3, 4, 5, 6]\nresult = [x**2 for x in data if x % 2 == 0]\nprint(result)",
+      "options": [
+        "[1, 4, 9, 16, 25, 36]",
+        "[4, 16, 36]",
+        "[2, 4, 6]",
+        "[1, 9, 25]"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "The condition \"if x % 2 == 0\" filters only even numbers from data (2, 4, 6). The expression x**2 squares each: 2^2=4, 4^2=16, 6^2=36."
+    },
+    {
+      "id": "q-py-3",
+      "topic": "Python",
+      "skillName": "Python",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "question": "What is the role of the Global Interpreter Lock (GIL) in standard CPython?",
+      "options": [
+        "It encrypts Python bytecode during compilation",
+        "It is a mutex that prevents multiple native threads from executing Python bytecodes at once",
+        "It prevents files from being modified by two processes simultaneously",
+        "It limits Python programs to using a maximum of 4GB of RAM"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "The GIL is a mechanism used by CPython to ensure thread-safe memory management. It allows only one OS thread to execute Python bytecode at a time, which is why multiprocessing or C extensions are typically used for CPU-bound parallelism."
+    },
+    {
+      "id": "q-sql-1",
+      "topic": "SQL / Databases",
+      "skillName": "SQL / PostgreSQL",
+      "difficulty": "beginner",
+      "type": "multiple_choice",
+      "question": "What is the difference between WHERE and HAVING clauses in SQL?",
+      "options": [
+        "WHERE and HAVING are completely identical aliases",
+        "WHERE filters rows before aggregation, while HAVING filters aggregated groups created by GROUP BY",
+        "HAVING only works on integer primary keys",
+        "WHERE is only supported in SQLite, not PostgreSQL"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "The WHERE clause filters individual records before any grouping takes place. The HAVING clause filters the summarized groups that result from a GROUP BY clause."
+    },
+    {
+      "id": "q-sql-2",
+      "topic": "SQL / Databases",
+      "skillName": "SQL / PostgreSQL",
+      "difficulty": "intermediate",
+      "type": "code_snippet",
+      "question": "What will this SQL query return?",
+      "codeSnippet": "SELECT department, AVG(salary) as avg_sal\nFROM employees\nGROUP BY department\nHAVING AVG(salary) > 80000;",
+      "options": [
+        "All employees who individually earn more than 80,000",
+        "Departments where the average salary among employees exceeds 80,000 along with their average salary",
+        "The highest paid department and its minimum salary",
+        "A syntax error because AVG cannot be placed in the HAVING clause"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "The query groups all rows by department, calculates the average salary for each department, and then filters to include only those departments whose average salary is strictly greater than 80,000."
+    },
+    {
+      "id": "q-sql-3",
+      "topic": "SQL / Databases",
+      "skillName": "SQL / PostgreSQL",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "question": "In database transaction processing, what does the \"I\" in ACID stand for and guarantee?",
+      "options": [
+        "Indexing: Ensures all columns have B-tree indices",
+        "Isolation: Ensures concurrent execution of transactions leaves the database in the same state as if executed sequentially",
+        "Iteration: Guarantees recursive queries terminate",
+        "Immutability: Disallows updating historical records"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "Isolation guarantees that transactions are isolated from each other so that concurrent transactions do not observe intermediate, uncommitted states, preventing phenomena like dirty reads and phantom reads."
+    },
+    {
+      "id": "q-git-1",
+      "topic": "Git & Version Control",
+      "skillName": "Git & Version Control",
+      "difficulty": "beginner",
+      "type": "multiple_choice",
+      "question": "What is the command to create a new branch named \"feature-login\" and switch to it in Git?",
+      "options": [
+        "git new branch feature-login",
+        "git checkout -b feature-login (or git switch -c feature-login)",
+        "git branch --switch feature-login",
+        "git merge feature-login"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "Both \"git checkout -b <name>\" and the modern \"git switch -c <name>\" create the specified branch and immediately point HEAD to it."
+    },
+    {
+      "id": "q-devops-1",
+      "topic": "Docker & DevOps",
+      "skillName": "Docker",
+      "difficulty": "intermediate",
+      "type": "multiple_choice",
+      "question": "What is the primary difference between a Docker Image and a Docker Container?",
+      "options": [
+        "An image is a running process, while a container is a compiled binary file",
+        "An image is a read-only template with instructions, while a container is a runnable, isolated instance of an image",
+        "Containers can only run on Linux, while images can only run on Windows",
+        "Images require a hypervisor, while containers do not"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "A Docker image is an immutable, layered blueprint containing application code, runtime, libraries, and dependencies. A container is a live, running instance of an image with a thin writable container layer."
+    },
+    {
+      "id": "q-dsa-1",
+      "topic": "Data Structures & Algorithms",
+      "skillName": "Data Structures & Algorithms",
+      "difficulty": "intermediate",
+      "type": "multiple_choice",
+      "question": "What is the average time complexity for searching an element in a Hash Map?",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(1)",
+        "O(n log n)"
+      ],
+      "correctOptionIndex": 2,
+      "explanation": "Hash maps compute the bucket index using a hash function, providing O(1) constant average time complexity for lookups, insertions, and deletions under good hashing distribution."
+    },
+    {
+      "id": "q-dsa-2",
+      "topic": "Data Structures & Algorithms",
+      "skillName": "Data Structures & Algorithms",
+      "difficulty": "advanced",
+      "type": "multiple_choice",
+      "question": "Which sorting algorithm has a worst-case time complexity of O(n log n) and guarantees stable ordering?",
+      "options": [
+        "Quick Sort",
+        "Merge Sort",
+        "Heap Sort",
+        "Selection Sort"
+      ],
+      "correctOptionIndex": 1,
+      "explanation": "Merge Sort uses a divide-and-conquer strategy that consistently runs in O(n log n) time across best, average, and worst cases, and is stable (preserves relative order of equal elements)."
+    }
+  ],
+  "assessments": [
+    {
+      "id": "attempt-aaea4ee7",
+      "userId": "user-demo-1001",
+      "assessmentId": "assessment-javascript",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "intermediate",
+      "totalQuestions": 1,
+      "correctAnswers": 1,
+      "scorePercentage": 100,
+      "passed": true,
+      "userAnswers": [
+        {
+          "questionId": "q-js-1",
+          "questionText": "What is the difference between \"==\" and \"===\" in JavaScript?",
+          "selectedOption": 1,
+          "correctOptionIndex": 1,
+          "isCorrect": true,
+          "explanation": "The double equals (==) operator performs abstract equality comparison with type coercion if the operands are of different types. The triple equals (===) operator performs strict equality comparison with no type coercion."
+        }
+      ],
+      "weakSubtopics": [
+        "None detected - flawless performance"
+      ],
+      "feedback": "Outstanding mastery demonstrated in JavaScript. Strong command of both theoretical invariants and implementation mechanics. Verified proficiency badge granted.",
+      "completedAt": "2026-11-14T05:00:22.567Z"
+    },
+    {
+      "id": "attempt-70ba26f3",
+      "userId": "user-demo-1001",
+      "assessmentId": "assessment-javascript",
+      "topic": "JavaScript",
+      "skillName": "JavaScript",
+      "difficulty": "intermediate",
+      "totalQuestions": 1,
+      "correctAnswers": 1,
+      "scorePercentage": 100,
+      "passed": true,
+      "userAnswers": [
+        {
+          "questionId": "q-js-1",
+          "questionText": "What is the difference between \"==\" and \"===\" in JavaScript?",
+          "selectedOption": 1,
+          "correctOptionIndex": 1,
+          "isCorrect": true,
+          "explanation": "The double equals (==) operator performs abstract equality comparison with type coercion if the operands are of different types. The triple equals (===) operator performs strict equality comparison with no type coercion."
+        }
+      ],
+      "weakSubtopics": [
+        "None detected - flawless performance"
+      ],
+      "feedback": "Outstanding mastery demonstrated in JavaScript. Strong command of both theoretical invariants and implementation mechanics. Verified proficiency badge granted.",
+      "completedAt": "2026-11-14T04:59:56.032Z"
+    }
+  ],
+  "mentorMessages": [
+    {
+      "id": "msg-c760541f",
+      "userId": "user-demo-1001",
+      "role": "user",
+      "content": "Explain closure in JS simply",
+      "metadata": {
+        "mode": "general"
+      },
+      "createdAt": "2026-11-14T04:59:56.040Z"
+    },
+    {
+      "id": "msg-f1be99cb",
+      "userId": "user-demo-1001",
+      "role": "assistant",
+      "content": "### Understanding Closures in JavaScript\n\nA **closure** is a function that remembers and accesses variables from its outer (enclosing) lexical scope, even after that outer function has finished executing.\n\n```javascript\nfunction createCounter(initialValue = 0) {\n  let count = initialValue; // Kept in memory via closure\n  \n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    get: () => count\n  };\n}\n\nconst counter = createCounter(10);\nconsole.log(counter.increment()); // 11\nconsole.log(counter.get());       // 11\n```\n\n#### Key Takeaways:\n1. **Encapsulation**: State (`count`) is completely private; external code cannot mutate it except through the exposed API.\n2. **Memory Management**: Variables referenced in a closure remain in heap memory until the returned function reference is garbage collected.\n3. **Common Pitfall**: Creating closures inside unbounded loops without let/const or failing to clear intervals can cause memory retention.",
+      "metadata": {
+        "mode": "general",
+        "suggestedFollowUps": [
+          "What is the difference between microtasks and macrotasks?",
+          "How does \"this\" binding work in arrow functions?",
+          "Test my JavaScript skills with a quiz question"
+        ],
+        "referencedSkill": "JavaScript"
+      },
+      "createdAt": "2026-11-14T04:59:56.042Z"
+    },
+    {
+      "id": "msg-7e72ebf7",
+      "userId": "user-demo-1001",
+      "role": "user",
+      "content": "Explain closure in JS simply",
+      "metadata": {
+        "mode": "general"
+      },
+      "createdAt": "2026-11-14T05:00:22.586Z"
+    },
+    {
+      "id": "msg-4f624a98",
+      "userId": "user-demo-1001",
+      "role": "assistant",
+      "content": "### Understanding Closures in JavaScript\n\nA **closure** is a function that remembers and accesses variables from its outer (enclosing) lexical scope, even after that outer function has finished executing.\n\n```javascript\nfunction createCounter(initialValue = 0) {\n  let count = initialValue; // Kept in memory via closure\n  \n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    get: () => count\n  };\n}\n\nconst counter = createCounter(10);\nconsole.log(counter.increment()); // 11\nconsole.log(counter.get());       // 11\n```\n\n#### Key Takeaways:\n1. **Encapsulation**: State (`count`) is completely private; external code cannot mutate it except through the exposed API.\n2. **Memory Management**: Variables referenced in a closure remain in heap memory until the returned function reference is garbage collected.\n3. **Common Pitfall**: Creating closures inside unbounded loops without let/const or failing to clear intervals can cause memory retention.",
+      "metadata": {
+        "mode": "general",
+        "suggestedFollowUps": [
+          "What is the difference between microtasks and macrotasks?",
+          "How does \"this\" binding work in arrow functions?",
+          "Test my JavaScript skills with a quiz question"
+        ],
+        "referencedSkill": "JavaScript"
+      },
+      "createdAt": "2026-11-14T05:00:22.590Z"
+    }
+  ],
+  "agentExecutions": [
+    {
+      "agentName": "Profile Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-profile-1794632422609",
+      "status": "completed",
+      "taskSummary": "Analyzed academic background, verified competencies, and pace preferences using SkillPath Heuristic Engine.",
+      "inputSummary": "Learner: Alex Rivera, Edu: N/A, Target: role-fullstack, Skills: 9 listed",
+      "outputSummary": "Generated persona \"Pragmatic Builder focused on hands-on full-stack development and practical engineering\" with 4 key strengths.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-01a3d39e",
+      "timestamp": "2026-11-14T05:00:22.610Z"
+    },
+    {
+      "agentName": "AI Mentor Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-mentor-1794632422586",
+      "status": "completed",
+      "taskSummary": "Delivered context-aware mentor response in mode: general.",
+      "inputSummary": "User: \"Explain closure in JS simply...\", Mode: general, Target: role-fullstack",
+      "outputSummary": "Rendered 969 chars of guidance referencing [JavaScript].",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-a9f0044d",
+      "timestamp": "2026-11-14T05:00:22.587Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794632422568",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: mastery_accelerated.",
+      "inputSummary": "Trigger: assessment_completed, User: user-demo-1001, Current Progress: 29%",
+      "outputSummary": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-5f9b25d9",
+      "timestamp": "2026-11-14T05:00:22.568Z"
+    },
+    {
+      "agentName": "Assessment Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-assessment-1794632422561",
+      "status": "completed",
+      "taskSummary": "Diagnosed JavaScript assessment performance and pinpointed conceptual gaps.",
+      "inputSummary": "Topic: JavaScript, Questions: 1, Submissions: 1",
+      "outputSummary": "Score: 100%, Passed: true, Mastery: Level 5/5.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-6cfc342d",
+      "timestamp": "2026-11-14T05:00:22.562Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794632422509",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: career_recalculated.",
+      "inputSummary": "Trigger: career_goal_changed, User: user-demo-1001, Current Progress: 43%",
+      "outputSummary": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-f3a04548",
+      "timestamp": "2026-11-14T05:00:22.510Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632422505",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 9, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-dd4e8d8e",
+      "timestamp": "2026-11-14T05:00:22.505Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632422428",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 8, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-166f09fc",
+      "timestamp": "2026-11-14T05:00:22.432Z"
+    },
+    {
+      "agentName": "Profile Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-profile-1794632396051",
+      "status": "completed",
+      "taskSummary": "Analyzed academic background, verified competencies, and pace preferences using SkillPath Heuristic Engine.",
+      "inputSummary": "Learner: Alex Rivera, Edu: N/A, Target: role-fullstack, Skills: 8 listed",
+      "outputSummary": "Generated persona \"Pragmatic Builder focused on hands-on full-stack development and practical engineering\" with 4 key strengths.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-e1ed8e32",
+      "timestamp": "2026-11-14T04:59:56.051Z"
+    },
+    {
+      "agentName": "AI Mentor Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-mentor-1794632396040",
+      "status": "completed",
+      "taskSummary": "Delivered context-aware mentor response in mode: general.",
+      "inputSummary": "User: \"Explain closure in JS simply...\", Mode: general, Target: role-fullstack",
+      "outputSummary": "Rendered 969 chars of guidance referencing [JavaScript].",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-648f3b6f",
+      "timestamp": "2026-11-14T04:59:56.041Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794632396033",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: mastery_accelerated.",
+      "inputSummary": "Trigger: assessment_completed, User: user-demo-1001, Current Progress: 29%",
+      "outputSummary": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-1e23332d",
+      "timestamp": "2026-11-14T04:59:56.033Z"
+    },
+    {
+      "agentName": "Assessment Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-assessment-1794632396030",
+      "status": "completed",
+      "taskSummary": "Diagnosed JavaScript assessment performance and pinpointed conceptual gaps.",
+      "inputSummary": "Topic: JavaScript, Questions: 1, Submissions: 1",
+      "outputSummary": "Score: 100%, Passed: true, Mastery: Level 5/5.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-0c071f30",
+      "timestamp": "2026-11-14T04:59:56.031Z"
+    },
+    {
+      "agentName": "Progress Optimization Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-progress-opt-1794632396012",
+      "status": "completed",
+      "taskSummary": "Executed adaptive optimization: career_recalculated.",
+      "inputSummary": "Trigger: career_goal_changed, User: user-demo-1001, Current Progress: 43%",
+      "outputSummary": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-d318b615",
+      "timestamp": "2026-11-14T04:59:56.012Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632396010",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 8, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-6813dc45",
+      "timestamp": "2026-11-14T04:59:56.010Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632395985",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 7, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-8d73749f",
+      "timestamp": "2026-11-14T04:59:55.986Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632365327",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 7, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 0,
+      "source": "heuristic_engine",
+      "id": "exec-fc5046bb",
+      "timestamp": "2026-11-14T04:59:25.328Z"
+    },
+    {
+      "agentName": "Skill Gap Analyzer Agent",
+      "userId": "user-demo-1001",
+      "taskId": "task-gap-1794632166134",
+      "status": "completed",
+      "taskSummary": "Computed weighted readiness delta for Full Stack Developer.",
+      "inputSummary": "Role: Full Stack Developer, User Skills: 7, Required Benchmark: 7 skills",
+      "outputSummary": "Readiness Score: 87%, Gaps Identified: 1, Strengths: 6.",
+      "latencyMs": 1,
+      "source": "heuristic_engine",
+      "id": "exec-48ccb9cf",
+      "timestamp": "2026-11-14T04:56:06.135Z"
+    }
+  ],
+  "resources": [
+    {
+      "id": "res-mdn-js",
+      "title": "MDN Web Docs: JavaScript Fundamentals & Reference",
+      "provider": "Mozilla Developer Network",
+      "type": "documentation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      "skill": "JavaScript",
+      "category": "languages",
+      "difficulty": "Beginner",
+      "duration": "20 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "The authoritative, comprehensive documentation on JavaScript syntax, standard objects, event loop, and web APIs."
+    },
+    {
+      "id": "res-react-docs",
+      "title": "React Official Documentation (react.dev)",
+      "provider": "Meta Open Source",
+      "type": "documentation",
+      "url": "https://react.dev/learn",
+      "skill": "React",
+      "category": "frameworks",
+      "difficulty": "Beginner",
+      "duration": "15 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "Interactive tutorials, diagrams, and best practices for building component-based interfaces with modern React Hooks."
+    },
+    {
+      "id": "res-ts-handbook",
+      "title": "TypeScript Official Handbook",
+      "provider": "Microsoft",
+      "type": "documentation",
+      "url": "https://www.typescriptlang.org/docs/handbook/intro.html",
+      "skill": "TypeScript",
+      "category": "languages",
+      "difficulty": "Intermediate",
+      "duration": "12 hours",
+      "isFree": true,
+      "rating": 4.8,
+      "description": "Comprehensive guide covering static typing, generics, interfaces, union types, and utility types."
+    },
+    {
+      "id": "res-fcc-js",
+      "title": "freeCodeCamp: JavaScript Algorithms and Data Structures",
+      "provider": "freeCodeCamp",
+      "type": "course",
+      "url": "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/",
+      "skill": "JavaScript",
+      "category": "languages",
+      "difficulty": "Beginner",
+      "duration": "40 hours",
+      "isFree": true,
+      "rating": 4.8,
+      "description": "Hands-on interactive curriculum covering JavaScript basics, ES6, regular expressions, debugging, and data structures."
+    },
+    {
+      "id": "res-py-official",
+      "title": "Python Official Tutorial & Documentation",
+      "provider": "Python Software Foundation",
+      "type": "documentation",
+      "url": "https://docs.python.org/3/tutorial/",
+      "skill": "Python",
+      "category": "languages",
+      "difficulty": "Beginner",
+      "duration": "14 hours",
+      "isFree": true,
+      "rating": 4.7,
+      "description": "Direct from the creators: control flow, data structures, modules, classes, and standard library reference."
+    },
+    {
+      "id": "res-pg-tutorial",
+      "title": "PostgreSQL Tutorial & Interactive Reference",
+      "provider": "PostgreSQL Global Development Group",
+      "type": "tutorial",
+      "url": "https://www.postgresqltutorial.com/",
+      "skill": "SQL / PostgreSQL",
+      "category": "databases",
+      "difficulty": "Intermediate",
+      "duration": "18 hours",
+      "isFree": true,
+      "rating": 4.8,
+      "description": "Master table constraints, joins, window functions, indexes, CTEs, and query optimization in PostgreSQL."
+    },
+    {
+      "id": "res-docker-curriculum",
+      "title": "Docker for Beginners Curriculum",
+      "provider": "Docker Open Docs",
+      "type": "tutorial",
+      "url": "https://docker-curriculum.com/",
+      "skill": "Docker",
+      "category": "cloud",
+      "difficulty": "Beginner",
+      "duration": "6 hours",
+      "isFree": true,
+      "rating": 4.8,
+      "description": "Hands-on guide to containerization, Dockerfiles, multi-stage builds, and Docker Compose multi-container setups."
+    },
+    {
+      "id": "res-cs50",
+      "title": "Harvard CS50: Introduction to Computer Science",
+      "provider": "Harvard University / edX",
+      "type": "course",
+      "url": "https://cs50.harvard.edu/x/",
+      "skill": "Data Structures & Algorithms",
+      "category": "other",
+      "difficulty": "Beginner",
+      "duration": "60 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "World-renowned introduction to computer science, memory management, algorithms, and computational thinking."
+    },
+    {
+      "id": "res-mit-ocw-6006",
+      "title": "MIT 6.006: Introduction to Algorithms",
+      "provider": "MIT OpenCourseWare",
+      "type": "course",
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      "skill": "Data Structures & Algorithms",
+      "category": "other",
+      "difficulty": "Advanced",
+      "duration": "45 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "Rigorous academic lectures on sorting, trees, hashing, shortest paths, dynamic programming, and complexity."
+    },
+    {
+      "id": "res-fastapi-docs",
+      "title": "FastAPI Interactive Documentation & Tutorial",
+      "provider": "FastAPI / Tiangolo",
+      "type": "documentation",
+      "url": "https://fastapi.tiangolo.com/tutorial/",
+      "skill": "Python",
+      "category": "frameworks",
+      "difficulty": "Intermediate",
+      "duration": "10 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "Building high-performance async REST APIs in Python with automatic OpenAPI schema generation."
+    },
+    {
+      "id": "res-git-scm",
+      "title": "Pro Git Book (Complete & Free)",
+      "provider": "Git SCM Community",
+      "type": "documentation",
+      "url": "https://git-scm.com/book/en/v2",
+      "skill": "Git & Version Control",
+      "category": "other",
+      "difficulty": "Intermediate",
+      "duration": "12 hours",
+      "isFree": true,
+      "rating": 4.9,
+      "description": "The definitive open-source guide to Git branching, rebasing, remotes, internals, and team workflows."
+    },
+    {
+      "id": "res-kaggle-intro",
+      "title": "Kaggle Intro to Machine Learning",
+      "provider": "Kaggle / Google",
+      "type": "platform",
+      "url": "https://www.kaggle.com/learn/intro-to-machine-learning",
+      "skill": "Machine Learning (Scikit-Learn)",
+      "category": "analytics",
+      "difficulty": "Beginner",
+      "duration": "8 hours",
+      "isFree": true,
+      "rating": 4.7,
+      "description": "Micro-courses with interactive browser notebooks covering decision trees, validation, underfitting, and random forests."
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-demo-1",
+      "userId": "user-demo-1001",
+      "title": "DevPulse Realtime Collaboration Board",
+      "description": "A full-stack collaborative workspace with drag-and-drop kanban boards, live user presence, and PostgreSQL persistence.",
+      "skills": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL",
+        "Tailwind CSS"
+      ],
+      "githubUrl": "https://github.com/example/devpulse",
+      "liveUrl": "https://devpulse-demo.example.com",
+      "status": "completed",
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "completedAt": "2026-11-14T04:38:41.808Z"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "cert-232ffff1",
+      "userId": "user-demo-1001",
+      "userName": "Alex Rivera",
+      "title": "Full Stack Engineering Specialization",
+      "credentialId": "SKILLPATH-8822D0E4",
+      "verificationHash": "3cee628e2b944172a593463a38e3228f",
+      "skillsCovered": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL"
+      ],
+      "issuedAt": "2026-11-14T05:00:22.657Z",
+      "gradePercentage": 96
+    },
+    {
+      "id": "cert-257d5a48",
+      "userId": "user-demo-1001",
+      "userName": "Alex Rivera",
+      "title": "Full Stack Engineering Specialization",
+      "credentialId": "SKILLPATH-BE3BB712",
+      "verificationHash": "312185c1f5d04962b734d46be85742c0",
+      "skillsCovered": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL"
+      ],
+      "issuedAt": "2026-11-14T04:59:56.070Z",
+      "gradePercentage": 96
+    },
+    {
+      "id": "cert-demo-1",
+      "userId": "user-demo-1001",
+      "userName": "Alex Rivera",
+      "title": "Full Stack Foundations & TypeScript Mastery",
+      "credentialId": "SKILLPATH-FS-2025-8841",
+      "verificationHash": "9a8d7e6f5b4c3a2b1c0e9d8c7b6a5f4e",
+      "skillsCovered": [
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "SQL / PostgreSQL"
+      ],
+      "issuedAt": "2026-11-14T04:38:41.808Z",
+      "gradePercentage": 94
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-819231e3",
+      "userId": "user-demo-1001",
+      "title": "New Certificate Awarded!",
+      "message": "Congratulations! You earned the \"Full Stack Engineering Specialization\" credential.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:00:22.657Z",
+      "link": "/certificates"
+    },
+    {
+      "id": "notif-709f2cc9",
+      "userId": "user-demo-1001",
+      "title": "Mastery Achieved! Roadmap Accelerated",
+      "message": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:00:22.568Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-f65e359b",
+      "userId": "user-demo-1001",
+      "title": "Roadmap Recalculated for New Target Career",
+      "message": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T05:00:22.510Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-54e92e66",
+      "userId": "user-demo-1001",
+      "title": "New Certificate Awarded!",
+      "message": "Congratulations! You earned the \"Full Stack Engineering Specialization\" credential.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T04:59:56.070Z",
+      "link": "/certificates"
+    },
+    {
+      "id": "notif-7b2d4a5a",
+      "userId": "user-demo-1001",
+      "title": "Mastery Achieved! Roadmap Accelerated",
+      "message": "Score of 100% in JavaScript achieved verified mastery! Automatically recognized competency, accelerated foundational requirements, and advanced milestone status.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T04:59:56.033Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-192c15dc",
+      "userId": "user-demo-1001",
+      "title": "Roadmap Recalculated for New Target Career",
+      "message": "Target career transitioned to \"Full Stack Developer\". Recalculated benchmark delta and updated learning roadmap focus.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T04:59:56.012Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-1",
+      "userId": "user-demo-1001",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Your personalized Full Stack Developer roadmap is ready. Complete your first task to start your streak.",
+      "type": "success",
+      "read": true,
+      "createdAt": "2026-11-14T04:38:41.808Z",
+      "link": "/roadmap"
+    },
+    {
+      "id": "notif-5ceb4325",
+      "userId": "user-26a6e7ed",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Complete your initial onboarding profile to unlock your personalized learning roadmap.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-11-14T04:56:05.963Z",
+      "link": "/onboarding"
+    },
+    {
+      "id": "notif-f46021b2",
+      "userId": "user-680465c2",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Complete your initial onboarding profile to unlock your personalized learning roadmap.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-11-14T04:59:25.184Z",
+      "link": "/onboarding"
+    },
+    {
+      "id": "notif-bf497c0d",
+      "userId": "user-05c44794",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Complete your initial onboarding profile to unlock your personalized learning roadmap.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-11-14T04:59:55.782Z",
+      "link": "/onboarding"
+    },
+    {
+      "id": "notif-5fcbb888",
+      "userId": "user-d3a0b572",
+      "title": "Welcome to SkillPath AI!",
+      "message": "Complete your initial onboarding profile to unlock your personalized learning roadmap.",
+      "type": "info",
+      "read": false,
+      "createdAt": "2026-11-14T05:00:22.092Z",
+      "link": "/onboarding"
+    }
+  ]
+}
