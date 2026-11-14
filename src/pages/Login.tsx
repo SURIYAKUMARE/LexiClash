@@ -46,7 +46,7 @@ export const Login: React.FC = () => {
     <div
       className="min-h-screen w-full relative flex flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center bg-no-repeat overflow-y-auto"
       style={{
-        backgroundImage: `url('/images/campus-student-portal.png')`
+        backgroundImage: `url('/images/login-classroom-bg.png')`
       }}
     >
       {/* Dark Translucent Backdrop Overlay with Vignette */}
