@@ -51,7 +51,7 @@ export const Modal: React.FC<ModalProps> = ({
           maxWidthClasses[maxWidth]
         )}
       >
-        {(title || onClose) && (
+        {(Boolean(title) || typeof onClose === 'function') && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-surface-border bg-surface-subtle">
             <div>
               {title && <h3 className="text-base font-semibold text-charcoal">{title}</h3>}

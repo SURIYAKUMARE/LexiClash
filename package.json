@@ -10,7 +10,9 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "vite build && tsc -p tsconfig.server.json",
     "start": "node dist/server/index.js",
-    "test": "tsx --test tests/actionMap.test.ts tests/api.test.js"
+    "test": "tsc -p tsconfig.server.json && tsx --test tests/actionMap.test.ts tests/security.test.ts tests/codingAssessment.test.ts tests/multiAgent.test.ts tests/offlineSync.test.ts tests/careerSimulator.test.ts tests/api.test.js",
+    "test:coverage": "tsc -p tsconfig.server.json && tsx --test tests/actionMap.test.ts tests/security.test.ts tests/codingAssessment.test.ts tests/multiAgent.test.ts tests/offlineSync.test.ts tests/careerSimulator.test.ts tests/api.test.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

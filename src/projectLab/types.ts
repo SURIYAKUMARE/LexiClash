@@ -32,8 +32,9 @@ export interface LabProjectTrack {
 export interface ProjectSubmissionInput {
   projectId: string;
   githubRepoUrl: string;
-  branch: string;
+  branch?: string;
   commitHash?: string;
+  liveDemoUrl?: string;
   completedMilestoneIds: string[];
   architecturalNotes: string;
 }

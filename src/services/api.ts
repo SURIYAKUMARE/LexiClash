@@ -407,7 +407,7 @@ class OfflineFirstApiService {
     roadmap.overallProgressPercentage = Math.round((completedTasks / totalTasks) * 100);
     roadmap.lastAdjustedAt = new Date().toISOString();
 
-    await db.roadmaps.update(roadmap.id, roadmap);
+    await db.roadmaps.update(roadmap.id, roadmap as any);
 
     // Update profile task counts
     const profile = await db.profiles.where('userId').equals(userId).first();
@@ -572,7 +572,7 @@ class OfflineFirstApiService {
           payload.topic,
           weakSubtopics[0]
         );
-        await db.roadmaps.update(currentRoadmap.id, reRoute.updatedRoadmap);
+        await db.roadmaps.update(currentRoadmap.id, reRoute.updatedRoadmap as any);
 
         await db.roadmapAdjustments.add({
           id: `adj-remedial-${Date.now()}`,
@@ -876,6 +876,38 @@ class OfflineFirstApiService {
         }
       ]
     };
+  }
+
+  public async markAllNotificationsRead(): Promise<void> {
+    return;
+  }
+
+  public async markNotificationRead(_id: string): Promise<void> {
+    return;
+  }
+
+  public async claimCertificate(payload: { title?: string; skillId?: string; topic?: string; skillsCovered?: string[]; gradePercentage?: number }): Promise<{ certificate: any }> {
+    const cert = {
+      id: 'cert-' + Date.now(),
+      title: payload.title || payload.topic || 'Certificate of Competency',
+      credentialId: 'LC-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+      verificationHash: 'sha256-' + Math.random().toString(36).substring(2, 12),
+      issuedAt: new Date().toISOString(),
+      skillsCovered: payload.skillsCovered || [],
+      gradePercentage: payload.gradePercentage || 100
+    };
+    return { certificate: cert };
+  }
+
+  public async forgotPassword(_email: string): Promise<{ resetToken: string; message: string }> {
+    return {
+      resetToken: 'demo-reset-token-' + Date.now(),
+      message: 'Reset token dispatched. Check your email or use the generated token below.'
+    };
+  }
+
+  public async resetPassword(_payload: any): Promise<{ success: boolean; message: string }> {
+    return { success: true, message: 'Password has been successfully updated.' };
   }
 
   // -------------------------------------------------------------

@@ -254,16 +254,24 @@ export const SecurityInspector: React.FC = () => {
           }
           case 't5': {
             // Multi-Agent Conflict Detector
+            const mockUser: any = { id: 'u1', name: 'Demo User', email: 'demo@example.com' };
+            const mockProfile: any = { id: 'p1', userId: 'u1', hoursPerWeek: 5 };
+            const mockRole: any = {
+              id: 'r1',
+              title: 'Full Stack Engineer',
+              requiredSkills: [
+                { skillName: 'React', benchmarkLevel: 5, category: 'frameworks', priority: 'CRITICAL' },
+                { skillName: 'System Design', benchmarkLevel: 4, category: 'architecture', priority: 'HIGH' }
+              ]
+            };
             const conflict = ConflictDetectorAgent.detectAndResolveConflicts(
-              [
-                { id: '1', title: 'Adv React', weekNumber: 1, durationHours: 25, isCompleted: false },
-                { id: '2', title: 'Basic JS', weekNumber: 2, durationHours: 20, isCompleted: false }
-              ],
-              [{ id: 's1', name: 'JavaScript', targetLevel: 5, currentLevel: 1 }],
-              10
+              mockUser,
+              mockProfile,
+              [{ id: 's1', userId: 'u1', skillName: 'React', category: 'frameworks', proficiencyLevel: 1, isVerified: false }],
+              mockRole
             );
-            if (!conflict.hasConflict || conflict.detectedConflicts.length === 0) {
-              throw new Error('Conflict agent failed to flag prerequisite inversion');
+            if (!conflict.hasConflicts || conflict.conflicts.length === 0) {
+              throw new Error('Conflict agent failed to flag prerequisite/pacing issue');
             }
             break;
           }
@@ -272,7 +280,8 @@ export const SecurityInspector: React.FC = () => {
             const track = SEED_INTERVIEW_TRACKS[0];
             const evalResult = InterviewEvaluator.evaluateQuestionAnswer(track, {
               questionId: track.questions[0].id,
-              answerText: 'I optimize React performance using React.memo, useMemo, and useCallback to avoid needless re-renders. For state, I avoid large monolithic contexts by using Zustand or splitting state with proper profiling.'
+              answerText: 'I optimize React performance using React.memo, useMemo, and useCallback to avoid needless re-renders. For state, I avoid large monolithic contexts by using Zustand or splitting state with proper profiling.',
+              timeSpentSeconds: 60
             });
             if (evalResult.score < 50) throw new Error('Evaluation scoring below benchmark');
             break;
@@ -291,7 +300,7 @@ export const SecurityInspector: React.FC = () => {
               },
               'demo-user'
             );
-            if (projEval.overallScore < 70) throw new Error('Project evaluation below rubric target');
+            if (projEval.totalScore < 70) throw new Error('Project evaluation below rubric target');
             break;
           }
           case 't8': {
@@ -436,7 +445,7 @@ export const SecurityInspector: React.FC = () => {
                     {auditScore}%
                   </span>
                   <Badge
-                    variant={auditStatus === 'COMPLIANT' ? 'success' : auditStatus === 'WARNING' ? 'brand' : 'error'}
+                    variant={auditStatus === 'COMPLIANT' ? 'success' : auditStatus === 'WARNING' ? 'brand' : 'danger'}
                     size="sm"
                   >
                     {auditStatus}
@@ -500,7 +509,7 @@ export const SecurityInspector: React.FC = () => {
                         <span className="font-mono text-[10px] font-bold text-charcoal-subtle">
                           {finding.benchmark}
                         </span>
-                        <Badge variant={isPass ? 'success' : finding.severity === 'CRITICAL' ? 'error' : 'brand'} size="sm">
+                        <Badge variant={isPass ? 'success' : finding.severity === 'CRITICAL' ? 'danger' : 'brand'} size="sm">
                           {isPass ? 'PASS' : finding.severity}
                         </Badge>
                         <h3 className="text-xs font-bold text-charcoal dark:text-slate-100">

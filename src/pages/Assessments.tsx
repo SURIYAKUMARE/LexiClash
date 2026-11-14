@@ -393,7 +393,7 @@ export const Assessments: React.FC = () => {
                 )}
               </div>
               <Badge
-                variant={diagnosisResult.attempt.violationsCount ? 'error' : 'success'}
+                variant={diagnosisResult.attempt.violationsCount ? 'danger' : 'success'}
                 size="sm"
                 className="font-mono"
               >

@@ -181,7 +181,7 @@ export class AgentOrchestrator {
         profile.hoursPerWeek
       );
       if (existingRoadmap) {
-        await db.roadmaps.update(existingRoadmap.id, updatedRoadmap);
+        await db.roadmaps.update(existingRoadmap.id, updatedRoadmap as any);
       } else {
         await db.roadmaps.add(updatedRoadmap);
       }

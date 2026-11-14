@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { Button } from '../ui/Button';
 import {
   MessageSquareCode,
   X,
@@ -101,7 +102,7 @@ export const PersistentMentor: React.FC = () => {
       const contextPrefix = `[Current Page: ${location.pathname}, Mode: ${languageMode}]: `;
       const res = await api.sendMentorMessage(contextPrefix + text);
 
-      let replyContent = res.reply;
+      let replyContent = res.assistantMessage?.content || (res as any).reply || 'How can I assist you further?';
       if (languageMode === 'tanglish') {
         replyContent = `Nalla question! ${replyContent} Idha implement panna easy-ah purinjukalam. Any other doubts?`;
       }

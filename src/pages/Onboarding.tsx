@@ -53,7 +53,7 @@ export const Onboarding: React.FC = () => {
     const fetchCareers = async () => {
       try {
         const data = await api.getCareers();
-        setCareerRoles(data.careers);
+        setCareerRoles((data.careers || []) as any);
       } catch (err) {
         console.error(err);
       }

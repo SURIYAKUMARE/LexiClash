@@ -148,7 +148,7 @@ export const ProjectLabWorkspace: React.FC = () => {
                       : proj.complexity === 'Advanced'
                       ? 'warning'
                       : proj.complexity === 'Intermediate'
-                      ? 'info'
+                      ? 'brand'
                       : 'neutral'
                   }
                   size="sm"

@@ -151,7 +151,7 @@ export const IncidentWarRoom: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] font-mono font-bold text-charcoal-subtle">{inc.code}</span>
-                <Badge variant={inc.severity === 'P1' ? 'error' : 'brand'} size="sm">
+                <Badge variant={inc.severity === 'P1' ? 'danger' : 'brand'} size="sm">
                   {inc.severity}
                 </Badge>
               </div>
@@ -171,7 +171,7 @@ export const IncidentWarRoom: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs font-bold text-rose-600">{selectedIncident.code}</span>
-                    <Badge variant={selectedIncident.severity === 'P1' ? 'error' : 'brand'} size="sm">
+                    <Badge variant={selectedIncident.severity === 'P1' ? 'danger' : 'brand'} size="sm">
                       {selectedIncident.severity} - CRITICAL
                     </Badge>
                   </div>
@@ -466,7 +466,7 @@ export const IncidentWarRoom: React.FC = () => {
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-surface-border dark:border-surface-dark-border">
                   <span className="text-charcoal-muted">Severity Level</span>
-                  <Badge variant={selectedIncident.severity === 'P1' ? 'error' : 'brand'} size="sm">
+                  <Badge variant={selectedIncident.severity === 'P1' ? 'danger' : 'brand'} size="sm">
                     {selectedIncident.severity}
                   </Badge>
                 </div>

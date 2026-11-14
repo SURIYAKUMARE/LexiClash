@@ -447,7 +447,7 @@ export const ArchitectureVisualizer: React.FC = () => {
                   </span>
                 </div>
                 <Badge
-                  variant={selectedNode.status === 'healthy' ? 'success' : 'error'}
+                  variant={selectedNode.status === 'healthy' ? 'success' : 'danger'}
                   size="sm"
                 >
                   {selectedNode.status.toUpperCase()}

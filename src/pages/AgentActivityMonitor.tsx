@@ -172,7 +172,7 @@ export const AgentActivityMonitor: React.FC = () => {
   const loadActivity = async () => {
     try {
       const data = await api.getAgentActivity();
-      setExecutions(data.executions || []);
+      setExecutions((data.executions || []) as any);
       setHasGeminiApiKey(data.hasGeminiApiKey || false);
     } catch (err) {
       console.error(err);
@@ -387,7 +387,7 @@ export const AgentActivityMonitor: React.FC = () => {
                     {exec.agentName}
                   </td>
                   <td className="py-2.5 text-charcoal-muted dark:text-slate-400 max-w-xs truncate">
-                    {exec.task}
+                    {(exec as any).task || (exec as any).taskSummary || 'Execution'}
                   </td>
                   <td className="py-2.5 text-charcoal-subtle dark:text-slate-400">
                     <span className="px-1.5 py-0.5 rounded text-[10px] bg-surface-subtle dark:bg-slate-800 border border-surface-border dark:border-surface-dark-border">

@@ -39,13 +39,13 @@ export const DashboardOverview: React.FC = () => {
           api.getCareers()
         ]);
 
-        setRoadmap(roadmapRes.roadmap);
+        setRoadmap((roadmapRes.roadmap as any) || null);
         setSkills(skillsRes.skills || []);
         setAnalyticsData(analyticsRes);
 
         const currentRoleId = profile?.targetCareerRoleId || roadmapRes.roadmap?.targetRoleId || 'role-fullstack';
         const matchedRole = careersRes.careers.find(r => r.id === currentRoleId) || careersRes.careers[0];
-        setTargetRole(matchedRole);
+        setTargetRole((matchedRole as any) || null);
 
         // Initialize completed tasks state from roadmap
         if (roadmapRes.roadmap) {

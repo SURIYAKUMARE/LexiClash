@@ -815,7 +815,7 @@ export const CloudConsole: React.FC = () => {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-xs text-charcoal dark:text-white">{alm.name}</span>
-                    <Badge variant={alm.state === 'OK' ? 'success' : 'error'} size="sm">
+                    <Badge variant={alm.state === 'OK' ? 'success' : 'danger'} size="sm">
                       {alm.state}
                     </Badge>
                   </div>

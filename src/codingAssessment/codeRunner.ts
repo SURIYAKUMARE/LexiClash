@@ -28,6 +28,16 @@ export class CodeRunner {
     return true;
   }
 
+  public static async runJavaScript(code: string, testCases: any[]) {
+    return this.executeJavaScript(code, { testCases } as any);
+  }
+  public static async runSql(code: string, testCases: any[]) {
+    return this.executeSQL(code, { testCases } as any);
+  }
+  public static async runPython(code: string, testCases: any[]) {
+    return this.executePython(code, { testCases } as any);
+  }
+
   /**
    * Safe JavaScript Execution
    */

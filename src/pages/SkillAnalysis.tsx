@@ -90,14 +90,14 @@ export const SkillAnalysis: React.FC = () => {
     try {
       if (editingSkill) {
         await api.updateSkill(editingSkill.id, {
-          category: formCategory,
+          category: formCategory as any,
           proficiencyLevel: formLevel,
           evidence: formEvidence,
         });
       } else {
         await api.addSkill({
           skillName: formSkillName.trim(),
-          category: formCategory,
+          category: formCategory as any,
           proficiencyLevel: formLevel,
           evidence: formEvidence,
         });

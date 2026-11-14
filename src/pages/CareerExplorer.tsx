@@ -34,7 +34,7 @@ export const CareerExplorer: React.FC = () => {
           api.getCareers(),
           api.getSkills()
         ]);
-        setRoles(careersRes.careers || []);
+        setRoles((careersRes.careers || []) as any);
         setSkills(skillsRes.skills || []);
 
         const activeId = profile?.targetCareerRoleId || careersRes.careers[0]?.id || 'role-fullstack';

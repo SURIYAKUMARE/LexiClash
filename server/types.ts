@@ -33,6 +33,7 @@ export interface UserProfile {
   bio?: string;
   targetCareerRoleId: string;
   careerInterests: string[];
+  hoursPerWeek?: number;
   learningPreferences: {
     hoursPerWeek: number;
     style: 'visual' | 'practical' | 'reading' | 'interactive';
