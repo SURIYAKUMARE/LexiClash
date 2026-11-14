@@ -100,6 +100,19 @@ export async function loadDemoPersona(personaId: string): Promise<{
   };
   await db.users.put(user);
 
+  // Pre-seed demo@skillpath.app alias pointing to the Full Stack student scenario
+  if (personaId === 'persona-student') {
+    const demoAlias: OfflineUser = {
+      id: 'user-demo-app',
+      email: 'demo@skillpath.app',
+      name: 'Demo Learner (Full Stack)',
+      role: 'student',
+      college: 'National Institute of Technology',
+      createdAt: new Date().toISOString()
+    };
+    await db.users.put(demoAlias);
+  }
+
   // 2. Clear old skills for this user and insert persona skills
   await db.skills.where('userId').equals(user.id).delete();
   const skillsToInsert: OfflineSkill[] = persona.skills.map((s, idx) => ({

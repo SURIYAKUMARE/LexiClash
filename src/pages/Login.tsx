@@ -313,6 +313,23 @@ export const Login: React.FC = () => {
             {/* TAB 3: EMAIL / PASSWORD */}
             {authMode === 'email' && (
               <form onSubmit={handleEmailLogin} className="space-y-3">
+                <div className="bg-surface-subtle dark:bg-slate-800 p-2.5 rounded-lg border border-surface-border dark:border-surface-dark-border text-[11px] text-charcoal-muted dark:text-slate-400 flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-charcoal dark:text-white">Pre-seeded:</span>{' '}
+                    <span className="font-mono text-brand-600 dark:text-brand-400">demo@skillpath.app</span> / <span className="font-mono">Demo@1234</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('demo@skillpath.app');
+                      setPassword('Demo@1234');
+                    }}
+                    className="text-brand-600 dark:text-brand-400 hover:underline font-semibold"
+                  >
+                    Auto-Fill
+                  </button>
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-charcoal dark:text-slate-200 mb-1">
                     Email Address

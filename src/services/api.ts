@@ -78,7 +78,21 @@ class OfflineFirstApiService {
 
   public async login(credentials: { email: string; password?: string }): Promise<{ token: string; user: OfflineUser; profile: OfflineProfile }> {
     await this.ensureInitialized();
-    let user = await db.users.where('email').equalsIgnoreCase(credentials.email.trim()).first();
+    const cleanEmail = credentials.email.trim().toLowerCase();
+    
+    // If logging in as demo@skillpath.app, map directly to the Full Stack student persona
+    if (cleanEmail === 'demo@skillpath.app') {
+      const init = await loadDemoPersona('persona-student');
+      this.activeUserId = init.activeUser.id;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('skillpath_offline_user_id', init.activeUser.id);
+      }
+      const token = `offline-token-${init.activeUser.id}`;
+      this.setToken(token);
+      return { token, user: { ...init.activeUser, email: 'demo@skillpath.app' }, profile: init.activeProfile };
+    }
+
+    let user = await db.users.where('email').equalsIgnoreCase(cleanEmail).first();
 
     if (!user) {
       // Find matching demo persona or create new
