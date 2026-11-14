@@ -41,7 +41,7 @@ class OfflineFirstApiService {
   private activeUserId: string = 'user-student';
 
   private async ensureInitialized(): Promise<string> {
-    const stored = localStorage.getItem('skillpath_offline_user_id');
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('skillpath_offline_user_id') : null;
     if (stored) {
       this.activeUserId = stored;
       const count = await db.careers.count();

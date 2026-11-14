@@ -33,6 +33,8 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ActionMapPanel } from '../components/actionMap/ActionMapPanel';
+import { ActionExecutor } from '../actionMap/actionExecutor';
 
 type CloudService = 'EC2' | 'S3' | 'IAM' | 'VPC' | 'CloudWatch' | 'Billing';
 
@@ -94,6 +96,7 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction(`EC2:${targetState}-instance:${instanceId}`);
   };
 
   const handleLaunchInstance = async () => {
@@ -121,6 +124,7 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction('EC2:launch-instance');
     setIsLaunchEc2Open(false);
     setNewInstanceName(`web-api-node-${Math.floor(Math.random() * 100)}`);
   };
@@ -128,9 +132,10 @@ export const CloudConsole: React.FC = () => {
   // S3 Actions
   const handleCreateBucket = async () => {
     if (!simState || !newBucketName.trim()) return;
+    const bktName = newBucketName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
     const newBkt: CloudS3Bucket = {
       id: `bkt-${Date.now()}`,
-      name: newBucketName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+      name: bktName,
       region: 'us-east-1',
       blockPublicAccess: newBucketBlockPublic,
       isPublic: !newBucketBlockPublic,
@@ -150,15 +155,17 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction(`S3:create-bucket:${bktName}`);
     setIsCreateS3Open(false);
     setNewBucketName(`skillpath-bucket-${Date.now()}`);
   };
 
   const handleToggleBucketPublicAccess = async (bucketId: string) => {
     if (!simState) return;
+    let nextBlock = true;
     const buckets = simState.s3.buckets.map(b => {
       if (b.id === bucketId) {
-        const nextBlock = !b.blockPublicAccess;
+        nextBlock = !b.blockPublicAccess;
         return {
           ...b,
           blockPublicAccess: nextBlock,
@@ -174,6 +181,7 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction(`S3:${nextBlock ? 'block' : 'enable'}-public-access:${bucketId}`);
     if (selectedBucket && selectedBucket.id === bucketId) {
       setSelectedBucket(buckets.find(b => b.id === bucketId) || null);
     }
@@ -182,9 +190,10 @@ export const CloudConsole: React.FC = () => {
   // IAM Actions
   const handleCreateUser = async () => {
     if (!simState || !newUsername.trim()) return;
+    const uname = newUsername.trim();
     const newUser: CloudIamUser = {
       id: `usr-${Date.now()}`,
-      username: newUsername.trim(),
+      username: uname,
       accessKeyId: `AKIA${Math.random().toString(36).substring(2, 14).toUpperCase()}`,
       policies: [newUserPolicy],
       mfaEnabled: false,
@@ -200,15 +209,18 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction(`IAM:create-user:${uname}`);
     setIsCreateUserOpen(false);
     setNewUsername(`developer-${Date.now().toString().slice(-4)}`);
   };
 
   const handleToggleUserMfa = async (userId: string) => {
     if (!simState) return;
+    let mfaState = true;
     const users = simState.iam.users.map(u => {
       if (u.id === userId) {
-        return { ...u, mfaEnabled: !u.mfaEnabled };
+        mfaState = !u.mfaEnabled;
+        return { ...u, mfaEnabled: mfaState };
       }
       return u;
     });
@@ -218,6 +230,7 @@ export const CloudConsole: React.FC = () => {
     };
     await api.updateCloudSimulation(updated);
     setSimState(updated);
+    ActionExecutor.executeAction(`IAM:${mfaState ? 'enable' : 'disable'}-mfa:${userId}`);
   };
 
   if (isLoading || !simState) {
@@ -301,6 +314,7 @@ export const CloudConsole: React.FC = () => {
               onClick={() => {
                 setActiveService(srv.id);
                 setSelectedBucket(null);
+                ActionExecutor.executeAction(`NAV:${srv.id.toLowerCase()}`).catch(console.error);
               }}
               className={`p-3 rounded-xl border text-left transition-all ${
                 isActive
@@ -320,6 +334,27 @@ export const CloudConsole: React.FC = () => {
           );
         })}
       </div>
+
+      {/* ActionMap Goal Validation Engine & Quest Verifier */}
+      <ActionMapPanel
+        onNavigateService={(svc) => {
+          const lower = svc.toLowerCase();
+          if (lower === 's3') {
+            setActiveService('S3');
+            setSelectedBucket(null);
+          } else if (lower === 'ec2') {
+            setActiveService('EC2');
+          } else if (lower === 'iam') {
+            setActiveService('IAM');
+          } else if (lower === 'vpc') {
+            setActiveService('VPC');
+          } else if (lower === 'cw' || lower === 'cloudwatch') {
+            setActiveService('CloudWatch');
+          } else if (lower === 'billing') {
+            setActiveService('Billing');
+          }
+        }}
+      />
 
       {/* ========================================================= */}
       {/* SERVICE 1: EC2 COMPUTE                                    */}
