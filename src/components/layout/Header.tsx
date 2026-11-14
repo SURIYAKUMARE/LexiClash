@@ -13,7 +13,8 @@ import {
   User,
   Settings,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  ExternalLink
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OfflineSyncManager, SyncStatus } from '../../offlineSync/syncManager';
@@ -60,6 +61,9 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
   const handleToggleMode = async (mode: 'student' | 'professional') => {
     setLearningMode(mode);
     await api.updateLearningPreference({ mode });
+    if (mode === 'professional') {
+      window.location.href = 'https://rebon123.vercel.app/';
+    }
   };
 
   useEffect(() => {
@@ -133,10 +137,10 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
 
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Dual-Mode Learning Toggle (Student Mode vs Professional Mode) */}
-        <div className="hidden md:flex items-center bg-surface-subtle dark:bg-slate-800 p-0.5 rounded-lg border border-surface-border dark:border-surface-dark-border text-[11px] font-mono">
+        <div className="flex items-center bg-surface-subtle dark:bg-slate-800 p-0.5 rounded-lg border border-surface-border dark:border-surface-dark-border text-[10px] sm:text-[11px] font-mono">
           <button
             onClick={() => handleToggleMode('student')}
-            className={`px-2.5 py-1 rounded transition-colors ${
+            className={`px-2 sm:px-2.5 py-1 rounded transition-colors ${
               learningMode === 'student'
                 ? 'bg-white dark:bg-slate-900 font-bold text-brand-600 dark:text-brand-400 shadow-xs'
                 : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
@@ -147,14 +151,15 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
           </button>
           <button
             onClick={() => handleToggleMode('professional')}
-            className={`px-2.5 py-1 rounded transition-colors ${
+            className={`px-2 sm:px-2.5 py-1 rounded transition-colors flex items-center gap-1 ${
               learningMode === 'professional'
                 ? 'bg-white dark:bg-slate-900 font-bold text-brand-600 dark:text-brand-400 shadow-xs'
                 : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
             }`}
-            title="Professional Mode: Cloud console simulations, incident war rooms & terminal"
+            title="Professional Mode: Launch Rebon Professional Cloud Platform (https://rebon123.vercel.app/)"
           >
-            Professional Mode
+            <span>Professional Mode</span>
+            <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 opacity-70" />
           </button>
         </div>
 

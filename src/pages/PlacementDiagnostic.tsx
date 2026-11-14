@@ -15,7 +15,8 @@ import {
   BarChart3,
   Award,
   Zap,
-  BookOpen
+  BookOpen,
+  ExternalLink
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CareerSimulatorWorkspace } from '../components/careerSimulator/CareerSimulatorWorkspace';
@@ -109,10 +110,20 @@ export const PlacementDiagnostic: React.FC = () => {
               size="md"
               variant="primary"
               className="gap-2"
-              onClick={() => navigate('/roadmap')}
+              onClick={() => {
+                if (placementResult.recommendedMode === 'professional') {
+                  window.location.href = 'https://rebon123.vercel.app/';
+                } else {
+                  navigate('/roadmap');
+                }
+              }}
             >
               Start {placementResult.recommendedMode.toUpperCase()} Curriculum
-              <ArrowRight className="w-4 h-4" />
+              {placementResult.recommendedMode === 'professional' ? (
+                <ExternalLink className="w-4 h-4" />
+              ) : (
+                <ArrowRight className="w-4 h-4" />
+              )}
             </Button>
             <Button
               size="md"
@@ -187,15 +198,26 @@ export const PlacementDiagnostic: React.FC = () => {
                 Curriculum Calibration
               </h2>
               <div className="p-3 bg-surface-subtle dark:bg-slate-800/60 rounded-lg border border-surface-border dark:border-surface-dark-border mb-3">
-                <span className="text-xs font-semibold text-charcoal dark:text-white block">
-                  Recommended Learning Mode:
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-charcoal dark:text-white block">
+                    Recommended Learning Mode:
+                  </span>
+                  {placementResult.recommendedMode === 'professional' && (
+                    <button
+                      onClick={() => { window.location.href = 'https://rebon123.vercel.app/'; }}
+                      className="text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+                    >
+                      <span>Open Professional Portal</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
                 <span className="text-sm font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">
                   {placementResult.recommendedMode} Mode
                 </span>
                 <p className="text-[11px] text-charcoal-muted dark:text-slate-400 mt-1">
                   {placementResult.recommendedMode === 'professional'
-                    ? 'Immediate access to cloud console simulations, SRE incident drills, and advanced CLI terminal quests.'
+                    ? 'Immediate access to cloud console simulations, SRE incident drills, and advanced CLI terminal quests on Rebon Professional.'
                     : 'Interactive concept whiteboards, guided architecture diagrams, step-by-step tutorials, and foundational knowledge checks.'}
                 </p>
               </div>

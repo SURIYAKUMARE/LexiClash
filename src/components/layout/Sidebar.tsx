@@ -22,7 +22,8 @@ import {
   Flame,
   Terminal,
   ShieldAlert,
-  Sparkles
+  Sparkles,
+  ExternalLink
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -96,6 +97,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
         {renderNavSection('Core Journey', coreNav)}
         {renderNavSection('Cloud & SRE Simulations', simulationNav)}
         {renderNavSection('Proof & Intelligence', intelligenceNav)}
+      </div>
+
+      {/* Professional Mode Launcher */}
+      <div className="p-2 border-t border-surface-border dark:border-surface-dark-border bg-brand-50/40 dark:bg-brand-950/20">
+        <button
+          onClick={() => {
+            if (onItemClick) onItemClick();
+            window.location.href = 'https://rebon123.vercel.app/';
+          }}
+          className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg bg-white dark:bg-surface-dark border border-brand-200 dark:border-brand-800 text-[11px] font-bold text-brand-700 dark:text-brand-300 hover:border-brand-400 hover:shadow-xs transition-all text-left"
+          title="Switch to Professional Mode on Rebon (https://rebon123.vercel.app/)"
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span>Professional Mode</span>
+          </div>
+          <ExternalLink className="w-3.5 h-3.5 opacity-70 shrink-0" />
+        </button>
       </div>
 
       {/* Footer Info */}
