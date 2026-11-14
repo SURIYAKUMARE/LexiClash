@@ -17,10 +17,20 @@ import {
   History,
   Code2,
   Terminal,
-  Layers
+  Layers,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  Maximize2,
+  FileCheck2,
+  ExternalLink,
+  ChevronDown
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CodingWorkspace } from '../components/codingAssessment/CodingWorkspace';
+import { SecureExamWorkspace } from '../components/assessment/SecureExamWorkspace';
+import { ExamSecurityService } from '../services/examSecurityService';
+import { IntegrityViolationLogItem } from '../db/indexedDb';
 
 export const Assessments: React.FC = () => {
   const { refreshProfile } = useAuth();
@@ -103,6 +113,41 @@ export const Assessments: React.FC = () => {
 
   const handleSelectOption = (questionId: string, optionIndex: number) => {
     setUserSelections(prev => ({ ...prev, [questionId]: optionIndex }));
+  };
+
+  const handleSecureSubmit = async (result: {
+    userSelections: Record<string, number>;
+    violationsCount: number;
+    violationsLog: IntegrityViolationLogItem[];
+    timeSpentSeconds: number;
+    integrityStatus: 'VERIFIED_CLEAN' | 'FLAGGED_REVIEW' | 'PROCTOR_WARNING';
+  }) => {
+    setIsSubmitting(true);
+    const answersPayload = questions.map(q => ({
+      questionId: q.id,
+      selectedOption: result.userSelections[q.id] !== undefined ? result.userSelections[q.id] : 0
+    }));
+
+    try {
+      const res = await api.submitAssessment({
+        topic: selectedTopic,
+        difficulty: selectedDifficulty,
+        userAnswers: answersPayload,
+        integrityStatus: result.integrityStatus,
+        violationsCount: result.violationsCount,
+        violationsLog: result.violationsLog,
+        timeSpentSeconds: result.timeSpentSeconds
+      });
+
+      setDiagnosisResult(res);
+      setIsQuizActive(false);
+      await refreshProfile();
+      await loadHistory();
+    } catch (err: any) {
+      alert(err?.message || 'Error evaluating assessment.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmitAssessment = async () => {
@@ -223,6 +268,15 @@ export const Assessments: React.FC = () => {
                           Remedial Triggered
                         </span>
                       )}
+                      {att.integrityStatus === 'VERIFIED_CLEAN' ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-emerald-600" /> Clean Proctored
+                        </span>
+                      ) : att.violationsCount && att.violationsCount > 0 ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800 flex items-center gap-1">
+                          <ShieldAlert className="w-3 h-3 text-amber-600" /> Flagged ({att.violationsCount} infractions)
+                        </span>
+                      ) : null}
                     </div>
                     <p className="text-xs text-charcoal-muted dark:text-slate-400 max-w-lg">
                       {att.feedback}
@@ -248,119 +302,21 @@ export const Assessments: React.FC = () => {
       )}
 
       {/* VIEW 2: ACTIVE QUIZ */}
+      {/* VIEW 2: SECURE FULL-SCREEN PROCTORED EXAMINATION */}
       {activeTab === 'assess' && isQuizActive && (
-        <Card className="space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-surface-border dark:border-surface-dark-border">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold font-mono text-stitch-blue uppercase tracking-wider">
-                {selectedTopic}
-              </span>
-              <span className="text-charcoal-subtle dark:text-slate-600">·</span>
-              <span className="text-xs font-medium text-charcoal-muted dark:text-slate-400 capitalize">
-                {selectedDifficulty}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="text-xs font-mono font-bold text-charcoal dark:text-slate-200">
-                Question {currentIndex + 1} of {questions.length}
-              </span>
-
-              {isTimedMode && (
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-mono text-xs font-bold">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>
-                    {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-surface-border dark:border-surface-dark-border">
-            <div
-              className="h-full bg-stitch-blue transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-
-          {currentQ && (
-            <div className="space-y-5">
-              <h2 className="text-base font-semibold text-charcoal dark:text-slate-100 leading-snug font-sans">
-                {currentQ.question}
-              </h2>
-
-              {currentQ.codeSnippet && (
-                <div className="p-4 bg-slate-900 text-slate-100 font-mono text-xs rounded-lg border border-slate-800 overflow-x-auto leading-relaxed">
-                  <pre>{currentQ.codeSnippet}</pre>
-                </div>
-              )}
-
-              <div className="space-y-2.5 pt-2">
-                {currentQ.options.map((opt, idx) => {
-                  const isSelected = userSelections[currentQ.id] === idx;
-                  const letter = String.fromCharCode(65 + idx);
-
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => handleSelectOption(currentQ.id, idx)}
-                      className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all flex items-start gap-3 ${
-                        isSelected
-                          ? 'border-stitch-blue bg-blue-50/60 dark:bg-blue-950/40 text-charcoal dark:text-slate-100 font-medium'
-                          : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal-muted dark:text-slate-300 hover:border-slate-300'
-                      }`}
-                    >
-                      <span
-                        className={`w-5 h-5 rounded flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 border font-mono ${
-                          isSelected
-                            ? 'bg-stitch-blue border-stitch-blue text-white'
-                            : 'border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-slate-800 text-charcoal-muted dark:text-slate-400'
-                        }`}
-                      >
-                        {letter}
-                      </span>
-                      <span className="leading-relaxed flex-1 font-sans">{opt}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-4 border-t border-surface-border dark:border-surface-dark-border">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentIndex === 0}
-              onClick={() => setCurrentIndex(prev => prev - 1)}
-            >
-              Previous
-            </Button>
-
-            {currentIndex < questions.length - 1 ? (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setCurrentIndex(prev => prev + 1)}
-                rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
-              >
-                Next Question
-              </Button>
-            ) : (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSubmitAssessment}
-                disabled={isSubmitting}
-                rightIcon={<Check className="w-3.5 h-3.5" />}
-              >
-                {isSubmitting ? 'Evaluating Diagnostics...' : 'Submit Assessment'}
-              </Button>
-            )}
-          </div>
-        </Card>
+        <SecureExamWorkspace
+          topic={selectedTopic}
+          difficulty={selectedDifficulty}
+          questions={questions}
+          isTimedMode={isTimedMode}
+          initialTimeSeconds={300}
+          onSubmit={handleSecureSubmit}
+          onCancel={() => {
+            setIsQuizActive(false);
+            ExamSecurityService.clearSession();
+            ExamSecurityService.stopProctoring();
+          }}
+        />
       )}
 
       {/* VIEW 3: DIAGNOSTIC REPORT RESULT */}
@@ -404,6 +360,63 @@ export const Assessments: React.FC = () => {
             <p className="text-xs text-charcoal-muted dark:text-slate-300 leading-relaxed p-3.5 bg-surface-subtle dark:bg-slate-800/60 rounded-lg border border-surface-border dark:border-surface-dark-border">
               {diagnosisResult.diagnosis.diagnosticFeedback}
             </p>
+          </div>
+
+          {/* Academic Integrity Audit Certificate */}
+          <div className="p-4 rounded-xl border border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-slate-800/50 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                {diagnosisResult.attempt.integrityStatus === 'VERIFIED_CLEAN' || (!diagnosisResult.attempt.violationsCount) ? (
+                  <>
+                    <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-charcoal dark:text-slate-100 block">
+                        Proctored Integrity: Verified Clean Full-Screen Session
+                      </span>
+                      <span className="text-[11px] text-charcoal-muted dark:text-slate-400">
+                        Zero tab switches, focus losses, or window minimization interruptions detected.
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-amber-800 dark:text-amber-300 block">
+                        Proctored Integrity: Flagged for Review ({diagnosisResult.attempt.violationsCount} Infractions)
+                      </span>
+                      <span className="text-[11px] text-charcoal-muted dark:text-slate-400">
+                        Focus boundaries were breached during active testing. Session audit transcript logged.
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+              <Badge
+                variant={diagnosisResult.attempt.violationsCount ? 'error' : 'success'}
+                size="sm"
+                className="font-mono"
+              >
+                {diagnosisResult.attempt.integrityStatus || 'VERIFIED_CLEAN'}
+              </Badge>
+            </div>
+
+            {diagnosisResult.attempt.violationsLog && diagnosisResult.attempt.violationsLog.length > 0 && (
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 space-y-1.5">
+                <span className="text-[11px] font-mono font-bold text-slate-500 uppercase tracking-wider block">
+                  Logged Integrity Events:
+                </span>
+                <div className="space-y-1 max-h-36 overflow-y-auto">
+                  {diagnosisResult.attempt.violationsLog.map((v: any, idx: number) => (
+                    <div key={idx} className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] flex items-center justify-between gap-2">
+                      <span className="font-mono font-bold text-rose-600 dark:text-rose-400">{v.type}</span>
+                      <span className="text-slate-600 dark:text-slate-400 truncate flex-1">{v.description}</span>
+                      <span className="font-mono text-[10px] text-slate-400">{new Date(v.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {!diagnosisResult.attempt.passed && diagnosisResult.diagnosis.weakSubtopics.length > 0 && (
@@ -496,6 +509,19 @@ export const Assessments: React.FC = () => {
             </div>
           </div>
 
+          {/* Proctored Exam Environment Notice */}
+          <div className="p-3.5 bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/60 rounded-xl space-y-2">
+            <div className="flex items-center gap-2 text-stitch-blue">
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider font-mono">
+                Secure Full-Screen Examination Active
+              </span>
+            </div>
+            <p className="text-[11px] text-charcoal-muted dark:text-slate-300 leading-relaxed">
+              Upon clicking "Start Assessment", browser Full-Screen API will be engaged. Tab switching, window focus loss, and navigation attempts are automatically logged to your integrity audit record. External application popups and floating AI assistance are suppressed during testing.
+            </p>
+          </div>
+
           <div className="pt-2 border-t border-surface-border dark:border-surface-dark-border">
             <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-charcoal dark:text-slate-200">
               <input
@@ -508,14 +534,17 @@ export const Assessments: React.FC = () => {
             </label>
           </div>
 
-          <div className="pt-3 border-t border-surface-border dark:border-surface-dark-border flex justify-end">
+          <div className="pt-3 border-t border-surface-border dark:border-surface-dark-border flex items-center justify-between">
+            <span className="text-[11px] text-charcoal-subtle dark:text-slate-400 font-mono">
+              Proctored by LexiClash Integrity Engine
+            </span>
             <Button
               variant="primary"
               size="md"
               onClick={handleStartQuiz}
               leftIcon={<Play className="w-4 h-4" />}
             >
-              Start {selectedTopic} Check
+              Start {selectedTopic} Examination
             </Button>
           </div>
         </Card>

@@ -475,6 +475,10 @@ class OfflineFirstApiService {
     topic: string;
     difficulty: string;
     userAnswers: { questionId: string; selectedOption: number }[];
+    integrityStatus?: 'VERIFIED_CLEAN' | 'FLAGGED_REVIEW' | 'PROCTOR_WARNING';
+    violationsCount?: number;
+    violationsLog?: any[];
+    timeSpentSeconds?: number;
   }): Promise<{
     attempt: OfflineAssessmentAttempt;
     diagnosis: any;
@@ -526,7 +530,11 @@ class OfflineFirstApiService {
       passed,
       feedback,
       weakSubtopics,
-      completedAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      integrityStatus: payload.integrityStatus || (payload.violationsCount && payload.violationsCount > 2 ? 'FLAGGED_REVIEW' : 'VERIFIED_CLEAN'),
+      violationsCount: payload.violationsCount || 0,
+      violationsLog: payload.violationsLog || [],
+      timeSpentSeconds: payload.timeSpentSeconds || 0
     };
     await db.assessmentAttempts.add(attempt);
 

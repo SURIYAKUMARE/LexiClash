@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -9,6 +9,15 @@ import { ErrorBoundary } from '../common/ErrorBoundary';
 
 export const Layout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [isExamActive, setIsExamActive] = useState(false);
+
+  useEffect(() => {
+    const handleExamEvent = (e: any) => {
+      setIsExamActive(Boolean(e.detail?.active));
+    };
+    window.addEventListener('skillpath:exam-active', handleExamEvent);
+    return () => window.removeEventListener('skillpath:exam-active', handleExamEvent);
+  }, []);
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface-subtle dark:bg-surface-dark-subtle transition-colors">
@@ -35,11 +44,11 @@ export const Layout: React.FC = () => {
         </main>
       </div>
 
-      {/* Persistent AI Mentor (Ren-Style Floating Experience) */}
-      <PersistentMentor />
+      {/* Persistent AI Mentor (Suppressed during secure proctored exams) */}
+      {!isExamActive && <PersistentMentor />}
 
-      {/* Collapsible Multi-Agent Reasoning Trace Drawer */}
-      <AgentTraceDrawer />
+      {/* Collapsible Multi-Agent Reasoning Trace Drawer (Suppressed during secure proctored exams) */}
+      {!isExamActive && <AgentTraceDrawer />}
     </div>
   );
 };

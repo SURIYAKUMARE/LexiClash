@@ -105,6 +105,14 @@ export interface OfflineQuestion {
   subtopic: string;
 }
 
+export interface IntegrityViolationLogItem {
+  id: string;
+  timestamp: string;
+  type: 'FULLSCREEN_EXIT' | 'TAB_SWITCH' | 'WINDOW_BLUR' | 'NAVIGATION_ATTEMPT' | 'SHORTCUT_ATTEMPT';
+  description: string;
+  severity: 'LOW' | 'MEDIUM' | 'HIGH';
+}
+
 export interface OfflineAssessmentAttempt {
   id: string;
   userId: string;
@@ -117,6 +125,10 @@ export interface OfflineAssessmentAttempt {
   feedback: string;
   weakSubtopics: string[];
   completedAt: string;
+  integrityStatus?: 'VERIFIED_CLEAN' | 'FLAGGED_REVIEW' | 'PROCTOR_WARNING';
+  violationsCount?: number;
+  violationsLog?: IntegrityViolationLogItem[];
+  timeSpentSeconds?: number;
 }
 
 export interface OfflineMentorMessage {
