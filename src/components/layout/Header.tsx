@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OfflineSyncManager, SyncStatus } from '../../offlineSync/syncManager';
+import { LexiClashLogo } from '../common/LexiClashLogo';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -121,10 +122,10 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
           <Menu className="w-4 h-4" />
         </button>
 
-        <div className="hidden sm:flex items-center gap-2 text-xs">
-          <span className="font-semibold text-charcoal dark:text-white">SkillPath</span>
+        <div className="flex items-center gap-2 text-xs">
+          <LexiClashLogo size="xs" showText={true} />
           <span className="text-charcoal-subtle dark:text-slate-400">/</span>
-          <span className="text-charcoal-muted dark:text-slate-300">
+          <span className="text-charcoal-muted dark:text-slate-300 hidden sm:inline">
             {profile?.targetCareerRoleId ? profile.targetCareerRoleId.replace('role-', '').replace('-', ' ').toUpperCase() : 'Full Stack Developer'}
           </span>
         </div>

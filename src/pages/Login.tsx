@@ -197,10 +197,14 @@ export const Login: React.FC = () => {
             </Link>
           </div>
 
-          {/* Center Squircle Icon */}
+          {/* Center Logo Icon */}
           <div className="text-center mt-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-blue-500/25">
-              <GraduationCap className="w-7 h-7 stroke-[2.2]" />
+            <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 flex items-center justify-center mx-auto shadow-md">
+              <img
+                src="/images/lexiclash-logo.jpg"
+                alt="LexiClash Logo"
+                className="w-full h-full object-contain rounded-xl"
+              />
             </div>
 
             {/* Pill Badge */}

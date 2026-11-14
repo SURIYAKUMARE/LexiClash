@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Mail, Lock, User, GraduationCap, Building2, AlertCircle, Check } from 'lucide-react';
+import { LexiClashLogo } from '../components/common/LexiClashLogo';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -64,13 +65,8 @@ export const Register: React.FC = () => {
         {/* Left Form */}
         <div className="p-8 sm:p-10 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-6 h-6 rounded bg-brand-600 flex items-center justify-center text-white font-bold text-xs">
-                SP
-              </div>
-              <span className="font-bold text-base tracking-tight text-charcoal dark:text-white">
-                SkillPath
-              </span>
+            <div className="mb-6">
+              <LexiClashLogo size="md" showText={true} />
             </div>
 
             <h1 className="text-xl font-bold tracking-tight text-charcoal dark:text-white">

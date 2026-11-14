@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { clsx } from 'clsx';
+import { LexiClashLogo } from '../common/LexiClashLogo';
 import {
   LayoutDashboard,
   BrainCircuit,
@@ -86,18 +87,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
   return (
     <aside className="w-60 bg-surface dark:bg-surface-dark border-r border-surface-border dark:border-surface-dark-border flex flex-col h-full select-none transition-colors">
       {/* Brand Header */}
-      <div className="h-14 px-5 border-b border-surface-border dark:border-surface-dark-border flex items-center gap-2.5">
-        <div className="w-6 h-6 rounded bg-brand-600 flex items-center justify-center text-white font-bold text-xs">
-          SP
-        </div>
-        <div>
-          <span className="font-bold text-sm tracking-tight text-charcoal dark:text-white block leading-none">
-            SkillPath AI
-          </span>
-          <span className="text-[10px] text-charcoal-subtle dark:text-slate-400 block mt-0.5">
-            Engineering Platform
-          </span>
-        </div>
+      <div className="h-14 px-4 border-b border-surface-border dark:border-surface-dark-border flex items-center gap-2">
+        <LexiClashLogo size="sm" showText={true} />
       </div>
 
       {/* Nav List */}
