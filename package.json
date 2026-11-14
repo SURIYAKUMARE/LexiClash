@@ -17,6 +17,8 @@
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
+    "dexie": "^4.4.7",
+    "dexie-react-hooks": "^4.4.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
@@ -26,7 +28,10 @@
     "react-router-dom": "^6.28.1",
     "recharts": "^2.15.0",
     "tailwind-merge": "^2.6.0",
-    "uuid": "^11.0.5"
+    "uuid": "^11.0.5",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.0",
+    "zustand": "^5.1.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
