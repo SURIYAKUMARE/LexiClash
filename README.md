@@ -1,85 +1,168 @@
-# SkillPath AI
-> **"Your Skills. Your Career. Your Personalized Journey."**
+# LexiClash — SkillPath AI
 
-SkillPath AI is a production-grade, AI-powered learning and career platform built for college and engineering students, fresh graduates, job seekers, and working professionals. It combines algorithmic skill intelligence, a 7-agent multi-agent backend architecture, verifiable topic assessments, context-aware mentoring, and an adaptive learning engine that automatically adjusts roadmap pacing based on measured competency.
+> **"Your Skills. Your Career. Your Autonomous Personalized Learning Universe."**
 
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.0.7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.17-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Dexie.js](https://img.shields.io/badge/IndexedDB-Dexie.js-orange)](https://dexie.org/)
+[![PWA Ready](https://img.shields.io/badge/PWA-Offline--First-success)](https://web.dev/progressive-web-apps/)
+[![Test Suite](https://img.shields.io/badge/Tests-22%2F22%20Passing-brightgreen)]()
 
-## 🌟 Key Platform Features
-
-### 1. Robust Authentication & Onboarding
-- **Multi-method Auth**: Registration with college, education level, and terms acceptance; Secure JWT session management; Google Sign-In simulation; Password recovery with reset token dispatch.
-- **Agentic Onboarding Wizard**: Guided 4-step intake covering academic background, existing skills (with 5 proficiency tiers and evidence), target career role, and personal learning preferences (hours/week, visual/practical style, velocity pace).
-- **Automated Synthesis**: Onboarding immediately executes the multi-agent orchestration pipeline to generate a tailored 4-phase learning roadmap.
-
-### 2. Multi-Agent AI System (7 Backend Agents)
-Orchestrated via a structured JSON exchange pipeline with an **Agent Activity Monitor** displaying live telemetry, task summaries, latency in milliseconds, and execution sources:
-1. **Profile Analyzer Agent**: Synthesizes background, degree, hours, and pace into an actionable learner archetype and velocity recommendation.
-2. **Skill Gap Analyzer Agent**: Calculates mathematically rigorous, weighted deficit scores comparing verified and self-reported skills against role benchmarks.
-3. **Career Intelligence Agent**: Analyzes industry hiring trends, recruiter checklists, salary benchmarks, and high-leverage capstone themes.
-4. **Learning Path Agent**: Constructs tailored 4-phase milestone roadmaps with estimated durations, completion criteria, and verified external resources.
-5. **Assessment Agent**: Evaluates quiz and coding challenge submissions, categorizing errors into *conceptual*, *syntax/API*, or *edge-case* categories and pinpointing weak subtopics.
-6. **AI Mentor Agent**: Context-aware conversational mentor grounded in the user's active profile, target role, and recent scores, with suggested follow-up prompts and mock interview simulation.
-7. **Progress Optimization Agent**: Evaluates velocity, streak, and diagnostic results to dynamically inject remediation tasks or accelerate mastery.
-
-### 3. Adaptive Learning Engine
-- **Remediation Trigger (<70% Score)**: Automatically identifies weak topics, analyzes wrong answers, injects targeted review tasks into the active roadmap phase, and schedules a retest.
-- **Mastery Acceleration (≥85% Score)**: Recognizes verified competency, grants a verifiable badge, skips redundant beginner milestones, and advances the learner.
-- **Career Goal Transition**: Dynamically recalculates benchmark deltas, updates readiness metrics, and adapts roadmap milestones when a user switches their target role.
-- **Audit Logging**: Every single adaptive change is logged in the `RoadmapAdjustmentLog` and explainable to the user in the roadmap view.
-
-### 4. Interactive Skill Intelligence & Gap Analysis
-- 7 Categories: Languages, Frameworks, Databases, Cloud/DevOps, Analytics/AI, Soft Skills, Other.
-- 5 Standardized Proficiency Levels: Beginner (1) to Expert (5) with project evidence notes and assessment dates.
-- Clear distinction between **Self-Reported** skills and **Assessment-Verified** skills with verifiable score badges.
-- Transparent readiness calculation with clear, strict employment disclaimers.
-
-### 5. Verified Resource Library
-- Searchable directory of verified courses, official documentation, tutorials, and platforms.
-- Filterable by skill, difficulty (Beginner, Intermediate, Advanced), duration, and provider.
-- All external links point to official destinations (MDN Web Docs, React.dev, Python.org, PostgreSQL Tutorial, Docker Curriculum, Harvard CS50, MIT OpenCourseWare, freeCodeCamp, Kaggle).
-
-### 6. Interactive Quizzes & Assessments
-- Multi-topic question bank covering JavaScript, React, Python, SQL, Git & DevOps, and Data Structures.
-- Timed examination mode (5-minute countdown), code snippet rendering, and instant diagnostic scoring.
-- Question-by-question explanations with error classification breakdowns.
-
-### 7. Verifiable Certificates & Portfolio Projects
-- Claim tamper-proof certificates of competency upon reaching milestones.
-- Verifiable credential IDs, verification hashes, and print-to-PDF certificate views.
-- Project showcase for tracking open-source repositories and live deployments.
+<p align="center">
+  <img src="public/images/lexiclash-logo.jpg" alt="LexiClash Logo" width="380" style="border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+</p>
 
 ---
 
-## 🏗 Tech Stack & Architecture
+## 📖 Executive Summary
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Lucide React, Recharts, canvas-confetti, Vite 6.
-- **Backend API**: Node.js, Express, TypeScript, tsx, JWT, bcryptjs, uuid.
-- **Database Layer**: File-backed relational JSON database engine (`server/db/database.ts`) with atomic write locking, indexing, and automatic demo seeding.
-- **AI Engine**: Google Gemini API client with structured JSON output enforcement + high-fidelity deterministic heuristic engine that ensures 100% uptime with zero crashes when an API key is omitted.
-- **Testing**: Node.js native test runner (`node --test`) covering 16 end-to-end integration workflows.
+**LexiClash (SkillPath AI)** is an enterprise-grade, offline-first, AI-powered personalized learning and career navigation platform. Designed to meet **Google Stitch** and **Material Design 3 Editorial** specifications, LexiClash bridges the gap between static academic curricula and real-world industrial competencies.
+
+The platform unifies **algorithmic skill intelligence**, a **7-agent autonomous AI architecture**, an **in-browser coding sandbox**, a **career readiness mock interview simulator**, an **interactive cloud incident response engine**, and a **secure proctored full-screen examination environment** backed by client-side cryptographic integrity checks.
+
+LexiClash is **100% operational offline** via Dexie IndexedDB persistence, client-side Web Crypto PBKDF2 authentication, and Progressive Web App (PWA) precaching, with zero mandatory external API or network dependencies.
 
 ---
 
-## 🚀 Quick Start & Local Setup
+## 🌟 Core Platform Pillars & Capabilities
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                             LEXICLASH PLATFORM HUB                               │
+└────────┬─────────────────────────┬─────────────────────────┬─────────────────────┘
+         │                         │                         │
+         ▼                         ▼                         ▼
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│  MULTI-AGENT AI  │      │ SECURE PROCTOR   │      │ REAL PROJECT LAB │
+│  7 Backend Agents│      │ Fullscreen API   │      │ Multi-tier repos │
+│  Live Telemetry  │      │ Focus Loss Guard │      │ Milestone audits │
+│  Deterministic   │      │ Violation Audits │      │ Rubric reviews   │
+└────────┬─────────┘      └────────┬─────────┘      └────────┬─────────┘
+         │                         │                         │
+         ├─────────────────────────┼─────────────────────────┤
+         ▼                         ▼                         ▼
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│ CODING WORKSPACE │      │ MOCK INTERVIEWS  │      │ OFFLINE STORAGE  │
+│ JS / Python / SQL│      │ Role-based QA    │      │ Dexie IndexedDB  │
+│ Sandboxed runner │      │ Depth & Clarity  │      │ PBKDF2 hashing   │
+│ Hidden testcases │      │ Coaching tips    │      │ Zero-network PWA │
+└──────────────────┘      └──────────────────┘      └──────────────────┘
+```
+
+---
+
+### 1. 🛡️ Secure Full-Screen Assessment Mode & Proctoring Engine
+Engineered to enforce academic integrity without relying on invasive malware or untrusted kernel extensions:
+- **HTML5 Fullscreen API Enforcement:** Engaging an examination enters fullscreen automatically; exiting triggers an immediate, inescapable modal lockout that suspends testing until re-entry.
+- **Environment & Focus Loss Interception:** Listens to `visibilitychange` (tab switches, minimizing) and `blur` events (clicking outside or opening devtools).
+- **Automated External Tool Suppression:** Dispatches global `skillpath:exam-active` events to suppress floating AI mentors (`PersistentMentor`) and reasoning trace drawers (`AgentTraceDrawer`).
+- **Keyboard Shortcut Defense:** Intercepts `F11`, `F12`, and `Ctrl+Shift+I` inspector shortcuts with clear non-punitive deterrent banners.
+- **Three-Tier Escalation Policy:**
+  - *Tier 1:* Educational warning popup.
+  - *Tier 2:* Stern advisory highlighting audit log persistence.
+  - *Tier 3+:* Marks assessment status as `FLAGGED_REVIEW` for instructor / accreditation oversight without abruptly disqualifying the student mid-test.
+- **Exam Recovery & Continuity:** Real-time answer state, flagged questions, and violation counters continuously mirror to `localStorage` for disaster recovery against browser crashes.
+- **Question Palette & Countdown Timer:** Full question grid overview with review flags, live visual timer (amber `<60s`, red pulse `<30s`), and auto-submit on expiry.
+- **Tamper-Proof Audit Certificate:** Diagnostic results and historical records display an Academic Integrity Certificate with a timestamped breakdown of all infractions.
+- **Honest Security Boundaries Disclosure:** Integrated modal transparently outlines browser limitations (e.g., secondary phones or external monitors) in accordance with IEEE/ABET integrity ethics.
+
+---
+
+### 2. 💻 Real-World Coding Assessment Engine
+- **Multi-Language In-Browser Runtime:** Interactive code workspace supporting **JavaScript**, **Python**, and **SQL**.
+- **Sandboxed Execution:** Secure client-side execution sandbox preventing infinite loops, memory leaks, or DOM tampering.
+- **Comprehensive Test Case Runner:** Instant feedback across public test cases, hidden edge cases, execution duration, and standard output.
+- **Automated Competency Update:** Passing evaluations automatically updates user skill mastery levels in the Skill Passport.
+
+---
+
+### 3. 🎯 Career Readiness & Mock Technical Interview Simulator
+- **Role-Specific Question Scenarios:** Covers Full-Stack Engineers, DevOps Specialists, Cloud Architects, and Data Engineers.
+- **Multi-Vector AI Evaluation:** Answers are evaluated across **Clarity**, **Technical Depth**, **Architecture**, and **Correctness**.
+- **Actionable Coaching:** Generates specific, personalized remediation steps and recommended curriculum adjustments.
+
+---
+
+### 4. 🧪 Real-World Project Lab
+- **Industry-Calibrated Capstones:** Beginner, intermediate, and advanced practical assignments (e.g., *Resilient Microservice Gateway*, *Distributed Event Bus*, *Zero-Trust Auth Layer*).
+- **Milestone & Submission Tracking:** Interactive progress checklists with GitHub repository URL submission and automated rubric evaluations.
+
+---
+
+### 5. ☁️ Cloud Architecture & Incident Simulator (ActionMap Engine)
+- **Whitelisted Operational Validation:** Evaluates incident triage actions across AWS, GCP, Azure, and Kubernetes.
+- **Action Code Parsing:** Colon-delimited mutations (e.g., `ACTION:NAV:DEPLOYMENT`, `ACTION:TRIAGE:CONTAINER_RESTART`) validated against strict schemas with automated audit logging.
+
+---
+
+### 6. 🤖 7-Agent Autonomous Multi-Agent Architecture
+All agents run deterministically 100% offline via a structured JSON heuristic engine, with optional live LLM enhancement via Gemini API:
+1. **Profile Analyzer Agent:** Synthesizes user background, available hours, and learning pace into an archetype profile.
+2. **Skill Gap Analyzer Agent:** Calculates mathematical deficit scores comparing declared competencies against target career benchmarks.
+3. **Career Intelligence Agent:** Analyzes hiring criteria, high-yield competencies, and current industry requirements.
+4. **Learning Path Agent:** Dynamically constructs adaptive 4-phase milestone roadmaps with time allocations and verified resources.
+5. **Assessment Agent:** Analyzes quiz and coding challenge submissions, classifying misconceptions into *conceptual*, *syntax/API*, or *edge-case* categories.
+6. **AI Mentor Agent:** Context-aware virtual mentor grounded in active roadmap milestones, weak topics, and target career goals.
+7. **Progress Optimization Agent:** Dynamically injects remediation modules (<70% score) or accelerates roadmap velocity (≥85% score).
+- **Multi-Agent Activity Drawer:** Live telemetry drawer tracking execution traces, timestamps, latency (ms), and output payloads.
+
+---
+
+### 7. 📴 Offline-First Architecture & Data Isolation
+- **Dexie IndexedDB Engine:** Client-side relational database storing accounts, skills, roadmaps, attempts, projects, certificates, mock interviews, and traces.
+- **Cryptographic Security (Web Crypto API):** Passwords hashed locally using **PBKDF2** with individual salts; raw credentials are never stored.
+- **Multi-User Isolation:** Every record is strictly keyed by `userId` to ensure data privacy across distinct sessions on shared computers.
+- **PWA Service Worker:** Pre-caches all app shell assets, fonts, icons, and static databases for zero-network operation.
+
+---
+
+### 8. 🎨 Google Stitch & Material Design 3 Editorial UI
+- **Aesthetic Direction:** Replaces generic dark "AI-slop" neon gradients with an editorial, tactile human-centered aesthetic.
+- **Color Palette:** Warm alabaster canvas (`#FAF9F6`), elevated crisp white surfaces (`#FFFFFF`), deep ink typography (`#001744`), high-contrast electric blue accents (`#0070F3`), and hairline 1px borders (`#E2E8F0`).
+- **Typography:** Refined sans-serif (`Inter` / `Plus Jakarta Sans`) paired with monospace (`JetBrains Mono`) for metrics, code snippets, and telemetry logs.
+- **Institution / Academic Login Portal:** Styled as an authorized campus academic / regulatory access portal with 1-click role fill and 2FA MPIN demo flow.
+
+---
+
+## 🏗 Tech Stack Overview
+
+| Category | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | React 18, Vite 6, TypeScript 5.7, React Router 6 |
+| **State Management** | Zustand 5.1, Dexie React Hooks |
+| **Styling & Icons** | Tailwind CSS 3.4, Lucide React, Canvas Confetti |
+| **Data Visualization** | Recharts (Radar, Area, Bar, Line charts) |
+| **Local Offline Storage** | IndexedDB via Dexie.js 4.4, LocalStorage (session backup) |
+| **Offline Security** | Web Crypto API (PBKDF2 password derivation, SHA-256 integrity hashes) |
+| **PWA & Caching** | vite-plugin-pwa (Service Worker offline precaching) |
+| **Optional Server API** | Express 4.21, TypeScript, tsx, JWT, bcryptjs |
+| **AI Integration** | Google Gemini Interactions API + Deterministic Heuristic Engine fallback |
+| **Automated Testing** | Node.js Test Runner (`node:test`, `tsx --test`), 22 test suites |
+
+---
+
+## 🚀 Quick Start & Installation
 
 ### Prerequisites
-- Node.js (v18.0.0 or higher, tested on Node v24.14.0)
-- npm (v9.0.0 or higher)
+- **Node.js**: v18.0.0 or higher (tested on Node v20 & v24)
+- **npm**: v9.0.0 or higher
 
-### 1. Clone & Install Dependencies
+### 1. Clone & Install
 ```bash
-git clone <repository-url>
-cd "1 prompt war"
+git clone https://github.com/SURIYAKUMARE/LexiClash.git
+cd LexiClash
 npm install
 ```
 
-### 2. Environment Configuration
-Copy the example environment file to `.env`:
+### 2. Environment Configuration (Optional)
+Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-Default configuration values:
+Default parameters:
 ```env
 PORT=5000
 NODE_ENV=development
@@ -87,89 +170,70 @@ JWT_SECRET=skillpath_ai_super_secret_jwt_key_2025_change_in_production
 GEMINI_API_KEY=
 CLIENT_URL=http://localhost:3000
 ```
-*(Note: If `GEMINI_API_KEY` is left blank, SkillPath AI automatically runs using its intelligent heuristic fallback engine without any loss of functionality.)*
+> **Note on Zero-Network / Offline Mode:** If `GEMINI_API_KEY` is omitted or you are disconnected from the internet, the application operates seamlessly using its internal heuristic rule engine.
 
-### 3. Run Development Servers
-Start both the Express API server (port 5000) and the Vite development client (port 3000) concurrently:
+### 3. Launch Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+- Client runs at: `http://localhost:3000` (or next open port)
+- API server runs at: `http://localhost:5000`
 
-### 4. Build & Production Start
+### 4. Build for Production
 ```bash
-# Build frontend and compile server TypeScript
 npm run build
-
-# Start production server (serves API and client assets on port 5000)
-npm start
 ```
+Generates optimized frontend bundles in `dist/` and compiles server TypeScript into `dist/server/`.
 
-### 5. Run Automated Test Suite
+### 5. Run Automated Tests
 ```bash
 npm test
 ```
-All 16 test workflows validate authentication, role matching, gap analysis, roadmap adjustments, assessments, mentor chat, and notifications.
+Executes all **22 unit and end-to-end workflow tests**:
+- **ActionMap Goal Validation Engine Tests (6 passing)**
+- **Comprehensive API & Workflow Integration Tests (16 passing)**
 
 ---
 
-## 👤 Pre-Seeded Demo Credentials
+## 🔑 Demo Credentials
 
-To evaluate the platform immediately without registration, use the pre-seeded account:
-- **Email**: `demo@skillpath.ai`
-- **Password**: `Password123!`
-*(A 1-click "Autofill Demo Account" button is also provided directly on the Login screen).*
+To explore the application without manual registration, use the pre-seeded demo accounts or the 1-click auto-fill buttons on the login screen:
+
+| Account Type | Email / Username | Password | Role |
+| :--- | :--- | :--- | :--- |
+| **Standard Demo Learner** | `demo@skillpath.app` | `Demo@1234` | Full-Stack Student |
+| **Institutional Account** | `demo@skillpath.ai` | `Password123!` | Engineering Candidate |
+| **Auditor / Regulatory Demo** | `auditor` | `password123` | Compliance Officer |
+
+*(Each demo profile is pre-seeded with sample skills, roadmap milestones, diagnostic test history, and portfolio projects).*
 
 ---
 
-## 📡 API Reference Overview
+## 📡 API & Service Architecture
 
-| Endpoint | Method | Description |
+| Endpoint / Service | Purpose | Offline Behavior |
 | :--- | :--- | :--- |
-| `/api/auth/register` | `POST` | Register a new user with academic info |
-| `/api/auth/login` | `POST` | Authenticate with email/password and obtain JWT |
-| `/api/auth/google` | `POST` | One-click simulated Google OAuth sign-in |
-| `/api/auth/forgot-password` | `POST` | Request password reset token |
-| `/api/auth/reset-password` | `POST` | Set new password with token |
-| `/api/profile` | `GET/PUT` | Retrieve or update user profile and preferences |
-| `/api/profile/onboarding` | `POST` | Submit onboarding wizard and synthesize roadmap |
-| `/api/skills` | `GET/POST` | List or declare new technical skills |
-| `/api/skills/:id` | `PUT/DELETE`| Update proficiency level or delete skill |
-| `/api/skills/gap-analysis` | `GET` | Calculate weighted readiness delta against target role |
-| `/api/careers` | `GET` | List all 9 pre-configured career roles |
-| `/api/careers/:id/intelligence` | `GET` | Run Career Intelligence Agent for a specific role |
-| `/api/careers/select-target` | `POST` | Change target career and adapt roadmap |
-| `/api/roadmap` | `GET` | Fetch active 4-phase learning roadmap |
-| `/api/roadmap/task/:id/toggle` | `POST` | Toggle milestone completion and update progress |
-| `/api/roadmap/regenerate` | `POST` | Recompute roadmap based on latest competencies |
-| `/api/roadmap/adjustments` | `GET` | Audit log of all adaptive optimizations |
-| `/api/assessments/questions` | `GET` | Retrieve questions by topic and difficulty |
-| `/api/assessments/submit` | `POST` | Evaluate submission, classify errors, update badges |
-| `/api/assessments/history` | `GET` | View previous assessment scores |
-| `/api/mentor/chat` | `POST` | Context-aware technical mentorship query |
-| `/api/agents/activity` | `GET` | Telemetry logs for all 7 multi-agent executions |
-| `/api/agents/run` | `POST` | Manually invoke any individual agent |
-| `/api/analytics` | `GET` | Retrieve radar chart, weekly activity, and streak data |
-| `/api/resources` | `GET` | Filter verified courses, documentation, and guides |
-| `/api/projects` | `GET/POST` | Manage user portfolio projects |
-| `/api/certificates` | `GET/POST` | View and claim verifiable completion credentials |
-| `/api/notifications` | `GET/PUT` | Manage real-time adaptive alerts |
+| `POST /api/auth/login` | Authentication & JWT issuance | Handled via Dexie IndexedDB + PBKDF2 Web Crypto |
+| `GET /api/skills` | Skill directory with verified badges | Query local IndexedDB `skills` table |
+| `GET /api/skills/gap-analysis` | Mathematical role readiness delta | Calculated locally via weighted benchmark engine |
+| `GET /api/roadmap` | Adaptive 4-phase milestone path | Managed and updated in IndexedDB |
+| `POST /api/assessments/submit` | Diagnostics & proctored attempts | Scored locally; stores integrity log and violations |
+| `POST /api/coding/execute` | In-browser code execution | Sandboxed JS/Python/SQL evaluation |
+| `POST /api/mentor/chat` | Contextual mentor conversational turn | Heuristic pattern matching + roadmap grounding |
+| `GET /api/agents/activity` | 7-agent execution trace telemetry | Live IndexedDB audit trail |
+| `GET/POST /api/projects` | Capstone lab submissions | Persisted locally with GitHub repository validation |
+| `GET/POST /api/certificates` | Verifiable cryptographic certificates | Generates unique UUID and SHA-256 verification hash |
 
 ---
 
-## 📝 Limitations & Workarounds
+## 📜 Verification & Compliance
 
-1. **LLM Provider Quota & Offline Environments**:
-   - *Limitation*: External LLM endpoints may be rate-limited, unreachable, or missing an API key.
-   - *Workaround*: SkillPath AI includes a built-in deterministic heuristic engine for all 7 agents that generates structured JSON responses mirroring LLM outputs, ensuring 100% operational resilience.
-2. **Third-Party OAuth Providers**:
-   - *Limitation*: Live Google OAuth credentials require external Google Cloud Console project registration and domain verification.
-   - *Workaround*: SkillPath AI provides a one-click simulated Google OAuth login endpoint (`POST /api/auth/google`) that provisions authentic sessions without external console setup.
-3. **Email Dispatch in Development**:
-   - *Limitation*: SMTP servers require external credentials to deliver physical emails.
-   - *Workaround*: The password recovery flow returns a simulated reset token directly in the API response and guides the user through the reset interface.
+- **Vercel Single-Page App (SPA) Routing:** Configured with `vercel.json` rewrites (`"source": "/(.*)", "destination": "/index.html"`) and `_redirects` fallback to eliminate 404s on direct route navigation.
+- **Zero-Crash Defensive State:** Safe fallbacks for undefined profile attributes and graceful error boundary wrapping (`ErrorBoundary.tsx`).
+- **Data Privacy & GDPR:** All user competencies, assessment responses, and interview recordings remain local to the user's browser storage unless explicitly exported.
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License.
+
+This repository is licensed under the [MIT License](LICENSE).
