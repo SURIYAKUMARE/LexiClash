@@ -1,5 +1,5 @@
-import { db, OfflineUser, OfflineProfile, OfflineSkill, OfflineRoadmap } from './indexedDb';
-import { SEED_CAREER_ROLES, SEED_QUESTIONS, DEMO_PERSONAS } from './seedData';
+import { db, OfflineUser, OfflineProfile, OfflineSkill, OfflineRoadmap, OfflineCloudSimulationState, OfflinePortfolioCredential, OfflineLearningPreference } from './indexedDb';
+import { SEED_CAREER_ROLES, SEED_QUESTIONS, DEMO_PERSONAS, SEED_CLOUD_SIMULATION_STATE, SEED_PORTFOLIO_CREDENTIALS } from './seedData';
 import { CurriculumStrategistAgent } from '../agents/curriculumStrategistAgent';
 import { CareerArchitectAgent } from '../agents/careerArchitectAgent';
 
@@ -12,6 +12,21 @@ export async function initializeOfflineDatabase(): Promise<{
   if (careerCount === 0) {
     await db.careers.bulkAdd(SEED_CAREER_ROLES);
     await db.questions.bulkAdd(SEED_QUESTIONS);
+  }
+
+  // Check if cloud simulation exists; if not, seed initial cloud simulation
+  const cloudSimCount = await db.cloudSimulations.count();
+  if (cloudSimCount === 0) {
+    await db.cloudSimulations.put({
+      ...SEED_CLOUD_SIMULATION_STATE,
+      id: 'sim-default'
+    });
+  }
+
+  // Check if portfolio credentials exist; if not, seed default verified credentials
+  const credCount = await db.portfolioCredentials.count();
+  if (credCount === 0) {
+    await db.portfolioCredentials.bulkAdd(SEED_PORTFOLIO_CREDENTIALS);
   }
 
   // Check if active user exists
@@ -49,6 +64,19 @@ export async function initializeOfflineDatabase(): Promise<{
       lastActiveDate: new Date().toISOString()
     };
     await db.profiles.add(profile);
+  }
+
+  // Ensure default learning preference
+  const pref = await db.learningPreferences.where('userId').equals(user.id).first();
+  if (!pref) {
+    await db.learningPreferences.put({
+      id: `pref-${user.id}`,
+      userId: user.id,
+      mode: 'student',
+      speechEnabled: false,
+      language: 'english',
+      updatedAt: new Date().toISOString()
+    });
   }
 
   localStorage.setItem('skillpath_offline_user_id', user.id);

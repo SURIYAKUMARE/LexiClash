@@ -83,8 +83,8 @@ export const AgentActivityMonitor: React.FC = () => {
       role: 'Phased Curriculum & Milestone Planner',
       taskSummary: 'Constructed week-by-week curriculum prioritizing Node.js event loop and PostgreSQL query indexing.',
       inputSummary: 'Prioritized Gaps (Node.js, PostgreSQL) + Target Role (Full Stack) + Velocity (10h/wk)',
-      outputSummary: 'Generated 6-week progressive roadmap with 18 verified tasks, documentation links, and coding exercises.',
-      handoffPayload: 'Transferred 6-phase curriculum milestones and verification criteria to Progress Optimization Agent.',
+      outputSummary: 'Generated progressive roadmap with verified tasks, documentation links, and coding exercises.',
+      handoffPayload: 'Transferred curriculum milestones to Cloud Architecture Agent.',
       status: 'completed',
       latencyMs: 145,
       timestamp: '1 min ago'
@@ -92,14 +92,66 @@ export const AgentActivityMonitor: React.FC = () => {
     {
       id: 'agent-5',
       order: 5,
-      name: 'Progress & Assessment Optimizer',
-      role: 'Adaptive Pacing & Diagnostic Feedback',
-      taskSummary: 'Evaluated latest quiz submission results and calibrated roadmap tasks and verification badges.',
-      inputSummary: 'Assessment Attempts (JavaScript: 80% Passed, Node.js: Pending verification)',
-      outputSummary: 'Verified JavaScript competency badge. Flagged Node.js streams exercise as required before advancing.',
-      handoffPayload: 'Pipeline cycle complete. All telemetry synchronized with learner profile.',
+      name: 'Cloud Architecture Agent',
+      role: 'Multi-AZ Topology & Resilience Auditor',
+      taskSummary: 'Audited simulated VPC subnets, ingress routing, and S3 Block Public Access perimeters.',
+      inputSummary: 'Simulated VPC (10.0.0.0/16) + 3 Subnets + 2 EC2 Instances + S3 Buckets',
+      outputSummary: 'Verified multi-AZ distribution across us-east-1a/b. Flagged 1 S3 bucket for public exposure remediation.',
+      handoffPayload: 'Dispatched infrastructure resilience audit to Incident Analysis Agent.',
+      status: 'completed',
+      latencyMs: 65,
+      timestamp: '1 min ago'
+    },
+    {
+      id: 'agent-6',
+      order: 6,
+      name: 'Incident Analysis Agent',
+      role: 'SRE Outage Triage & Runbook Recommender',
+      taskSummary: 'Analyzed telemetry log streams and diagnostic checks for active production outages.',
+      inputSummary: 'Incident INC-101 logs (CloudWatch + S3 Access Logs) + Error Frequency',
+      outputSummary: 'Correlated root cause to public ACL override. Recommended automated Block Public Access remediation.',
+      handoffPayload: 'Dispatched post-mortem recommendations to Assessment Agent.',
+      status: 'completed',
+      latencyMs: 82,
+      timestamp: 'Just now'
+    },
+    {
+      id: 'agent-7',
+      order: 7,
+      name: 'Assessment Agent',
+      role: 'Scenario Evaluation & Subtopic Scoring',
+      taskSummary: 'Diagnosed quiz and placement assessment answers across 4 competency dimensions.',
+      inputSummary: 'Scenario Submissions Map + Dimension Matrix (Technical, Problem-Solving, Practical, Experience)',
+      outputSummary: 'Determined Level 3-4 competency. Awarded verified skills and flagged streams for reinforcement.',
+      handoffPayload: 'Forwarded evaluated subtopics to Progress Optimization Agent.',
+      status: 'completed',
+      latencyMs: 94,
+      timestamp: 'Just now'
+    },
+    {
+      id: 'agent-8',
+      order: 8,
+      name: 'Progress Optimization Agent',
+      role: 'Adaptive Pacing & Dynamic Re-Routing',
+      taskSummary: 'Calibrated roadmap pacing, adjusted task deadlines, and scheduled retests for weak concepts.',
+      inputSummary: 'Learner Velocity + Pacing Commitment (12h/wk) + Competency Deliberations',
+      outputSummary: 'Optimized roadmap to 4 phases. Injected remedial micro-modules for Node.js backpressure.',
+      handoffPayload: 'Synchronized telemetry with persistent AI Mentor Agent.',
       status: 'completed',
       latencyMs: 78,
+      timestamp: 'Just now'
+    },
+    {
+      id: 'agent-9',
+      order: 9,
+      name: 'AI Mentor Agent',
+      role: 'Contextual Socratic Guidance & Audio Coaching',
+      taskSummary: 'Synthesized active learning context, route location, and personalized suggestions in English/Tanglish.',
+      inputSummary: 'Current Location: /cloud-console + User Competency Fingerprint + Speech State',
+      outputSummary: 'Delivered contextual recommendations, audio assistance, and real-time incident support.',
+      handoffPayload: 'Pipeline cycle complete. All telemetry synchronized with learner profile.',
+      status: 'completed',
+      latencyMs: 54,
       timestamp: 'Just now'
     }
   ];
@@ -127,7 +179,11 @@ export const AgentActivityMonitor: React.FC = () => {
       await api.runAgent('Skill Gap Analyzer Agent');
       await api.runAgent('Career Intelligence Agent');
       await api.runAgent('Learning Path Agent');
+      await api.runAgent('Cloud Architecture Agent');
+      await api.runAgent('Incident Analysis Agent');
+      await api.runAgent('Assessment Agent');
       await api.runAgent('Progress Optimization Agent');
+      await api.runAgent('AI Mentor Agent');
       await loadActivity();
     } catch (err: any) {
       alert(err?.message || 'Failed to trigger agent pipeline.');

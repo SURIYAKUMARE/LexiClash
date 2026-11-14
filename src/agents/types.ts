@@ -70,3 +70,22 @@ export interface ProjectIdea {
   milestones: string[];
   complexity: 'Beginner' | 'Intermediate' | 'Capstone';
 }
+
+export interface ArchitectureAuditResult {
+  architectureHealthScore: number;
+  haStatus: 'High Availability Multi-AZ' | 'Single AZ Risk' | 'Degraded';
+  singlePointsOfFailure: string[];
+  securityPerimeterScore: number;
+  recommendations: string[];
+  reasoningTraces: AgentReasoningTrace[];
+}
+
+export interface IncidentAnalysisResult {
+  incidentId: string;
+  severity: 'P1' | 'P2' | 'P3';
+  triageSummary: string;
+  rootCauseIdentified: string;
+  recommendedMitigation: string;
+  mttrEstimatedMinutes: number;
+  reasoningTraces: AgentReasoningTrace[];
+}

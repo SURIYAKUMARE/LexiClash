@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { MobileDrawer } from './MobileDrawer';
 import { AgentTraceDrawer } from '../agents/AgentTraceDrawer';
+import { PersistentMentor } from '../mentor/PersistentMentor';
 
 export const Layout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -30,6 +31,9 @@ export const Layout: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Persistent AI Mentor (Ren-Style Floating Experience) */}
+      <PersistentMentor />
 
       {/* Collapsible Multi-Agent Reasoning Trace Drawer */}
       <AgentTraceDrawer />

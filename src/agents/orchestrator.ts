@@ -3,11 +3,16 @@ import { ProfilerAgent } from './profilerAgent';
 import { CareerArchitectAgent } from './careerArchitectAgent';
 import { CurriculumStrategistAgent } from './curriculumStrategistAgent';
 import { AdaptiveMentorAgent } from './adaptiveMentorAgent';
-import { AgentReasoningTrace, CareerBenchmarkResult, ProfilerAnalysisResult } from './types';
+import { CloudArchitectureAgent } from './cloudArchitectureAgent';
+import { IncidentAnalysisAgent } from './incidentAnalysisAgent';
+import { SEED_SRE_INCIDENTS, SEED_CLOUD_SIMULATION_STATE } from '../db/seedData';
+import { AgentReasoningTrace, CareerBenchmarkResult, ProfilerAnalysisResult, ArchitectureAuditResult, IncidentAnalysisResult } from './types';
 
 export interface FullOrchestrationResult {
   profilerResult: ProfilerAnalysisResult;
   benchmarkResult: CareerBenchmarkResult;
+  architectureResult: ArchitectureAuditResult;
+  incidentTriageResult: IncidentAnalysisResult;
   updatedRoadmap: OfflineRoadmap;
   allTraces: AgentReasoningTrace[];
 }
@@ -100,7 +105,48 @@ export class AgentOrchestrator {
       overallReadinessScore: benchmarkResult.readinessPercentage
     });
 
-    // 3. Curriculum & Resource Strategist Agent
+    // 3. Cloud Architecture Agent
+    const archStartTime = Date.now();
+    let cloudSim = await db.cloudSimulations.where('userId').equals(userId).first();
+    if (!cloudSim) {
+      cloudSim = { ...SEED_CLOUD_SIMULATION_STATE, id: `sim-${userId}`, userId };
+    }
+    const architectureResult = CloudArchitectureAgent.analyzeArchitecture(cloudSim);
+    allTraces.push(...architectureResult.reasoningTraces);
+
+    await db.agentTraces.add({
+      id: `trace-arch-${Date.now()}`,
+      userId,
+      agentName: 'Cloud Architecture Agent',
+      timestamp: new Date().toISOString(),
+      task: 'Audit multi-AZ topology, security groups & storage perimeters',
+      inputSummary: `VPC: ${cloudSim.vpc.vpcs[0]?.name}, Instances: ${cloudSim.ec2.instances.length}, S3 Buckets: ${cloudSim.s3.buckets.length}`,
+      outputSummary: `Health Score: ${architectureResult.architectureHealthScore}%, HA: ${architectureResult.haStatus}, SPOFs: ${architectureResult.singlePointsOfFailure.length}`,
+      reasoningTrace: architectureResult.reasoningTraces.map(t => `${t.action}: ${t.observation}`),
+      handoffTo: 'Incident Analysis Agent',
+      latencyMs: Date.now() - archStartTime
+    });
+
+    // 4. Incident Analysis Agent
+    const incidentStartTime = Date.now();
+    const activeScenario = SEED_SRE_INCIDENTS[0];
+    const incidentTriageResult = IncidentAnalysisAgent.triageIncident(activeScenario);
+    allTraces.push(...incidentTriageResult.reasoningTraces);
+
+    await db.agentTraces.add({
+      id: `trace-incident-${Date.now()}`,
+      userId,
+      agentName: 'Incident Analysis Agent',
+      timestamp: new Date().toISOString(),
+      task: `Triage simulated incident telemetry for ${activeScenario.code}`,
+      inputSummary: `Incident: ${activeScenario.title}, Severity: ${activeScenario.severity}`,
+      outputSummary: `Root Cause: ${incidentTriageResult.rootCauseIdentified.substring(0, 60)}..., Rec: ${incidentTriageResult.recommendedMitigation}`,
+      reasoningTrace: incidentTriageResult.reasoningTraces.map(t => `${t.action}: ${t.observation}`),
+      handoffTo: 'Curriculum & Resource Strategist Agent',
+      latencyMs: Date.now() - incidentStartTime
+    });
+
+    // 5. Curriculum & Resource Strategist Agent
     const curriculumStartTime = Date.now();
     const existingRoadmap = await db.roadmaps.where('userId').equals(userId).first();
 
@@ -148,6 +194,8 @@ export class AgentOrchestrator {
     return {
       profilerResult,
       benchmarkResult,
+      architectureResult,
+      incidentTriageResult,
       updatedRoadmap,
       allTraces
     };

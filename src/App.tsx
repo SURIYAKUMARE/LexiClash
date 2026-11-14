@@ -22,6 +22,14 @@ import { Projects } from './pages/Projects';
 import { ProgressAnalytics } from './pages/ProgressAnalytics';
 import { Certificates } from './pages/Certificates';
 import { Settings } from './pages/Settings';
+import { LearningUniverse } from './pages/LearningUniverse';
+import { PlacementDiagnostic } from './pages/PlacementDiagnostic';
+import { CloudConsole } from './pages/CloudConsole';
+import { ArchitectureVisualizer } from './pages/ArchitectureVisualizer';
+import { IncidentWarRoom } from './pages/IncidentWarRoom';
+import { SimulatedTerminal } from './pages/SimulatedTerminal';
+import { SecurityInspector } from './pages/SecurityInspector';
+import { VerifiedPortfolio } from './pages/VerifiedPortfolio';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading, profile } = useAuth();
@@ -122,11 +130,19 @@ export const App: React.FC = () => {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardOverview />} />
+            <Route path="universe" element={<LearningUniverse />} />
+            <Route path="placement" element={<PlacementDiagnostic />} />
             <Route path="profile" element={<Profile />} />
             <Route path="diagnostics" element={<SkillDiagnostics />} />
             <Route path="skills" element={<SkillDiagnostics />} />
             <Route path="careers" element={<CareerExplorer />} />
             <Route path="roadmap" element={<LearningRoadmap />} />
+            <Route path="cloud-console" element={<CloudConsole />} />
+            <Route path="architecture" element={<ArchitectureVisualizer />} />
+            <Route path="war-room" element={<IncidentWarRoom />} />
+            <Route path="terminal" element={<SimulatedTerminal />} />
+            <Route path="security-inspector" element={<SecurityInspector />} />
+            <Route path="portfolio" element={<VerifiedPortfolio />} />
             <Route path="resources" element={<ResourceLibrary />} />
             <Route path="assessments" element={<Assessments />} />
             <Route path="mentor" element={<AIMentor />} />

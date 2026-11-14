@@ -30,9 +30,21 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [learningMode, setLearningMode] = useState<'student' | 'professional'>('student');
 
   const notifRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    api.getLearningPreference().then(pref => {
+      if (pref) setLearningMode(pref.mode);
+    });
+  }, []);
+
+  const handleToggleMode = async (mode: 'student' | 'professional') => {
+    setLearningMode(mode);
+    await api.updateLearningPreference({ mode });
+  };
 
   // Network offline status listener
   useEffect(() => {
@@ -118,6 +130,32 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Dual-Mode Learning Toggle (Student Mode vs Professional Mode) */}
+        <div className="hidden md:flex items-center bg-surface-subtle dark:bg-slate-800 p-0.5 rounded-lg border border-surface-border dark:border-surface-dark-border text-[11px] font-mono">
+          <button
+            onClick={() => handleToggleMode('student')}
+            className={`px-2.5 py-1 rounded transition-colors ${
+              learningMode === 'student'
+                ? 'bg-white dark:bg-slate-900 font-bold text-brand-600 dark:text-brand-400 shadow-xs'
+                : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+            }`}
+            title="Student Mode: Concept whiteboards, guided diagrams & tutorials"
+          >
+            Student Mode
+          </button>
+          <button
+            onClick={() => handleToggleMode('professional')}
+            className={`px-2.5 py-1 rounded transition-colors ${
+              learningMode === 'professional'
+                ? 'bg-white dark:bg-slate-900 font-bold text-brand-600 dark:text-brand-400 shadow-xs'
+                : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+            }`}
+            title="Professional Mode: Cloud console simulations, incident war rooms & terminal"
+          >
+            Professional Mode
+          </button>
+        </div>
+
         {/* Network Online / Offline Status Badge */}
         <div
           className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-medium border ${

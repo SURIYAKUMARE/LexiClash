@@ -8,10 +8,29 @@ import {
   OfflineAssessmentAttempt,
   OfflineMentorMessage,
   OfflineAgentTrace,
-  OfflineProjectIdea
+  OfflineProjectIdea,
+  OfflineCloudSimulationState,
+  OfflineIncidentAttempt,
+  OfflinePlacementResult,
+  OfflinePortfolioCredential,
+  OfflineLearningPreference
 } from '../db/indexedDb';
 import { initializeOfflineDatabase, loadDemoPersona } from '../db/initDb';
-import { SEED_CAREER_ROLES, SEED_QUESTIONS, OFFLINE_STUDY_GUIDES } from '../db/seedData';
+import {
+  SEED_CAREER_ROLES,
+  SEED_QUESTIONS,
+  OFFLINE_STUDY_GUIDES,
+  SEED_LEARNING_DOMAINS,
+  SEED_CLOUD_SIMULATION_STATE,
+  SEED_SRE_INCIDENTS,
+  SEED_PLACEMENT_SCENARIOS,
+  SEED_TERMINAL_QUESTS,
+  SEED_PORTFOLIO_CREDENTIALS,
+  LearningDomain,
+  SreIncidentScenario,
+  PlacementQuestion,
+  TerminalQuest
+} from '../db/seedData';
 import { CareerArchitectAgent } from '../agents/careerArchitectAgent';
 import { CurriculumStrategistAgent } from '../agents/curriculumStrategistAgent';
 import { AdaptiveMentorAgent } from '../agents/adaptiveMentorAgent';
@@ -830,6 +849,558 @@ class OfflineFirstApiService {
         }
       ]
     };
+  }
+
+  // -------------------------------------------------------------
+  // 1. Learning Universe
+  // -------------------------------------------------------------
+  public async getLearningDomains(): Promise<{ domains: LearningDomain[] }> {
+    return { domains: SEED_LEARNING_DOMAINS };
+  }
+
+  // -------------------------------------------------------------
+  // 2. Dual Mode & User Preferences
+  // -------------------------------------------------------------
+  public async getLearningPreference(): Promise<OfflineLearningPreference> {
+    const userId = await this.ensureInitialized();
+    let pref = await db.learningPreferences.where('userId').equals(userId).first();
+    if (!pref) {
+      pref = {
+        id: `pref-${userId}`,
+        userId,
+        mode: 'student',
+        speechEnabled: false,
+        language: 'english',
+        updatedAt: new Date().toISOString()
+      };
+      await db.learningPreferences.put(pref);
+    }
+    return pref;
+  }
+
+  public async updateLearningPreference(updates: Partial<OfflineLearningPreference>): Promise<OfflineLearningPreference> {
+    const userId = await this.ensureInitialized();
+    let pref = await this.getLearningPreference();
+    const updated: OfflineLearningPreference = {
+      ...pref,
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    await db.learningPreferences.put(updated);
+    return updated;
+  }
+
+  // -------------------------------------------------------------
+  // 3. Interactive Cloud Console Simulation
+  // -------------------------------------------------------------
+  public async getCloudSimulation(): Promise<OfflineCloudSimulationState> {
+    const userId = await this.ensureInitialized();
+    let sim = await db.cloudSimulations.where('userId').equals(userId).first();
+    if (!sim) {
+      sim = {
+        ...SEED_CLOUD_SIMULATION_STATE,
+        id: `sim-${userId}`,
+        userId
+      };
+      await db.cloudSimulations.put(sim);
+    }
+    return sim;
+  }
+
+  public async updateCloudSimulation(state: OfflineCloudSimulationState): Promise<OfflineCloudSimulationState> {
+    const userId = await this.ensureInitialized();
+    const updated: OfflineCloudSimulationState = {
+      ...state,
+      id: state.id || `sim-${userId}`,
+      userId,
+      lastUpdated: new Date().toISOString()
+    };
+    await db.cloudSimulations.put(updated);
+    return updated;
+  }
+
+  // -------------------------------------------------------------
+  // 4. Simulated Terminal & Quests
+  // -------------------------------------------------------------
+  public async getTerminalQuests(): Promise<{ quests: (TerminalQuest & { completed: boolean })[] }> {
+    const storedDone = JSON.parse(localStorage.getItem('skillpath_terminal_quests_done') || '[]');
+    return {
+      quests: SEED_TERMINAL_QUESTS.map(q => ({
+        ...q,
+        completed: storedDone.includes(q.id)
+      }))
+    };
+  }
+
+  public async executeTerminalCommand(cmdString: string): Promise<{
+    output: string;
+    isError: boolean;
+    questUnlocked?: TerminalQuest;
+  }> {
+    const trimmed = cmdString.trim();
+    if (!trimmed) return { output: '', isError: false };
+
+    const sim = await this.getCloudSimulation();
+    const lower = trimmed.toLowerCase();
+
+    let output = '';
+    let isError = false;
+
+    // Command Dispatcher
+    if (lower === 'clear') {
+      return { output: '__CLEAR__', isError: false };
+    } else if (lower === 'help') {
+      output = `SkillPath Safe Educational Cloud Terminal (v2.4)
+Supported AWS CLI & Linux Commands:
+  aws sts get-caller-identity
+  aws ec2 describe-instances
+  aws ec2 run-instances --instance-type <type> --name <name>
+  aws ec2 stop-instances --instance-ids <id>
+  aws s3 ls [s3://bucket-name]
+  aws s3 mb s3://<bucket-name>
+  aws s3 cp <filename> s3://<bucket-name>/
+  aws iam list-users
+  aws iam create-user --user-name <username>
+  aws ec2 describe-vpcs
+  ls, pwd, cat <file>, curl <url>, top, uname -a
+  git status, git log
+  clear, help`;
+    } else if (lower.startsWith('aws sts get-caller-identity')) {
+      output = JSON.stringify({
+        UserId: 'AIDASAMPLEUSER7EXAMPLE',
+        Account: '123456789012',
+        Arn: 'arn:aws:iam::123456789012:user/devops-lead'
+      }, null, 2);
+    } else if (lower.startsWith('aws ec2 describe-instances')) {
+      const formatted = sim.ec2.instances.map(inst => ({
+        InstanceId: inst.id,
+        InstanceType: inst.type,
+        State: { Name: inst.state },
+        PublicIpAddress: inst.publicIp || 'None',
+        PrivateIpAddress: inst.privateIp,
+        SecurityGroups: [{ GroupName: inst.securityGroupId }],
+        Placement: { AvailabilityZone: inst.az },
+        Tags: [{ Key: 'Name', Value: inst.name }]
+      }));
+      output = JSON.stringify({ Reservations: [{ Instances: formatted }] }, null, 2);
+    } else if (lower.startsWith('aws ec2 run-instances')) {
+      const newInstId = `i-0${Math.random().toString(16).substring(2, 10)}`;
+      const newInst = {
+        id: newInstId,
+        name: `sim-instance-${newInstId.substring(0, 6)}`,
+        type: 't3.micro',
+        state: 'running' as const,
+        publicIp: `54.210.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 250)}`,
+        privateIp: `10.0.1.${Math.floor(Math.random() * 200)}`,
+        securityGroupId: 'sg-web-public',
+        az: 'us-east-1a',
+        launchTime: new Date().toISOString(),
+        cpuUtilization: 12.5
+      };
+      sim.ec2.instances.push(newInst);
+      await this.updateCloudSimulation(sim);
+      output = JSON.stringify({ Instances: [{ InstanceId: newInstId, State: { Name: 'pending' }, InstanceType: 't3.micro' }] }, null, 2);
+    } else if (lower.startsWith('aws ec2 stop-instances')) {
+      const match = trimmed.match(/--instance-ids\s+([\w-]+)/i);
+      const targetId = match ? match[1] : sim.ec2.instances[0]?.id;
+      const target = sim.ec2.instances.find(i => i.id === targetId);
+      if (target) {
+        target.state = 'stopped';
+        target.cpuUtilization = 0;
+        await this.updateCloudSimulation(sim);
+        output = JSON.stringify({ StoppingInstances: [{ CurrentState: { Name: 'stopping' }, PreviousState: { Name: 'running' }, InstanceId: targetId }] }, null, 2);
+      } else {
+        output = `An error occurred (InvalidInstanceID.NotFound) when calling the StopInstances operation: The instance ID '${targetId}' does not exist`;
+        isError = true;
+      }
+    } else if (lower === 'aws s3 ls') {
+      output = sim.s3.buckets.map(b => `${b.createdAt.substring(0, 10)} 12:00:00 ${b.name}`).join('\n');
+    } else if (lower.startsWith('aws s3 ls s3://')) {
+      const bktName = trimmed.replace(/aws s3 ls s3:\/\//i, '').replace(/\/$/, '').trim();
+      const bkt = sim.s3.buckets.find(b => b.name === bktName);
+      if (bkt) {
+        output = bkt.objects.map(o => `${o.lastModified.substring(0, 10)} 10:00:00  ${o.sizeKb * 1024}  ${o.key}`).join('\n');
+      } else {
+        output = `fatal error: An error occurred (NoSuchBucket) when calling the ListObjectsV2 operation: The specified bucket does not exist.`;
+        isError = true;
+      }
+    } else if (lower.startsWith('aws s3 mb s3://')) {
+      const bktName = trimmed.replace(/aws s3 mb s3:\/\//i, '').trim();
+      if (sim.s3.buckets.find(b => b.name === bktName)) {
+        output = `fatal error: An error occurred (BucketAlreadyExists) when calling the CreateBucket operation: The requested bucket name is not available.`;
+        isError = true;
+      } else {
+        sim.s3.buckets.push({
+          id: `bkt-${Date.now()}`,
+          name: bktName,
+          region: 'us-east-1',
+          blockPublicAccess: true,
+          isPublic: false,
+          versioning: false,
+          createdAt: new Date().toISOString(),
+          objects: []
+        });
+        await this.updateCloudSimulation(sim);
+        output = `make_bucket: s3://${bktName}`;
+      }
+    } else if (lower.startsWith('aws iam list-users')) {
+      output = JSON.stringify({
+        Users: sim.iam.users.map(u => ({
+          UserName: u.username,
+          UserId: u.id,
+          Arn: `arn:aws:iam::123456789012:user/${u.username}`,
+          CreateDate: u.createdAt
+        }))
+      }, null, 2);
+    } else if (lower.startsWith('aws iam create-user')) {
+      const match = trimmed.match(/--user-name\s+([\w.-]+)/i);
+      const username = match ? match[1] : `user-${Date.now()}`;
+      sim.iam.users.push({
+        id: `usr-${Date.now()}`,
+        username,
+        accessKeyId: `AKIA${Math.random().toString(36).substring(2, 14).toUpperCase()}`,
+        policies: ['AmazonEC2ReadOnlyAccess'],
+        mfaEnabled: false,
+        createdAt: new Date().toISOString()
+      });
+      await this.updateCloudSimulation(sim);
+      output = JSON.stringify({ User: { UserName: username, Arn: `arn:aws:iam::123456789012:user/${username}` } }, null, 2);
+    } else if (lower.startsWith('aws ec2 describe-vpcs')) {
+      output = JSON.stringify({
+        Vpcs: sim.vpc.vpcs.map(v => ({
+          VpcId: v.id,
+          CidrBlock: v.cidrBlock,
+          State: 'available',
+          IsDefault: v.isDefault,
+          Tags: [{ Key: 'Name', Value: v.name }]
+        }))
+      }, null, 2);
+    } else if (lower === 'ls' || lower === 'ls -la') {
+      output = `total 24\ndrwxr-xr-x 4 devops-lead staff  128 Nov 14 05:00 .\ndrwxr-xr-x 8 root        staff  256 Nov 14 04:00 ..\n-rw-r--r-- 1 devops-lead staff  412 Nov 14 04:30 architecture.tf\n-rw-r--r-- 1 devops-lead staff  842 Nov 14 04:35 package.json\n-rw-r--r-- 1 devops-lead staff 1024 Nov 14 04:40 README.md`;
+    } else if (lower === 'pwd') {
+      output = '/home/devops-lead/workspace';
+    } else if (lower.startsWith('cat ')) {
+      const file = trimmed.replace('cat ', '').trim();
+      if (file.includes('tf') || file.includes('architecture')) {
+        output = `resource "aws_vpc" "main" {\n  cidr_block = "10.0.0.0/16"\n  tags = { Name = "production-vpc" }\n}`;
+      } else {
+        output = `# SkillPath Engineering Lab\nSimulated Cloud Workspace v2.4.\nAll simulated cloud infrastructure state is stored safely in local browser IndexedDB.`;
+      }
+    } else if (lower.startsWith('curl ')) {
+      output = `HTTP/1.1 200 OK\nDate: Sat, 14 Nov 2026 05:40:00 GMT\nServer: nginx/1.24.0\nContent-Type: application/json\nContent-Length: 42\n\n{"status":"healthy","cluster":"us-east-1a"}`;
+    } else if (lower.startsWith('git status')) {
+      output = `On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  modified:   architecture.tf\n\nno changes added to commit (use "git add" and/or "git commit -a")`;
+    } else if (lower.startsWith('git log')) {
+      output = `commit 4f91629 (HEAD -> main, origin/main)\nAuthor: SkillPath Engineer <dev@skillpath.ai>\nDate:   Sat Nov 14 05:27:06 2026 +0000\n\n    feat: integrate cloud simulation and multi-agent systems`;
+    } else {
+      output = `bash: ${trimmed.split(' ')[0]}: command not recognized. Type 'help' to see safe educational commands.`;
+      isError = true;
+    }
+
+    // Check Quests
+    let questUnlocked: TerminalQuest | undefined;
+    const storedDone = JSON.parse(localStorage.getItem('skillpath_terminal_quests_done') || '[]');
+    for (const q of SEED_TERMINAL_QUESTS) {
+      if (!storedDone.includes(q.id) && lower.includes(q.targetCommandPattern.toLowerCase())) {
+        storedDone.push(q.id);
+        localStorage.setItem('skillpath_terminal_quests_done', JSON.stringify(storedDone));
+        questUnlocked = q;
+        break;
+      }
+    }
+
+    return { output, isError, questUnlocked };
+  }
+
+  // -------------------------------------------------------------
+  // 5. SRE Incident War Room
+  // -------------------------------------------------------------
+  public async getSreIncidents(): Promise<{ incidents: SreIncidentScenario[] }> {
+    return { incidents: SEED_SRE_INCIDENTS };
+  }
+
+  public async resolveSreIncident(incidentId: string, actionId: string, durationSeconds: number): Promise<{
+    success: boolean;
+    consequence: string;
+    postMortem: any;
+    score: number;
+    credentialAwarded?: OfflinePortfolioCredential;
+  }> {
+    const userId = await this.ensureInitialized();
+    const scenario = SEED_SRE_INCIDENTS.find(i => i.id === incidentId) || SEED_SRE_INCIDENTS[0];
+    const action = scenario.mitigationOptions.find(a => a.id === actionId) || scenario.mitigationOptions[0];
+
+    const isSuccess = action.isCorrect;
+    const score = isSuccess ? Math.max(70, Math.min(100, Math.round(100 - (durationSeconds / 60) * 5))) : 40;
+
+    // Apply state remediation if valid
+    if (isSuccess && incidentId === 'inc-101') {
+      const sim = await this.getCloudSimulation();
+      const bkt = sim.s3.buckets.find(b => b.name === 'skillpath-customer-exports-backup');
+      if (bkt) {
+        bkt.blockPublicAccess = true;
+        bkt.isPublic = false;
+        await this.updateCloudSimulation(sim);
+      }
+    } else if (isSuccess && incidentId === 'inc-102') {
+      const sim = await this.getCloudSimulation();
+      if (sim.ec2.autoScalingGroups[0]) {
+        sim.ec2.autoScalingGroups[0].maxSize = 6;
+        sim.ec2.autoScalingGroups[0].desiredCapacity = 4;
+        sim.ec2.instances.forEach(i => { i.cpuUtilization = 35; });
+        await this.updateCloudSimulation(sim);
+      }
+    }
+
+    // Save attempt
+    const attempt: OfflineIncidentAttempt = {
+      id: `inc-attempt-${Date.now()}`,
+      userId,
+      scenarioId: incidentId,
+      scenarioTitle: scenario.title,
+      severity: scenario.severity,
+      resolved: isSuccess,
+      durationSeconds,
+      score,
+      actionsTaken: [action.actionName],
+      feedback: action.consequenceExplanation,
+      timestamp: new Date().toISOString()
+    };
+    await db.incidentAttempts.put(attempt);
+
+    let credentialAwarded: OfflinePortfolioCredential | undefined;
+    if (isSuccess && score >= 80) {
+      credentialAwarded = {
+        id: `cred-${Date.now()}`,
+        userId,
+        credentialId: `SKILLPATH-SRE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        title: `SRE Incident Responder: ${scenario.title}`,
+        skillCategory: 'DevOps & SRE',
+        verificationHash: Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+        scorePercentage: score,
+        issuedDate: new Date().toISOString(),
+        status: 'Verified',
+        verifiedByAgent: 'Incident Analysis Agent',
+        skillsCovered: ['Incident Triage', 'Cloud Resilience', 'Root Cause Analysis'],
+        evidenceSummary: `Successfully resolved ${scenario.code} (${scenario.title}) in ${Math.round(durationSeconds)}s with verified post-mortem.`
+      };
+      await db.portfolioCredentials.put(credentialAwarded);
+    }
+
+    return {
+      success: isSuccess,
+      consequence: action.consequenceExplanation,
+      postMortem: scenario.postMortemTemplate,
+      score,
+      credentialAwarded
+    };
+  }
+
+  // -------------------------------------------------------------
+  // 6. Placement & Diagnostic System
+  // -------------------------------------------------------------
+  public async getPlacementScenarios(): Promise<{ questions: PlacementQuestion[] }> {
+    return { questions: SEED_PLACEMENT_SCENARIOS };
+  }
+
+  public async submitPlacementAssessment(answers: Record<string, number>): Promise<{
+    result: OfflinePlacementResult;
+  }> {
+    const userId = await this.ensureInitialized();
+    const questions = SEED_PLACEMENT_SCENARIOS;
+
+    let techPoints = 0;
+    let probPoints = 0;
+    let pracPoints = 0;
+    let expPoints = 0;
+
+    questions.forEach(q => {
+      const selectedIndex = answers[q.id];
+      const selectedOption = q.options[selectedIndex] || q.options[0];
+      const pts = selectedOption.points;
+
+      if (q.dimension === 'technical') techPoints += pts;
+      else if (q.dimension === 'problem_solving') probPoints += pts;
+      else if (q.dimension === 'practical') pracPoints += pts;
+      else if (q.dimension === 'experience') expPoints += pts;
+    });
+
+    const totalPoints = techPoints + probPoints + pracPoints + expPoints;
+    const overallScore = Math.round((totalPoints / (questions.length * 10)) * 100);
+
+    let level: 1 | 2 | 3 | 4 | 5 = 1;
+    let levelName = 'Level 1: Beginner / Fresher';
+    let recommendedMode: 'student' | 'professional' = 'student';
+
+    if (overallScore >= 85) {
+      level = 5;
+      levelName = 'Level 5: Professional / SRE';
+      recommendedMode = 'professional';
+    } else if (overallScore >= 70) {
+      level = 4;
+      levelName = 'Level 4: Advanced Learner';
+      recommendedMode = 'professional';
+    } else if (overallScore >= 50) {
+      level = 3;
+      levelName = 'Level 3: Intermediate Learner';
+      recommendedMode = 'student';
+    } else if (overallScore >= 30) {
+      level = 2;
+      levelName = 'Level 2: Junior Learner';
+      recommendedMode = 'student';
+    }
+
+    const result: OfflinePlacementResult = {
+      id: `place-${Date.now()}`,
+      userId,
+      targetRole: 'Full Stack & Cloud Architecture',
+      placementLevel: level,
+      levelName,
+      technicalScore: Math.round((techPoints / 20) * 100) || 75,
+      problemSolvingScore: Math.round((probPoints / 10) * 100) || 80,
+      practicalScore: Math.round((pracPoints / 10) * 100) || 70,
+      experienceScore: Math.round((expPoints / 10) * 100) || 60,
+      overallScore,
+      recommendedMode,
+      personalizedSummary: `Based on your diagnostic score of ${overallScore}%, your demonstrated core strengths align with ${levelName}. We have initialized your curriculum pacing and placed you into ${recommendedMode.toUpperCase()} mode.`,
+      recommendedFocusAreas: [
+        'VPC Subnetting & Network Egress',
+        'Asynchronous Node.js Stream Buffers',
+        'IAM Least-Privilege Policy Enforcement'
+      ],
+      completedAt: new Date().toISOString()
+    };
+
+    await db.placementDiagnostics.put(result);
+    await this.updateLearningPreference({ mode: recommendedMode });
+
+    return { result };
+  }
+
+  // -------------------------------------------------------------
+  // 7. Security & Compliance Inspector
+  // -------------------------------------------------------------
+  public async getSecurityAudit(): Promise<{
+    score: number;
+    status: 'COMPLIANT' | 'WARNING' | 'CRITICAL';
+    findings: {
+      id: string;
+      benchmark: string;
+      title: string;
+      severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+      status: 'FAIL' | 'PASS';
+      description: string;
+      remediationSuggestion: string;
+      canAutoRemediate: boolean;
+    }[];
+  }> {
+    const sim = await this.getCloudSimulation();
+
+    const findings = [
+      {
+        id: 'cis-mfa-root',
+        benchmark: 'CIS 1.1',
+        title: 'Enforce Multi-Factor Authentication on All IAM Users',
+        severity: 'HIGH' as const,
+        status: sim.iam.users.every(u => u.mfaEnabled) ? ('PASS' as const) : ('FAIL' as const),
+        description: 'One or more IAM users have console access without MFA enabled (developer-alex).',
+        remediationSuggestion: 'Enable virtual MFA token on developer-alex credentials.',
+        canAutoRemediate: true
+      },
+      {
+        id: 'cis-iam-wildcard',
+        benchmark: 'CIS 1.16',
+        title: 'Ensure IAM Least Privilege (No Wildcard Admin on Service Accounts)',
+        severity: 'CRITICAL' as const,
+        status: sim.iam.users.some(u => u.username === 'developer-alex' && u.policies.includes('AdministratorAccess')) ? ('FAIL' as const) : ('PASS' as const),
+        description: 'AdministratorAccess attached directly to non-admin developer user.',
+        remediationSuggestion: 'Detach AdministratorAccess and replace with scoped developer policy.',
+        canAutoRemediate: true
+      },
+      {
+        id: 'cis-s3-public',
+        benchmark: 'CIS 2.1',
+        title: 'Ensure S3 Bucket Block Public Access is Enabled',
+        severity: 'CRITICAL' as const,
+        status: sim.s3.buckets.every(b => b.blockPublicAccess) ? ('PASS' as const) : ('FAIL' as const),
+        description: 'Bucket skillpath-customer-exports-backup allows public unauthenticated reads.',
+        remediationSuggestion: 'Enable BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy on all buckets.',
+        canAutoRemediate: true
+      },
+      {
+        id: 'cis-sg-ssh',
+        benchmark: 'CIS 4.1',
+        title: 'Ensure Security Groups Do Not Allow 0.0.0.0/0 on Port 22 (SSH)',
+        severity: 'HIGH' as const,
+        status: sim.ec2.securityGroups.some(sg => sg.inboundRules.some(r => r.port === 22 && r.source === '0.0.0.0/0')) ? ('FAIL' as const) : ('PASS' as const),
+        description: 'Security group sg-web-public permits inbound SSH (Port 22) from the entire internet.',
+        remediationSuggestion: 'Restrict SSH ingress to specific corporate bastion IP or VPN CIDR.',
+        canAutoRemediate: true
+      },
+      {
+        id: 'cis-cloudtrail',
+        benchmark: 'CIS 3.1',
+        title: 'Ensure Multi-Region CloudTrail Audit Logging is Active',
+        severity: 'MEDIUM' as const,
+        status: 'PASS' as const,
+        description: 'CloudTrail audit vault bucket skillpath-cloudtrail-audit-vault is active.',
+        remediationSuggestion: 'Keep logging enabled with Object Lock immutability.',
+        canAutoRemediate: false
+      }
+    ];
+
+    const passCount = findings.filter(f => f.status === 'PASS').length;
+    const score = Math.round((passCount / findings.length) * 100);
+    const status = score >= 85 ? 'COMPLIANT' : score >= 60 ? 'WARNING' : 'CRITICAL';
+
+    return { score, status, findings };
+  }
+
+  public async remediateSecurityIssue(findingId: string): Promise<{ success: boolean; message: string }> {
+    const sim = await this.getCloudSimulation();
+
+    if (findingId === 'cis-mfa-root') {
+      sim.iam.users.forEach(u => { u.mfaEnabled = true; });
+      await this.updateCloudSimulation(sim);
+      return { success: true, message: 'Enabled MFA across all active IAM user accounts.' };
+    } else if (findingId === 'cis-iam-wildcard') {
+      const user = sim.iam.users.find(u => u.username === 'developer-alex');
+      if (user) {
+        user.policies = user.policies.filter(p => p !== 'AdministratorAccess');
+        user.policies.push('AmazonEC2ReadOnlyAccess');
+        await this.updateCloudSimulation(sim);
+      }
+      return { success: true, message: 'Detached AdministratorAccess policy from developer-alex and enforced least privilege.' };
+    } else if (findingId === 'cis-s3-public') {
+      sim.s3.buckets.forEach(b => {
+        b.blockPublicAccess = true;
+        b.isPublic = false;
+      });
+      await this.updateCloudSimulation(sim);
+      return { success: true, message: 'Enabled S3 Block Public Access on all buckets.' };
+    } else if (findingId === 'cis-sg-ssh') {
+      const webSg = sim.ec2.securityGroups.find(sg => sg.id === 'sg-web-public');
+      if (webSg) {
+        webSg.inboundRules = webSg.inboundRules.filter(r => !(r.port === 22 && r.source === '0.0.0.0/0'));
+        await this.updateCloudSimulation(sim);
+      }
+      return { success: true, message: 'Removed unrestricted 0.0.0.0/0 SSH rule from sg-web-public.' };
+    }
+
+    return { success: false, message: 'Manual remediation required for this finding.' };
+  }
+
+  // -------------------------------------------------------------
+  // 8. Verified Proof of Work Portfolio
+  // -------------------------------------------------------------
+  public async getPortfolioCredentials(): Promise<{ credentials: OfflinePortfolioCredential[] }> {
+    const userId = await this.ensureInitialized();
+    let creds = await db.portfolioCredentials.where('userId').equals(userId).toArray();
+    if (creds.length === 0) {
+      await db.portfolioCredentials.bulkAdd(SEED_PORTFOLIO_CREDENTIALS);
+      creds = SEED_PORTFOLIO_CREDENTIALS;
+    }
+    return { credentials: creds };
   }
 }
 
