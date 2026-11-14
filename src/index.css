@@ -4,8 +4,29 @@
 
 @layer base {
   :root {
-    --brand-primary: #0F5C7A;
-    --brand-dark: #08303F;
+    --brand-primary: #3B3FD9;
+    --brand-hover: #2E32B6;
+    --brand-light-tint: #EEF0FD;
+    --app-bg: #F7F8FA;
+    --surface-card: #FFFFFF;
+    --surface-muted: #F2F4F7;
+    --border-divider: #E4E7EC;
+    --text-primary: #1D2939;
+    --text-secondary: #475467;
+    --text-muted: #667085;
+  }
+
+  html.dark {
+    --brand-primary: #6366F1;
+    --brand-hover: #4F46E5;
+    --brand-light-tint: rgba(49, 46, 129, 0.3);
+    --app-bg: #0B0F19;
+    --surface-card: #111827;
+    --surface-muted: #1F2937;
+    --border-divider: #374151;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
   }
 
   html {
@@ -13,11 +34,49 @@
   }
 
   body {
-    @apply bg-surface-subtle text-charcoal font-sans antialiased selection:bg-brand-100 selection:text-brand-900;
+    background-color: var(--app-bg);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   html.dark body {
-    @apply bg-surface-dark-subtle text-slate-100 selection:bg-brand-900 selection:text-brand-100;
+    background-color: var(--app-bg);
+    color: var(--text-primary);
+  }
+}
+
+@layer utilities {
+  .bg-app-bg {
+    background-color: var(--app-bg);
+  }
+  .bg-surface-card {
+    background-color: var(--surface-card);
+  }
+  .bg-surface-muted {
+    background-color: var(--surface-muted);
+  }
+  .border-divider {
+    border-color: var(--border-divider);
+  }
+  .text-semantic-primary {
+    color: var(--text-primary);
+  }
+  .text-semantic-secondary {
+    color: var(--text-secondary);
+  }
+  .text-semantic-muted {
+    color: var(--text-muted);
+  }
+  .bg-brand-primary {
+    background-color: var(--brand-primary);
+  }
+  .bg-brand-hover {
+    background-color: var(--brand-hover);
+  }
+  .bg-brand-tint {
+    background-color: var(--brand-light-tint);
   }
 }
 
@@ -30,7 +89,7 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E5E7EB;
+  background: #E4E7EC;
   border-radius: 4px;
 }
 .dark ::-webkit-scrollbar-thumb {

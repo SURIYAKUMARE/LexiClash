@@ -17,7 +17,7 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const variantClasses = {
-    brand: 'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border-brand-200 dark:border-brand-800',
+    brand: 'bg-brand-50 dark:bg-[#312E81]/30 text-brand-700 dark:text-indigo-200 border-brand-200 dark:border-indigo-800/50',
     success: 'bg-status-success-bg dark:bg-emerald-950/60 text-status-success dark:text-emerald-400 border-status-success-border dark:border-emerald-900',
     warning: 'bg-status-warning-bg dark:bg-amber-950/60 text-status-warning dark:text-amber-400 border-status-warning-border dark:border-amber-900',
     danger: 'bg-status-danger-bg dark:bg-red-950/60 text-status-danger dark:text-red-400 border-status-danger-border dark:border-red-900',

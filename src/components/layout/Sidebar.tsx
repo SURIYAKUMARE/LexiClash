@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
             clsx(
               'flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
               isActive
-                ? 'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-semibold'
+                ? 'bg-brand-50 dark:bg-[#312E81]/30 text-brand-700 dark:text-indigo-300 font-semibold'
                 : 'text-charcoal-muted dark:text-slate-300 hover:text-charcoal dark:hover:text-white hover:bg-surface-muted dark:hover:bg-surface-dark-muted'
             )
           }

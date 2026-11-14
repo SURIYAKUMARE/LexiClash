@@ -24,9 +24,9 @@ export const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-brand-600 disabled:opacity-50 disabled:cursor-not-allowed select-none text-xs';
 
   const variantClasses = {
-    primary: 'bg-brand-600 hover:bg-brand-700 text-white border border-brand-700 active:bg-brand-800 shadow-xs',
-    secondary: 'bg-surface-muted dark:bg-surface-dark-muted hover:bg-slate-200 dark:hover:bg-slate-700 text-charcoal dark:text-slate-200 border border-surface-border dark:border-surface-dark-border',
-    outline: 'border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal dark:text-slate-200 hover:bg-surface-subtle dark:hover:bg-surface-dark-muted',
+    primary: 'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white border border-brand-700 dark:bg-brand-500 dark:hover:bg-[#4F46E5] dark:border-indigo-500 shadow-xs',
+    secondary: 'bg-surface-muted dark:bg-surface-dark-muted hover:bg-slate-200 dark:hover:bg-slate-700 text-charcoal dark:text-slate-100 border border-surface-border dark:border-surface-dark-border',
+    outline: 'border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal dark:text-slate-100 hover:bg-surface-subtle dark:hover:bg-surface-dark-muted',
     danger: 'bg-status-danger hover:bg-red-700 text-white border border-red-700 shadow-xs',
     ghost: 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal dark:hover:text-white hover:bg-surface-muted dark:hover:bg-surface-dark-muted',
     success: 'bg-status-success hover:bg-emerald-700 text-white border border-emerald-700 shadow-xs',
