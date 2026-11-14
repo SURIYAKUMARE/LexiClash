@@ -403,6 +403,90 @@ export interface OfflineLearningPreference {
   updatedAt: string;
 }
 
+export interface OfflineCodingChallenge {
+  id: string;
+  title: string;
+  language: 'javascript' | 'python' | 'sql';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category: string;
+  description: string;
+  instructions: string[];
+  starterCode: string;
+  solutionTemplate: string;
+  testCases: {
+    id: string;
+    description: string;
+    input: any;
+    expectedOutput: any;
+    isHidden: boolean;
+  }[];
+  skillAffected: string;
+  targetLevel: number;
+}
+
+export interface OfflineCodingAttempt {
+  id: string;
+  userId: string;
+  challengeId: string;
+  challengeTitle: string;
+  language: 'javascript' | 'python' | 'sql';
+  codeSubmitted: string;
+  totalTests: number;
+  passedTests: number;
+  passed: boolean;
+  score: number;
+  executionTimeMs: number;
+  timestamp: string;
+}
+
+export interface OfflineMockInterview {
+  id: string;
+  userId: string;
+  roleId: string;
+  roleTitle: string;
+  overallScore: number;
+  technicalScore: number;
+  architectureScore: number;
+  clarityScore: number;
+  edgeCaseScore: number;
+  readinessRating: 'Ready' | 'Needs Reinforcement' | 'Developing';
+  feedbackSummary: string;
+  strengths: string[];
+  blindSpots: string[];
+  recommendedModules: string[];
+  completedAt: string;
+}
+
+export interface OfflineProjectSubmission {
+  id: string;
+  userId: string;
+  projectId: string;
+  projectTitle: string;
+  githubRepoUrl: string;
+  branch: string;
+  commitHash: string;
+  milestonesCompleted: number;
+  totalMilestones: number;
+  status: 'In Progress' | 'Submitted' | 'Verified';
+  rubricScore: number;
+  rubricDetails: { category: string; score: number; maxScore: number; notes: string }[];
+  submittedAt: string;
+  verifiedAt?: string;
+  credentialId?: string;
+}
+
+export interface OfflineSyncItem {
+  id: string;
+  userId: string;
+  entity: string;
+  action: 'CREATE' | 'UPDATE' | 'DELETE';
+  payload: any;
+  status: 'PENDING' | 'SYNCED' | 'FAILED';
+  clientTimestamp: string;
+  syncedAt?: string;
+  retryCount: number;
+}
+
 export class SkillPathOfflineDatabase extends Dexie {
   users!: Table<OfflineUser, string>;
   profiles!: Table<OfflineProfile, string>;
@@ -420,6 +504,11 @@ export class SkillPathOfflineDatabase extends Dexie {
   placementDiagnostics!: Table<OfflinePlacementResult, string>;
   portfolioCredentials!: Table<OfflinePortfolioCredential, string>;
   learningPreferences!: Table<OfflineLearningPreference, string>;
+  codingChallenges!: Table<OfflineCodingChallenge, string>;
+  codingAttempts!: Table<OfflineCodingAttempt, string>;
+  mockInterviews!: Table<OfflineMockInterview, string>;
+  projectSubmissions!: Table<OfflineProjectSubmission, string>;
+  syncQueue!: Table<OfflineSyncItem, string>;
 
   constructor() {
     super('SkillPathOfflineDB');
@@ -443,6 +532,14 @@ export class SkillPathOfflineDatabase extends Dexie {
       placementDiagnostics: 'id, userId, completedAt',
       portfolioCredentials: 'id, userId, credentialId, status',
       learningPreferences: 'id, userId',
+    });
+
+    this.version(3).stores({
+      codingChallenges: 'id, language, difficulty, category',
+      codingAttempts: 'id, userId, challengeId, language, passed, timestamp',
+      mockInterviews: 'id, userId, roleId, status, timestamp',
+      projectSubmissions: 'id, userId, projectId, status, submittedAt',
+      syncQueue: 'id, userId, entity, action, status, timestamp',
     });
   }
 }

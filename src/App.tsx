@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Layout } from './components/layout/Layout';
 
 import { Login } from './pages/Login';
@@ -81,84 +82,86 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-          {/* Public Authentication Routes */}
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            }
-          />
+        <ErrorBoundary>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Authentication Routes */}
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <PublicRoute>
+                    <Register />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <PublicRoute>
+                    <ForgotPassword />
+                  </PublicRoute>
+                }
+              />
 
-          {/* Onboarding Wizard */}
-          <Route
-            path="/onboarding"
-            element={
-              <ProtectedRoute>
-                <Onboarding />
-              </ProtectedRoute>
-            }
-          />
+              {/* Onboarding Wizard */}
+              <Route
+                path="/onboarding"
+                element={
+                  <ProtectedRoute>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
 
-          {/* Protected Main Application Shell */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<DashboardOverview />} />
-            <Route path="universe" element={<LearningUniverse />} />
-            <Route path="placement" element={<PlacementDiagnostic />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="diagnostics" element={<SkillDiagnostics />} />
-            <Route path="skills" element={<SkillDiagnostics />} />
-            <Route path="careers" element={<CareerExplorer />} />
-            <Route path="roadmap" element={<LearningRoadmap />} />
-            <Route path="cloud-console" element={<CloudConsole />} />
-            <Route path="architecture" element={<ArchitectureVisualizer />} />
-            <Route path="war-room" element={<IncidentWarRoom />} />
-            <Route path="terminal" element={<SimulatedTerminal />} />
-            <Route path="security-inspector" element={<SecurityInspector />} />
-            <Route path="portfolio" element={<VerifiedPortfolio />} />
-            <Route path="resources" element={<ResourceLibrary />} />
-            <Route path="assessments" element={<Assessments />} />
-            <Route path="mentor" element={<AIMentor />} />
-            <Route path="agents" element={<AgentActivityMonitor />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="analytics" element={<ProgressAnalytics />} />
-            <Route path="certificates" element={<Certificates />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
+              {/* Protected Main Application Shell */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<DashboardOverview />} />
+                <Route path="universe" element={<LearningUniverse />} />
+                <Route path="placement" element={<PlacementDiagnostic />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="diagnostics" element={<SkillDiagnostics />} />
+                <Route path="skills" element={<SkillDiagnostics />} />
+                <Route path="careers" element={<CareerExplorer />} />
+                <Route path="roadmap" element={<LearningRoadmap />} />
+                <Route path="cloud-console" element={<CloudConsole />} />
+                <Route path="architecture" element={<ArchitectureVisualizer />} />
+                <Route path="war-room" element={<IncidentWarRoom />} />
+                <Route path="terminal" element={<SimulatedTerminal />} />
+                <Route path="security-inspector" element={<SecurityInspector />} />
+                <Route path="portfolio" element={<VerifiedPortfolio />} />
+                <Route path="resources" element={<ResourceLibrary />} />
+                <Route path="assessments" element={<Assessments />} />
+                <Route path="mentor" element={<AIMentor />} />
+                <Route path="agents" element={<AgentActivityMonitor />} />
+                <Route path="projects" element={<Projects />} />
+                <Route path="analytics" element={<ProgressAnalytics />} />
+                <Route path="certificates" element={<Certificates />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
 
-          {/* Catch-all Fallback */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  </ThemeProvider>
+              {/* Catch-all Fallback */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ErrorBoundary>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

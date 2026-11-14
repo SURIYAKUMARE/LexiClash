@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
@@ -8,12 +8,18 @@ import {
   Key,
   Bell,
   Download,
+  Upload,
   CheckCircle2,
   Moon,
   Sun,
   User,
-  Check
+  Check,
+  RefreshCw,
+  Database,
+  ShieldCheck,
+  Radio
 } from 'lucide-react';
+import { OfflineSyncManager, SyncStatus, ConflictStrategy } from '../offlineSync/syncManager';
 
 export const Settings: React.FC = () => {
   const { user, profile, updateProfile } = useAuth();
@@ -35,6 +41,25 @@ export const Settings: React.FC = () => {
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [adaptiveNotifs, setAdaptiveNotifs] = useState(true);
   const [weeklyDigest, setWeeklyDigest] = useState(true);
+
+  // Offline Sync & Portability State
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>({
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+    isSyncing: false,
+    pendingCount: 0,
+    lastSyncedAt: null,
+    conflictStrategy: 'client-wins'
+  });
+  const [importStatusMessage, setImportStatusMessage] = useState<{ text: string; isError: boolean } | null>(null);
+  const [isExportingFull, setIsExportingFull] = useState(false);
+  const [isSyncingNow, setIsSyncingNow] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    OfflineSyncManager.init();
+    const unsubscribe = OfflineSyncManager.subscribe(setSyncStatus);
+    return () => unsubscribe();
+  }, []);
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,12 +114,55 @@ export const Settings: React.FC = () => {
     }
   };
 
+  const handleExportFullBackup = async () => {
+    try {
+      setIsExportingFull(true);
+      const json = await OfflineSyncManager.exportBackup();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `skillpath-database-v3-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      alert(`Export failed: ${err.message}`);
+    } finally {
+      setIsExportingFull(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const res = await OfflineSyncManager.importBackup(text);
+      setImportStatusMessage({ text: res.message, isError: !res.success });
+      if (res.success) {
+        setTimeout(() => window.location.reload(), 1500);
+      }
+    } catch (err: any) {
+      setImportStatusMessage({ text: `Failed to parse backup: ${err.message}`, isError: true });
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleTriggerSync = async () => {
+    setIsSyncingNow(true);
+    await OfflineSyncManager.processSyncQueue();
+    setIsSyncingNow(false);
+  };
+
   const tabs = [
     { key: 'profile', label: 'Profile' },
     { key: 'appearance', label: 'Appearance' },
     { key: 'notifications', label: 'Notifications' },
     { key: 'engine', label: 'AI Provider Key' },
-    { key: 'export', label: 'Data Export' }
+    { key: 'export', label: 'Data & Offline Sync' }
   ] as const;
 
   return (
@@ -368,33 +436,210 @@ export const Settings: React.FC = () => {
         </Card>
       )}
 
-      {/* TAB 5: DATA EXPORT */}
+      {/* TAB 5: DATA PORTABILITY & OFFLINE SYNC */}
       {activeTab === 'export' && (
-        <Card className="space-y-4">
-          <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
-            <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
-              Data Portability & Export
-            </h2>
-            <p className="text-xs text-charcoal-muted dark:text-slate-400">
-              Download your verified skill credentials, roadmap progress, and assessment telemetry.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed max-w-lg">
-              You own all data generated on SkillPath. Exporting downloads an unencrypted JSON document containing your profile, verified competencies, curriculum progress, and diagnostic history.
-            </p>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportData}
-              leftIcon={<Download className="w-4 h-4" />}
+        <div className="space-y-6">
+          {importStatusMessage && (
+            <div
+              className={`p-3.5 rounded-xl border text-xs flex items-center gap-2.5 animate-fade-in ${
+                importStatusMessage.isError
+                  ? 'bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-200'
+                  : 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-200'
+              }`}
             >
-              Download Learning History (.JSON)
-            </Button>
-          </div>
-        </Card>
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>{importStatusMessage.text}</span>
+            </div>
+          )}
+
+          {/* Offline Sync State Card */}
+          <Card className="space-y-4">
+            <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold text-charcoal dark:text-slate-100 flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4 text-brand-600" />
+                  Offline Sync Status & Outbox
+                </h2>
+                <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
+                  Local-first Dexie IndexedDB persistence with background outbox synchronization.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-2.5 h-2.5 rounded-full ${
+                    syncStatus.isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+                  }`}
+                />
+                <span className="font-mono text-xs font-semibold text-charcoal dark:text-slate-200">
+                  {syncStatus.isOnline ? 'Network Online' : 'Network Offline (IndexedDB Active)'}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3 bg-surface-subtle dark:bg-surface-dark-card rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[10px] font-semibold text-charcoal-subtle uppercase tracking-wider block">
+                  Pending Sync Mutations
+                </span>
+                <span className="text-xl font-bold font-mono text-charcoal dark:text-slate-100 mt-0.5 block">
+                  {syncStatus.pendingCount} records
+                </span>
+              </div>
+
+              <div className="p-3 bg-surface-subtle dark:bg-surface-dark-card rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[10px] font-semibold text-charcoal-subtle uppercase tracking-wider block">
+                  Last Synchronization
+                </span>
+                <span className="text-sm font-mono font-medium text-charcoal dark:text-slate-100 mt-1 block">
+                  {syncStatus.lastSyncedAt || 'Not yet synced'}
+                </span>
+              </div>
+
+              <div className="p-3 bg-surface-subtle dark:bg-surface-dark-card rounded-lg border border-surface-border dark:border-surface-dark-border">
+                <span className="text-[10px] font-semibold text-charcoal-subtle uppercase tracking-wider block">
+                  Active Conflict Rule
+                </span>
+                <span className="text-xs font-mono font-bold text-brand-600 dark:text-brand-400 mt-1 block uppercase">
+                  {syncStatus.conflictStrategy}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex flex-wrap gap-2 items-center">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleTriggerSync}
+                disabled={isSyncingNow || syncStatus.pendingCount === 0}
+                className="text-xs gap-1.5"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncingNow ? 'animate-spin' : ''}`} />
+                {isSyncingNow ? 'Processing Sync...' : `Process Outbox Queue (${syncStatus.pendingCount})`}
+              </Button>
+            </div>
+          </Card>
+
+          {/* Conflict Resolution Strategy */}
+          <Card className="space-y-4">
+            <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
+              <h2 className="text-sm font-bold text-charcoal dark:text-slate-100 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-brand-600" />
+                Conflict Resolution Strategy
+              </h2>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
+                Determine reconciliation precedence when mutations occur offline on multiple clients.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => OfflineSyncManager.setConflictStrategy('client-wins')}
+                className={`p-3.5 rounded-xl border text-left transition-all ${
+                  syncStatus.conflictStrategy === 'client-wins'
+                    ? 'border-brand-600 bg-brand-50/40 dark:bg-brand-950/30'
+                    : 'border-surface-border dark:border-surface-dark-border hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-charcoal dark:text-slate-100">
+                    Client-Wins (Local First)
+                  </span>
+                  {syncStatus.conflictStrategy === 'client-wins' && (
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                  )}
+                </div>
+                <p className="text-[11px] text-charcoal-muted dark:text-slate-400 leading-relaxed">
+                  IndexedDB client records remain authoritative during merge. Recommended for private study environments.
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => OfflineSyncManager.setConflictStrategy('last-write-wins')}
+                className={`p-3.5 rounded-xl border text-left transition-all ${
+                  syncStatus.conflictStrategy === 'last-write-wins'
+                    ? 'border-brand-600 bg-brand-50/40 dark:bg-brand-950/30'
+                    : 'border-surface-border dark:border-surface-dark-border hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-charcoal dark:text-slate-100">
+                    Last-Write-Wins (Timestamp)
+                  </span>
+                  {syncStatus.conflictStrategy === 'last-write-wins' && (
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                  )}
+                </div>
+                <p className="text-[11px] text-charcoal-muted dark:text-slate-400 leading-relaxed">
+                  Evaluates ISO-8601 mutation timestamps and preserves whichever record has the latest timestamp.
+                </p>
+              </button>
+            </div>
+          </Card>
+
+          {/* Database Backup & Restore */}
+          <Card className="space-y-4">
+            <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
+              <h2 className="text-sm font-bold text-charcoal dark:text-slate-100 flex items-center gap-2">
+                <Database className="w-4 h-4 text-brand-600" />
+                IndexedDB Snapshot Backup & Restore
+              </h2>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
+                Export an all-table schema snapshot or restore from an existing JSON state file.
+              </p>
+            </div>
+
+            <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed max-w-xl">
+              You own all data stored inside your browser. Exporting produces an unencrypted snapshot containing verified competencies, coding challenges, capstone submissions, mock interview scorecards, and learning roadmap modules.
+            </p>
+
+            <div className="flex flex-wrap gap-3 pt-1">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleExportFullBackup}
+                disabled={isExportingFull}
+                className="text-xs gap-1.5"
+              >
+                <Download className="w-4 h-4" />
+                {isExportingFull ? 'Generating Snapshot...' : 'Export Full Database Backup (.JSON)'}
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportData}
+                className="text-xs gap-1.5"
+              >
+                <Download className="w-4 h-4" />
+                Export Profile & Progress (.JSON)
+              </Button>
+
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept=".json"
+                className="hidden"
+              />
+
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                className="text-xs gap-1.5"
+              >
+                <Upload className="w-4 h-4" />
+                Restore Snapshot from File
+              </Button>
+            </div>
+
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg text-[11px] text-amber-900 dark:text-amber-300">
+              <strong>Notice:</strong> Restoring a backup merges database records into your current IndexedDB instance using non-destructive bulk upsertion.
+            </div>
+          </Card>
+        </div>
       )}
     </div>
   );

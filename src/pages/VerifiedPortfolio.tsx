@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { OfflinePortfolioCredential } from '../db/indexedDb';
+import { db, OfflinePortfolioCredential, OfflineSkill, OfflineCodingAttempt, OfflineProjectSubmission } from '../db/indexedDb';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -15,20 +15,33 @@ import {
   Layers,
   Terminal,
   Activity,
-  FileText
+  FileText,
+  Code2,
+  FolderGit2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const VerifiedPortfolio: React.FC = () => {
   const [credentials, setCredentials] = useState<OfflinePortfolioCredential[]>([]);
+  const [verifiedSkills, setVerifiedSkills] = useState<OfflineSkill[]>([]);
+  const [codingAttempts, setCodingAttempts] = useState<OfflineCodingAttempt[]>([]);
+  const [projectSubmissions, setProjectSubmissions] = useState<OfflineProjectSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCreds = async () => {
       try {
-        const res = await api.getPortfolioCredentials();
-        setCredentials(res.credentials);
+        const [res, skillsData, attemptsData, submissionsData] = await Promise.all([
+          api.getPortfolioCredentials(),
+          db.skills.where('isVerified').equals(1).toArray(),
+          db.codingAttempts.where('passed').equals(1).toArray(),
+          db.projectSubmissions.toArray()
+        ]);
+        setCredentials(res.credentials || []);
+        setVerifiedSkills(skillsData || []);
+        setCodingAttempts(attemptsData || []);
+        setProjectSubmissions(submissionsData || []);
       } catch (err) {
         console.error('Failed to load portfolio credentials:', err);
       } finally {
@@ -205,6 +218,100 @@ export const VerifiedPortfolio: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* SECTION 2: VERIFIED COMPETENCIES TABLE */}
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+          <Award className="w-4 h-4 text-emerald-600" />
+          Verified Technical Competencies
+        </h2>
+
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-surface-subtle dark:bg-slate-800 border-b border-surface-border dark:border-surface-dark-border text-charcoal-subtle dark:text-slate-400 font-mono text-[11px]">
+                  <th className="p-3">Skill Name</th>
+                  <th className="p-3">Category</th>
+                  <th className="p-3">Proficiency</th>
+                  <th className="p-3">Verified Score</th>
+                  <th className="p-3">Proof of Work Evidence</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-surface-border dark:divide-surface-dark-border">
+                {verifiedSkills.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-4 text-center text-charcoal-muted">
+                      Complete real coding assessments to verify competencies.
+                    </td>
+                  </tr>
+                ) : (
+                  verifiedSkills.map(s => (
+                    <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                      <td className="p-3 font-bold text-charcoal dark:text-white flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        {s.skillName}
+                      </td>
+                      <td className="p-3 font-mono text-[10px] uppercase text-charcoal-subtle">{s.category}</td>
+                      <td className="p-3">
+                        <Badge variant="success" size="sm">
+                          Level {s.proficiencyLevel} / 5
+                        </Badge>
+                      </td>
+                      <td className="p-3 font-mono font-bold text-emerald-600">
+                        {s.verifiedScore || 100}%
+                      </td>
+                      <td className="p-3 text-[11px] text-charcoal-muted dark:text-slate-300">
+                        {s.evidence || 'Passed verified algorithmic coding challenge.'}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+
+      {/* SECTION 3: PROJECT LAB EVIDENCE */}
+      {projectSubmissions.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-sm font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+            <FolderGit2 className="w-4 h-4 text-brand-600" />
+            Verified Project Lab Submissions
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {projectSubmissions.map(sub => (
+              <Card key={sub.id} className="p-4 space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xs font-bold text-charcoal dark:text-white">{sub.projectTitle}</h3>
+                    <a
+                      href={sub.githubRepoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-mono text-[10px] text-brand-600 hover:underline flex items-center gap-1 mt-0.5"
+                    >
+                      {sub.githubRepoUrl} <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+                  <Badge variant={sub.status === 'Verified' ? 'success' : 'warning'} size="sm">
+                    {sub.status}
+                  </Badge>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] pt-2 border-t border-surface-border dark:border-surface-dark-border">
+                  <span className="text-charcoal-muted">Rubric Score: <strong>{sub.rubricScore}%</strong></span>
+                  <span className="text-charcoal-subtle font-mono text-[10px]">
+                    Milestones: {sub.milestonesCompleted}/{sub.totalMilestones}
+                  </span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

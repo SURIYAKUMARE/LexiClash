@@ -18,10 +18,12 @@ import {
   RefreshCw,
   FolderGit2
 } from 'lucide-react';
+import { ProjectLabWorkspace } from '../components/projectLab/ProjectLabWorkspace';
 
 export const Projects: React.FC = () => {
   const { profile } = useAuth();
 
+  const [viewTab, setViewTab] = useState<'lab' | 'ideas'>('lab');
   const [projects, setProjects] = useState<OfflineProjectIdea[]>([]);
   const [skills, setSkills] = useState<OfflineSkill[]>([]);
   const [careers, setCareers] = useState<OfflineCareerRole[]>([]);
@@ -93,34 +95,62 @@ export const Projects: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight font-sans">
-              Interactive Project Idea Generator
-            </h1>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-blue-50 text-stitch-blue dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
-              Synergy Engine
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-charcoal-muted dark:text-slate-400 mt-1">
-            Tailored capstone project briefs synthesizing your existing strengths with newly learned target skills for portfolio proof of work.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleGenerateFreshIdeas}
-            disabled={isGenerating}
-            leftIcon={<Sparkles className="w-3.5 h-3.5" />}
-          >
-            {isGenerating ? 'Synthesizing...' : 'Generate New Briefs'}
-          </Button>
-        </div>
+      {/* Top Navigation Tabs */}
+      <div className="flex items-center gap-2 p-1 bg-surface-subtle dark:bg-slate-800 rounded-xl border border-surface-border dark:border-surface-dark-border w-fit">
+        <button
+          onClick={() => setViewTab('lab')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewTab === 'lab'
+              ? 'bg-white dark:bg-surface-dark text-brand-600 dark:text-brand-400 shadow-xs'
+              : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+          }`}
+        >
+          Real-World Project Lab
+        </button>
+        <button
+          onClick={() => setViewTab('ideas')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewTab === 'ideas'
+              ? 'bg-white dark:bg-surface-dark text-brand-600 dark:text-brand-400 shadow-xs'
+              : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+          }`}
+        >
+          Project Idea Generator
+        </button>
       </div>
+
+      {viewTab === 'lab' ? (
+        <ProjectLabWorkspace />
+      ) : (
+        <div className="space-y-6">
+          {/* Header bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight font-sans">
+                  Interactive Project Idea Generator
+                </h1>
+                <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-blue-50 text-stitch-blue dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+                  Synergy Engine
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-charcoal-muted dark:text-slate-400 mt-1">
+                Tailored capstone project briefs synthesizing your existing strengths with newly learned target skills for portfolio proof of work.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleGenerateFreshIdeas}
+                disabled={isGenerating}
+                leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+              >
+                {isGenerating ? 'Synthesizing...' : 'Generate New Briefs'}
+              </Button>
+            </div>
+          </div>
 
       {/* Synergy Formula Banner */}
       <Card className="border-l-4 border-l-stitch-blue space-y-2">
@@ -207,9 +237,11 @@ export const Projects: React.FC = () => {
             </div>
           </Card>
         ))}
+        </div>
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
 };
 
 export default Projects;

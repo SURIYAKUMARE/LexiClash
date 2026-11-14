@@ -105,7 +105,10 @@ export const DashboardOverview: React.FC = () => {
   ];
 
   const skillGaps = benchmarkSkills.map(b => {
-    const matched = skills.find(s => s.name.toLowerCase() === b.name.toLowerCase());
+    const matched = skills.find(s => {
+      const sName = (s as any).skillName || (s as any).name || '';
+      return sName.toLowerCase() === b.name.toLowerCase();
+    });
     const currentLevel = matched ? matched.proficiencyLevel : b.defaultCurrent;
     const gap = b.targetLevel - currentLevel;
     return {

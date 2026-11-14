@@ -18,9 +18,11 @@ import {
   BookOpen
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { CareerSimulatorWorkspace } from '../components/careerSimulator/CareerSimulatorWorkspace';
 
 export const PlacementDiagnostic: React.FC = () => {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'simulator' | 'diagnostic'>('simulator');
   const [questions, setQuestions] = useState<PlacementQuestion[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -70,6 +72,20 @@ export const PlacementDiagnostic: React.FC = () => {
   if (placementResult) {
     return (
       <div className="max-w-4xl mx-auto space-y-6 pb-12">
+        <div className="flex items-center gap-2 p-1 bg-surface-subtle dark:bg-slate-800 rounded-xl border border-surface-border dark:border-surface-dark-border w-fit">
+          <button
+            onClick={() => setViewMode('simulator')}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-charcoal-muted dark:text-slate-400 hover:text-charcoal"
+          >
+            Mock Interview Simulator
+          </button>
+          <button
+            onClick={() => setViewMode('diagnostic')}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-surface-dark text-brand-600 dark:text-brand-400 shadow-xs"
+          >
+            Role Diagnostic Quiz
+          </button>
+        </div>
         {/* Placement Completed Banner */}
         <div className="bg-white dark:bg-surface-dark-card border border-surface-border dark:border-surface-dark-border rounded-xl p-8 text-center shadow-xs">
           <div className="w-14 h-14 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-600 dark:text-brand-300 flex items-center justify-center mx-auto mb-4">
@@ -208,34 +224,62 @@ export const PlacementDiagnostic: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-12">
-      {/* Header */}
-      <div className="pb-4 border-b border-surface-border dark:border-surface-dark-border flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
-              Diagnostic Assessment
-            </span>
-            <span className="text-xs text-charcoal-subtle dark:text-slate-400">
-              Step {currentStep + 1} of {questions.length}
-            </span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
-            Intelligent Placement Assessment
-          </h1>
-          <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
-            Evaluate your baseline technical knowledge, architectural problem-solving, and practical readiness.
-          </p>
-        </div>
-
-        <Link to="/universe">
-          <Button size="sm" variant="secondary" className="text-xs">
-            Cancel
-          </Button>
-        </Link>
+    <div className="max-w-5xl mx-auto space-y-6 pb-12">
+      {/* Top Mode Navigation Tabs */}
+      <div className="flex items-center gap-2 p-1 bg-surface-subtle dark:bg-slate-800 rounded-xl border border-surface-border dark:border-surface-dark-border w-fit">
+        <button
+          onClick={() => setViewMode('simulator')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewMode === 'simulator'
+              ? 'bg-white dark:bg-surface-dark text-brand-600 dark:text-brand-400 shadow-xs'
+              : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+          }`}
+        >
+          Mock Interview Simulator
+        </button>
+        <button
+          onClick={() => setViewMode('diagnostic')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            viewMode === 'diagnostic'
+              ? 'bg-white dark:bg-surface-dark text-brand-600 dark:text-brand-400 shadow-xs'
+              : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
+          }`}
+        >
+          Role Diagnostic Quiz
+        </button>
       </div>
 
-      {/* Progress Bar */}
+      {viewMode === 'simulator' ? (
+        <CareerSimulatorWorkspace />
+      ) : (
+        <div className="max-w-3xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="pb-4 border-b border-surface-border dark:border-surface-dark-border flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+                  Diagnostic Assessment
+                </span>
+                <span className="text-xs text-charcoal-subtle dark:text-slate-400">
+                  Step {currentStep + 1} of {questions.length}
+                </span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
+                Intelligent Placement Assessment
+              </h1>
+              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
+                Evaluate your baseline technical knowledge, architectural problem-solving, and practical readiness.
+              </p>
+            </div>
+
+            <Link to="/universe">
+              <Button size="sm" variant="secondary" className="text-xs">
+                Cancel
+              </Button>
+            </Link>
+          </div>
+
+          {/* Progress Bar */}
       <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
         <div
           className="h-full bg-brand-600 rounded-full transition-all duration-300"
@@ -337,6 +381,8 @@ export const PlacementDiagnostic: React.FC = () => {
         <Card className="text-center py-12">
           <p className="text-xs text-charcoal-muted">Loading placement diagnostic scenarios...</p>
         </Card>
+      )}
+        </div>
       )}
     </div>
   );

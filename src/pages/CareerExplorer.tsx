@@ -72,7 +72,10 @@ export const CareerExplorer: React.FC = () => {
     if (!role || !role.requiredSkills.length) return 70;
     let metCount = 0;
     role.requiredSkills.forEach(req => {
-      const userSkill = skills.find(s => s.name.toLowerCase() === req.skillName.toLowerCase());
+      const userSkill = skills.find(s => {
+        const sName = (s as any).skillName || (s as any).name || '';
+        return sName.toLowerCase() === req.skillName.toLowerCase();
+      });
       const level = userSkill ? userSkill.proficiencyLevel : 2;
       if (level >= req.benchmarkLevel) metCount++;
     });
@@ -96,7 +99,10 @@ export const CareerExplorer: React.FC = () => {
 
   // Build required skills comparison for selected role
   const skillsComparison = selectedRole ? selectedRole.requiredSkills.map(req => {
-    const userSkill = skills.find(s => s.name.toLowerCase() === req.skillName.toLowerCase());
+    const userSkill = skills.find(s => {
+      const sName = (s as any).skillName || (s as any).name || '';
+      return sName.toLowerCase() === req.skillName.toLowerCase();
+    });
     // realistic default for fullstack demo if not yet in database
     let currentLevel = userSkill ? userSkill.proficiencyLevel : 2;
     if (!userSkill) {

@@ -5,12 +5,14 @@ import { CurriculumStrategistAgent } from './curriculumStrategistAgent';
 import { AdaptiveMentorAgent } from './adaptiveMentorAgent';
 import { CloudArchitectureAgent } from './cloudArchitectureAgent';
 import { IncidentAnalysisAgent } from './incidentAnalysisAgent';
+import { ConflictDetectorAgent, ConflictDetectionResult } from './conflictDetectorAgent';
 import { SEED_SRE_INCIDENTS, SEED_CLOUD_SIMULATION_STATE } from '../db/seedData';
 import { AgentReasoningTrace, CareerBenchmarkResult, ProfilerAnalysisResult, ArchitectureAuditResult, IncidentAnalysisResult } from './types';
 
 export interface FullOrchestrationResult {
   profilerResult: ProfilerAnalysisResult;
   benchmarkResult: CareerBenchmarkResult;
+  conflictResult: ConflictDetectionResult;
   architectureResult: ArchitectureAuditResult;
   incidentTriageResult: IncidentAnalysisResult;
   updatedRoadmap: OfflineRoadmap;
@@ -105,6 +107,24 @@ export class AgentOrchestrator {
       overallReadinessScore: benchmarkResult.readinessPercentage
     });
 
+    // 2.5 Conflict Detector Agent
+    const conflictStartTime = Date.now();
+    const conflictResult = ConflictDetectorAgent.detectAndResolveConflicts(user, profile, skills, targetRole);
+    allTraces.push(...conflictResult.reasoningTraces);
+
+    await db.agentTraces.add({
+      id: `trace-conflict-${Date.now()}`,
+      userId,
+      agentName: 'Conflict Detector & Resolution Agent',
+      timestamp: new Date().toISOString(),
+      task: 'Evaluate pacing velocity, prerequisite topology & skill overestimation',
+      inputSummary: `Pacing: ${profile.hoursPerWeek}h/wk, Target Role: ${targetRole.title}`,
+      outputSummary: conflictResult.recommendationExplanation,
+      reasoningTrace: conflictResult.reasoningTraces.map(t => `${t.action}: ${t.observation}`),
+      handoffTo: 'Curriculum & Resource Strategist Agent',
+      latencyMs: Date.now() - conflictStartTime
+    });
+
     // 3. Cloud Architecture Agent
     const archStartTime = Date.now();
     let cloudSim = await db.cloudSimulations.where('userId').equals(userId).first();
@@ -194,6 +214,7 @@ export class AgentOrchestrator {
     return {
       profilerResult,
       benchmarkResult,
+      conflictResult,
       architectureResult,
       incidentTriageResult,
       updatedRoadmap,

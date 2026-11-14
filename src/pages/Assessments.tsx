@@ -20,6 +20,7 @@ import {
   Layers
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { CodingWorkspace } from '../components/codingAssessment/CodingWorkspace';
 
 export const Assessments: React.FC = () => {
   const { refreshProfile } = useAuth();
@@ -49,7 +50,7 @@ export const Assessments: React.FC = () => {
 
   // History State
   const [history, setHistory] = useState<OfflineAssessmentAttempt[]>([]);
-  const [activeTab, setActiveTab] = useState<'assess' | 'history'>('assess');
+  const [activeTab, setActiveTab] = useState<'coding' | 'assess' | 'history'>('coding');
 
   const loadHistory = async () => {
     try {
@@ -147,6 +148,18 @@ export const Assessments: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <Button
+            variant={activeTab === 'coding' ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setActiveTab('coding');
+              setIsQuizActive(false);
+              setDiagnosisResult(null);
+            }}
+            leftIcon={<Code2 className="w-3.5 h-3.5" />}
+          >
+            Coding Engine
+          </Button>
+          <Button
             variant={activeTab === 'assess' ? 'primary' : 'outline'}
             size="sm"
             onClick={() => {
@@ -155,7 +168,7 @@ export const Assessments: React.FC = () => {
               setDiagnosisResult(null);
             }}
           >
-            New Quiz
+            MCQ Quiz
           </Button>
           <Button
             variant={activeTab === 'history' ? 'primary' : 'outline'}
@@ -171,6 +184,11 @@ export const Assessments: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* VIEW 0: REAL CODING ENGINE */}
+      {activeTab === 'coding' && (
+        <CodingWorkspace />
+      )}
 
       {/* VIEW 1: HISTORY */}
       {activeTab === 'history' && (

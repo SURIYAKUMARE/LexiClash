@@ -16,6 +16,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { OfflineSyncManager, SyncStatus } from '../../offlineSync/syncManager';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -29,11 +30,25 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [learningMode, setLearningMode] = useState<'student' | 'professional'>('student');
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>({
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+    isSyncing: false,
+    pendingCount: 0,
+    lastSyncedAt: null,
+    conflictStrategy: 'client-wins'
+  });
 
   const notifRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    OfflineSyncManager.init();
+    const unsub = OfflineSyncManager.subscribe((status) => {
+      setSyncStatus(status);
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     api.getLearningPreference().then(pref => {
@@ -45,20 +60,6 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
     setLearningMode(mode);
     await api.updateLearningPreference({ mode });
   };
-
-  // Network offline status listener
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -156,17 +157,50 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
           </button>
         </div>
 
-        {/* Network Online / Offline Status Badge */}
+        {/* Smart Offline Synchronization Status Badge & Action */}
         <div
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-medium border ${
-            isOnline
-              ? 'bg-status-success-bg dark:bg-emerald-950/40 text-status-success dark:text-emerald-400 border-status-success-border dark:border-emerald-900'
-              : 'bg-status-danger-bg dark:bg-red-950/40 text-status-danger dark:text-red-400 border-status-danger-border dark:border-red-900'
+          onClick={() => syncStatus.isOnline && OfflineSyncManager.processSyncQueue()}
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border cursor-pointer select-none transition-all ${
+            syncStatus.isSyncing
+              ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+              : syncStatus.isOnline
+              ? syncStatus.pendingCount > 0
+                ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+                : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
           }`}
-          title={isOnline ? 'System is online and connected' : 'System is currently offline'}
+          title={
+            syncStatus.isSyncing
+              ? 'Synchronizing local Dexie outbox with cloud registry...'
+              : syncStatus.isOnline
+              ? syncStatus.pendingCount > 0
+                ? `${syncStatus.pendingCount} offline changes pending. Click to Sync Now.`
+                : 'All changes synced. IndexedDB active.'
+              : 'Offline Mode: Zero network required. All changes safely persisted in IndexedDB.'
+          }
         >
-          <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-status-success' : 'bg-amber-500'}`} />
-          <span>{isOnline ? 'Online' : 'Offline (IndexedDB Active)'}</span>
+          {syncStatus.isSyncing ? (
+            <div className="w-2 h-2 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                syncStatus.isOnline
+                  ? syncStatus.pendingCount > 0
+                    ? 'bg-amber-500 animate-pulse'
+                    : 'bg-emerald-500'
+                  : 'bg-slate-400'
+              }`}
+            />
+          )}
+          <span>
+            {syncStatus.isSyncing
+              ? 'Syncing...'
+              : syncStatus.isOnline
+              ? syncStatus.pendingCount > 0
+                ? `Sync (${syncStatus.pendingCount})`
+                : 'Synced'
+              : 'Offline (IndexedDB)'}
+          </span>
         </div>
 
         {/* Theme Toggle (Light / Dark) */}

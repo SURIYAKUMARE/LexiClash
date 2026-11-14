@@ -210,9 +210,14 @@ class OfflineFirstApiService {
   }
 
   // Skills
-  public async getSkills(): Promise<{ skills: OfflineSkill[] }> {
+  public async getSkills(): Promise<{ skills: any[] }> {
     const userId = await this.ensureInitialized();
-    const skills = await db.skills.where('userId').equals(userId).toArray();
+    const rawSkills = await db.skills.where('userId').equals(userId).toArray();
+    const skills = rawSkills.map(s => ({
+      ...s,
+      name: (s as any).name || s.skillName || '',
+      skillName: s.skillName || (s as any).name || ''
+    }));
     return { skills };
   }
 
