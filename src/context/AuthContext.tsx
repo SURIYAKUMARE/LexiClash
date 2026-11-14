@@ -7,11 +7,14 @@ interface AuthContextType {
   profile: UserProfile | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
+  login: (credentials: { email: string; password?: string }) => Promise<void>;
+  loginWithPasscode: (passcode: string) => Promise<void>;
   register: (payload: any) => Promise<void>;
+  switchPersona: (personaId: string) => Promise<void>;
   googleLogin: (payload?: any) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  updateProfile: (payload: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,21 +25,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const initAuth = async () => {
-    const token = localStorage.getItem('skillpath_token');
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const data = await api.getMe();
-      setUser(data.user);
-      setProfile(data.profile);
+      setUser(data.user as any);
+      setProfile(data.profile as any);
     } catch (err) {
-      console.warn('Session expired or invalid token', err);
-      api.removeToken();
-      setUser(null);
-      setProfile(null);
+      console.warn('Offline session initialized', err);
     } finally {
       setIsLoading(false);
     }
@@ -46,12 +40,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initAuth();
   }, []);
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (credentials: { email: string; password?: string }) => {
     setIsLoading(true);
     try {
       const data = await api.login(credentials);
-      setUser(data.user);
-      setProfile(data.profile);
+      setUser(data.user as any);
+      setProfile(data.profile as any);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginWithPasscode = async (passcode: string) => {
+    setIsLoading(true);
+    try {
+      const data = await api.loginWithPasscode(passcode);
+      setUser(data.user as any);
+      setProfile(data.profile as any);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const switchPersona = async (personaId: string) => {
+    setIsLoading(true);
+    try {
+      const data = await api.switchPersona(personaId);
+      setUser(data.user as any);
+      setProfile(data.profile as any);
     } finally {
       setIsLoading(false);
     }
@@ -61,22 +77,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const data = await api.register(payload);
-      setUser(data.user);
-      setProfile(data.profile);
+      setUser(data.user as any);
+      setProfile(data.profile as any);
     } finally {
       setIsLoading(false);
     }
   };
 
   const googleLogin = async (payload?: any) => {
-    setIsLoading(true);
-    try {
-      const data = await api.googleLogin(payload || {});
-      setUser(data.user);
-      setProfile(data.profile);
-    } finally {
-      setIsLoading(false);
-    }
+    return login({ email: payload?.email || 'demo.learner@skillpath.local' });
   };
 
   const logout = async () => {
@@ -91,9 +100,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshProfile = async () => {
     try {
       const data = await api.getProfile();
-      setProfile(data.profile);
+      setProfile(data.profile as any);
     } catch (err) {
       console.error('Error refreshing profile:', err);
+    }
+  };
+
+  const updateProfile = async (payload: Partial<UserProfile>) => {
+    try {
+      const data = await api.updateProfile(payload as any);
+      setProfile(data.profile as any);
+    } catch (err) {
+      console.error('Error updating profile:', err);
     }
   };
 
@@ -105,10 +123,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         isAuthenticated: Boolean(user),
         login,
+        loginWithPasscode,
         register,
+        switchPersona,
         googleLogin,
         logout,
         refreshProfile,
+        updateProfile,
       }}
     >
       {children}

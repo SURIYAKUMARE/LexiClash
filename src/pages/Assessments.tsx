@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Question, AssessmentAttempt } from '../types';
+import { OfflineQuestion, OfflineAssessmentAttempt } from '../db/indexedDb';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -10,13 +10,14 @@ import {
   Play,
   RotateCcw,
   CheckCircle2,
-  XCircle,
   AlertCircle,
   ChevronRight,
   ArrowRight,
   Check,
   History,
-  BookOpen
+  Code2,
+  Terminal,
+  Layers
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -27,7 +28,6 @@ export const Assessments: React.FC = () => {
     'JavaScript',
     'React',
     'Node.js',
-    'TypeScript',
     'PostgreSQL',
     'Docker'
   ]);
@@ -37,9 +37,9 @@ export const Assessments: React.FC = () => {
   const [isTimedMode, setIsTimedMode] = useState(true);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
 
-  // Quiz Running State
+  // Running State
   const [isQuizActive, setIsQuizActive] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<OfflineQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userSelections, setUserSelections] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,7 +48,7 @@ export const Assessments: React.FC = () => {
   const [diagnosisResult, setDiagnosisResult] = useState<any | null>(null);
 
   // History State
-  const [history, setHistory] = useState<AssessmentAttempt[]>([]);
+  const [history, setHistory] = useState<OfflineAssessmentAttempt[]>([]);
   const [activeTab, setActiveTab] = useState<'assess' | 'history'>('assess');
 
   const loadHistory = async () => {
@@ -86,7 +86,7 @@ export const Assessments: React.FC = () => {
     try {
       const data = await api.getQuestions({ topic: selectedTopic, difficulty: selectedDifficulty });
       if (!data.questions || data.questions.length === 0) {
-        alert('No questions found for this topic and difficulty. Please try another selection.');
+        alert('No questions found for this topic and difficulty.');
         return;
       }
       setQuestions(data.questions);
@@ -96,7 +96,7 @@ export const Assessments: React.FC = () => {
       setTimeLeft(300);
       setIsQuizActive(true);
     } catch (err: any) {
-      alert(err?.message || 'Failed to load assessment questions.');
+      alert(err?.message || 'Failed to load assessment.');
     }
   };
 
@@ -137,11 +137,11 @@ export const Assessments: React.FC = () => {
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
         <div>
-          <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
-            Skill Assessment
+          <h1 className="text-2xl font-bold text-charcoal dark:text-slate-100 tracking-tight font-sans">
+            Adaptive Assessment & Practical Sandbox
           </h1>
           <p className="text-xs sm:text-sm text-charcoal-muted dark:text-slate-400 mt-1">
-            Diagnostic evaluations to verify competencies, uncover weak areas, and adjust your roadmap.
+            Role-specific scenario diagnostics. Scores automatically feed into your verified competency badge and trigger remedial re-routing.
           </p>
         </div>
 
@@ -167,61 +167,59 @@ export const Assessments: React.FC = () => {
             }}
             leftIcon={<History className="w-3.5 h-3.5" />}
           >
-            History ({history.length})
+            Attempts ({history.length})
           </Button>
         </div>
       </div>
 
-      {/* VIEW 1: HISTORY TAB */}
+      {/* VIEW 1: HISTORY */}
       {activeTab === 'history' && (
         <Card className="space-y-4">
           <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
             <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
-              Assessment Attempt History
+              Verified Diagnostic Performance History
             </h2>
             <p className="text-xs text-charcoal-muted dark:text-slate-400">
-              Past scores and verified credentials recorded on your profile.
+              Telemetry records of passed credentials and identified weak subtopics.
             </p>
           </div>
 
           {history.length === 0 ? (
-            <div className="py-12 text-center text-xs text-charcoal-muted dark:text-slate-400">
-              No previous assessment attempts recorded. Complete a diagnostic evaluation to see your results.
-            </div>
+            <p className="py-12 text-center text-xs text-charcoal-subtle">No previous attempts recorded.</p>
           ) : (
             <div className="divide-y divide-surface-border dark:divide-surface-dark-border">
               {history.map(att => (
                 <div key={att.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-charcoal dark:text-slate-100 text-sm">{att.topic}</span>
-                      <span className="text-[10px] uppercase font-semibold text-charcoal-subtle dark:text-slate-400">
+                      <span className="font-bold text-charcoal dark:text-slate-100 text-sm font-sans">{att.topic}</span>
+                      <span className="text-[10px] font-mono uppercase text-charcoal-subtle dark:text-slate-400 bg-surface-subtle dark:bg-slate-800 px-1.5 py-0.2 rounded border border-surface-border dark:border-surface-dark-border">
                         {att.difficulty}
                       </span>
                       {att.passed ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-status-success-bg dark:bg-emerald-950/40 text-status-success border border-emerald-200 dark:border-emerald-800/50">
-                          Passed & Verified
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-status-success-bg text-status-success border border-emerald-200">
+                          Verified Mastery
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
-                          Needs Review
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                          Remedial Triggered
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed max-w-lg">
+                    <p className="text-xs text-charcoal-muted dark:text-slate-400 max-w-lg">
                       {att.feedback}
                     </p>
-                    <span className="text-[11px] text-charcoal-subtle dark:text-slate-500 block">
+                    <span className="text-[10px] text-charcoal-subtle dark:text-slate-500 font-mono block">
                       {new Date(att.completedAt).toLocaleString()}
                     </span>
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="text-2xl font-bold text-charcoal dark:text-slate-100 block">
+                    <span className="text-2xl font-extrabold text-charcoal dark:text-slate-100 font-mono block">
                       {att.scorePercentage}%
                     </span>
-                    <span className="text-[11px] text-charcoal-subtle dark:text-slate-400">
-                      {att.correctAnswers} of {att.totalQuestions} correct
+                    <span className="text-[11px] text-charcoal-subtle font-mono">
+                      {att.correctAnswers} / {att.totalQuestions} Correct
                     </span>
                   </div>
                 </div>
@@ -231,13 +229,12 @@ export const Assessments: React.FC = () => {
         </Card>
       )}
 
-      {/* VIEW 2: ACTIVE QUIZ RUNNER (Question with options, timer, progress) */}
+      {/* VIEW 2: ACTIVE QUIZ */}
       {activeTab === 'assess' && isQuizActive && (
         <Card className="space-y-6">
-          {/* Top Bar: Topic, Question #, Timer */}
           <div className="flex items-center justify-between pb-3 border-b border-surface-border dark:border-surface-dark-border">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">
+              <span className="text-xs font-bold font-mono text-stitch-blue uppercase tracking-wider">
                 {selectedTopic}
               </span>
               <span className="text-charcoal-subtle dark:text-slate-600">·</span>
@@ -247,7 +244,7 @@ export const Assessments: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-xs font-medium text-charcoal dark:text-slate-200">
+              <span className="text-xs font-mono font-bold text-charcoal dark:text-slate-200">
                 Question {currentIndex + 1} of {questions.length}
               </span>
 
@@ -262,18 +259,16 @@ export const Assessments: React.FC = () => {
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-surface-border dark:border-surface-dark-border">
             <div
-              className="h-full bg-brand-600 dark:bg-brand-500 transition-all duration-300"
+              className="h-full bg-stitch-blue transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
 
-          {/* Question Text & Options */}
           {currentQ && (
             <div className="space-y-5">
-              <h2 className="text-base font-semibold text-charcoal dark:text-slate-100 leading-snug">
+              <h2 className="text-base font-semibold text-charcoal dark:text-slate-100 leading-snug font-sans">
                 {currentQ.question}
               </h2>
 
@@ -283,9 +278,8 @@ export const Assessments: React.FC = () => {
                 </div>
               )}
 
-              {/* Options List */}
               <div className="space-y-2.5 pt-2">
-                {currentQ.options.map((option, idx) => {
+                {currentQ.options.map((opt, idx) => {
                   const isSelected = userSelections[currentQ.id] === idx;
                   const letter = String.fromCharCode(65 + idx);
 
@@ -296,20 +290,20 @@ export const Assessments: React.FC = () => {
                       onClick={() => handleSelectOption(currentQ.id, idx)}
                       className={`w-full text-left p-3.5 rounded-lg border text-xs transition-all flex items-start gap-3 ${
                         isSelected
-                          ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-charcoal dark:text-slate-100 font-medium'
-                          : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
+                          ? 'border-stitch-blue bg-blue-50/60 dark:bg-blue-950/40 text-charcoal dark:text-slate-100 font-medium'
+                          : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal-muted dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
                       <span
-                        className={`w-5 h-5 rounded flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 border ${
+                        className={`w-5 h-5 rounded flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 border font-mono ${
                           isSelected
-                            ? 'bg-brand-600 border-brand-600 text-white'
+                            ? 'bg-stitch-blue border-stitch-blue text-white'
                             : 'border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-slate-800 text-charcoal-muted dark:text-slate-400'
                         }`}
                       >
                         {letter}
                       </span>
-                      <span className="leading-relaxed flex-1">{option}</span>
+                      <span className="leading-relaxed flex-1 font-sans">{opt}</span>
                     </button>
                   );
                 })}
@@ -317,7 +311,6 @@ export const Assessments: React.FC = () => {
             </div>
           )}
 
-          {/* Navigation Controls */}
           <div className="flex items-center justify-between pt-4 border-t border-surface-border dark:border-surface-dark-border">
             <Button
               variant="outline"
@@ -335,7 +328,7 @@ export const Assessments: React.FC = () => {
                 onClick={() => setCurrentIndex(prev => prev + 1)}
                 rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
               >
-                Next
+                Next Question
               </Button>
             ) : (
               <Button
@@ -345,81 +338,68 @@ export const Assessments: React.FC = () => {
                 disabled={isSubmitting}
                 rightIcon={<Check className="w-3.5 h-3.5" />}
               >
-                {isSubmitting ? 'Evaluating...' : 'Submit Assessment'}
+                {isSubmitting ? 'Evaluating Diagnostics...' : 'Submit Assessment'}
               </Button>
             )}
           </div>
         </Card>
       )}
 
-      {/* VIEW 3: RESULT SCREEN */}
+      {/* VIEW 3: DIAGNOSTIC REPORT RESULT */}
       {activeTab === 'assess' && !isQuizActive && diagnosisResult && (
-        <Card className="space-y-6">
-          {/* Result Header */}
+        <Card className="space-y-6 border-l-4 border-l-stitch-blue">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-border dark:border-surface-dark-border">
             <div>
-              <span className="text-xs font-semibold text-charcoal-subtle dark:text-slate-400 uppercase tracking-wider">
-                Assessment Results
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-charcoal-subtle dark:text-slate-400">
+                Diagnostic Evaluation Report
               </span>
-              <h2 className="text-xl font-bold text-charcoal dark:text-slate-100 mt-1">
-                {diagnosisResult.attempt.topic} Diagnostic Report
+              <h2 className="text-xl font-bold text-charcoal dark:text-slate-100 mt-1 font-sans">
+                {diagnosisResult.attempt.topic} Skill Verification Check
               </h2>
-              <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
-                Evaluation completed on {new Date().toLocaleDateString()}.
-              </p>
             </div>
 
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <span className="text-3xl font-extrabold text-charcoal dark:text-slate-100 block">
+                <span className="text-3xl font-extrabold text-charcoal dark:text-slate-100 font-mono block">
                   {diagnosisResult.attempt.scorePercentage}%
                 </span>
-                <span className="text-[11px] text-charcoal-subtle dark:text-slate-400">
+                <span className="text-[11px] text-charcoal-subtle font-mono">
                   {diagnosisResult.attempt.correctAnswers} / {diagnosisResult.attempt.totalQuestions} Correct
                 </span>
               </div>
               {diagnosisResult.attempt.passed ? (
-                <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-status-success-bg dark:bg-emerald-950/40 text-status-success border border-emerald-200 dark:border-emerald-800/50">
-                  Verified
+                <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-status-success-bg text-status-success border border-emerald-200">
+                  Verified Mastery
                 </span>
               ) : (
-                <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
-                  Needs Review
+                <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                  Remedial Injected
                 </span>
               )}
             </div>
           </div>
 
-          {/* Diagnostic Breakdown */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider">
-              Diagnostic Summary & Recommendations
-            </h3>
-            <p className="text-xs text-charcoal-muted dark:text-slate-300 leading-relaxed p-3 bg-surface-subtle dark:bg-slate-800/50 rounded-lg border border-surface-border dark:border-surface-dark-border">
-              {diagnosisResult.diagnosis?.diagnosticFeedback || diagnosisResult.attempt.feedback}
+          <div className="space-y-2">
+            <span className="text-xs font-mono font-bold text-charcoal dark:text-slate-200 uppercase tracking-wider block">
+              Evaluator Feedback:
+            </span>
+            <p className="text-xs text-charcoal-muted dark:text-slate-300 leading-relaxed p-3.5 bg-surface-subtle dark:bg-slate-800/60 rounded-lg border border-surface-border dark:border-surface-dark-border">
+              {diagnosisResult.diagnosis.diagnosticFeedback}
             </p>
           </div>
 
-          {/* Weak Topics to Focus On */}
-          {diagnosisResult.diagnosis?.weakSubtopics && diagnosisResult.diagnosis.weakSubtopics.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-charcoal dark:text-slate-100 uppercase tracking-wider">
-                Target Topics for Improvement:
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {diagnosisResult.diagnosis.weakSubtopics.map((sub: string, i: number) => (
-                  <span
-                    key={i}
-                    className="px-2.5 py-1 rounded text-xs bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 font-medium"
-                  >
-                    {sub}
-                  </span>
-                ))}
-              </div>
+          {!diagnosisResult.attempt.passed && diagnosisResult.diagnosis.weakSubtopics.length > 0 && (
+            <div className="p-3.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 space-y-1">
+              <span className="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4" />
+                Adaptive Re-Routing Triggered
+              </span>
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                Because your score was below 70%, the Curriculum Strategist Agent automatically injected targeted review exercises for <strong>{diagnosisResult.diagnosis.weakSubtopics.join(', ')}</strong> into Phase 1 of your roadmap.
+              </p>
             </div>
           )}
 
-          {/* Actions: Retake or View Roadmap */}
           <div className="flex items-center justify-between pt-4 border-t border-surface-border dark:border-surface-dark-border">
             <Button
               variant="outline"
@@ -427,35 +407,33 @@ export const Assessments: React.FC = () => {
               onClick={handleStartQuiz}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
             >
-              Retake Quiz
+              Retake Assessment
             </Button>
-
             <Link to="/roadmap">
               <Button
                 variant="primary"
                 size="sm"
                 rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               >
-                Return to Roadmap
+                Inspect Updated Roadmap
               </Button>
             </Link>
           </div>
         </Card>
       )}
 
-      {/* VIEW 4: QUIZ SELECTOR (Initial State) */}
+      {/* VIEW 4: CONFIGURE QUIZ */}
       {activeTab === 'assess' && !isQuizActive && !diagnosisResult && (
         <Card className="space-y-5">
           <div className="pb-3 border-b border-surface-border dark:border-surface-dark-border">
             <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
-              Configure Diagnostic Assessment
+              Configure Skill Assessment Sandbox
             </h2>
             <p className="text-xs text-charcoal-muted dark:text-slate-400">
               Select a core skill domain and difficulty level to test your technical competency.
             </p>
           </div>
 
-          {/* Topic Picker */}
           <div className="space-y-2">
             <label className="block text-xs font-semibold text-charcoal dark:text-slate-200">
               Skill Topic
@@ -468,8 +446,8 @@ export const Assessments: React.FC = () => {
                   onClick={() => setSelectedTopic(topic)}
                   className={`p-3 rounded-lg border text-xs text-left font-medium transition-all ${
                     selectedTopic === topic
-                      ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 font-semibold'
-                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-400 hover:border-slate-300'
+                      ? 'border-stitch-blue bg-blue-50/60 dark:bg-blue-950/40 text-stitch-blue font-semibold'
+                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal-muted hover:border-slate-300'
                   }`}
                 >
                   {topic}
@@ -478,10 +456,9 @@ export const Assessments: React.FC = () => {
             </div>
           </div>
 
-          {/* Difficulty Picker */}
           <div className="space-y-2">
             <label className="block text-xs font-semibold text-charcoal dark:text-slate-200">
-              Proficiency Benchmark
+              Benchmark Tier
             </label>
             <div className="grid grid-cols-3 gap-2">
               {(['beginner', 'intermediate', 'advanced'] as const).map(diff => (
@@ -491,8 +468,8 @@ export const Assessments: React.FC = () => {
                   onClick={() => setSelectedDifficulty(diff)}
                   className={`py-2 px-3 rounded-lg border text-xs font-medium capitalize text-center transition-all ${
                     selectedDifficulty === diff
-                      ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 font-semibold'
-                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-400 hover:border-slate-300'
+                      ? 'border-stitch-blue bg-blue-50/60 dark:bg-blue-950/40 text-stitch-blue font-semibold'
+                      : 'border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal-muted hover:border-slate-300'
                   }`}
                 >
                   {diff}
@@ -501,20 +478,18 @@ export const Assessments: React.FC = () => {
             </div>
           </div>
 
-          {/* Timed Mode Checkbox */}
           <div className="pt-2 border-t border-surface-border dark:border-surface-dark-border">
             <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-charcoal dark:text-slate-200">
               <input
                 type="checkbox"
                 checked={isTimedMode}
                 onChange={e => setIsTimedMode(e.target.checked)}
-                className="rounded border-slate-300 dark:border-slate-600 text-brand-600 focus:ring-0"
+                className="rounded border-slate-300 text-stitch-blue focus:ring-0"
               />
-              <span>Timed Mode (5 minutes · Simulated exam conditions)</span>
+              <span>Timed Mode (5-minute countdown clock • Exam conditions)</span>
             </label>
           </div>
 
-          {/* Start Button */}
           <div className="pt-3 border-t border-surface-border dark:border-surface-dark-border flex justify-end">
             <Button
               variant="primary"
@@ -522,7 +497,7 @@ export const Assessments: React.FC = () => {
               onClick={handleStartQuiz}
               leftIcon={<Play className="w-4 h-4" />}
             >
-              Start {selectedTopic} Assessment
+              Start {selectedTopic} Check
             </Button>
           </div>
         </Card>

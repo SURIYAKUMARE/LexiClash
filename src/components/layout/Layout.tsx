@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { MobileDrawer } from './MobileDrawer';
+import { AgentTraceDrawer } from '../agents/AgentTraceDrawer';
 
 export const Layout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -29,6 +30,9 @@ export const Layout: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Collapsible Multi-Agent Reasoning Trace Drawer */}
+      <AgentTraceDrawer />
     </div>
   );
 };

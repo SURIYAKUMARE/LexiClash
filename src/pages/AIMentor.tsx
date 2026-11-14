@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { MentorMessage } from '../types';
+import { OfflineMentorMessage } from '../db/indexedDb';
+import { AgentOrchestrator } from '../agents/orchestrator';
+import { AgentReasoningTrace } from '../agents/types';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import {
@@ -12,24 +14,31 @@ import {
   MapPin,
   HelpCircle,
   MessageSquare,
-  Compass,
-  ArrowRight
+  Terminal,
+  Activity,
+  ChevronDown,
+  ChevronUp,
+  RotateCcw
 } from 'lucide-react';
 
 export const AIMentor: React.FC = () => {
   const { user, profile } = useAuth();
 
-  const [messages, setMessages] = useState<MentorMessage[]>([]);
+  const [messages, setMessages] = useState<OfflineMentorMessage[]>([]);
   const [inputText, setInputText] = useState('');
-  const [selectedMode, setSelectedMode] = useState<'general' | 'code_explanation' | 'quiz' | 'interview_prep' | 'roadmap_help'>('general');
+  const [selectedMode, setSelectedMode] = useState<string>('general');
   const [suggestedFollowUps, setSuggestedFollowUps] = useState<string[]>([
-    'How does the Node.js event loop handle microtasks vs macrotasks?',
-    'Simulate a technical interview question on React state reconciliation',
-    'Why is B-tree indexing preferred for range queries in PostgreSQL?',
-    'What tasks should I prioritize this week to close my Node.js gap?'
+    '/mock-interview',
+    '/explain-gap',
+    '/pivot-career',
+    '/reassess'
   ]);
   const [isSending, setIsSending] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+  // Embedded Agent Reasoning Trace State
+  const [traces, setTraces] = useState<AgentReasoningTrace[]>([]);
+  const [isTraceExpanded, setIsTraceExpanded] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +58,11 @@ export const AIMentor: React.FC = () => {
       }
     };
     fetchHistory();
+
+    const unsubscribe = AgentOrchestrator.subscribe(newTraces => {
+      setTraces(newTraces);
+    });
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -63,7 +77,7 @@ export const AIMentor: React.FC = () => {
     setIsSending(true);
 
     // Optimistic UI update
-    const optimisticUserMsg: MentorMessage = {
+    const optimisticUserMsg: OfflineMentorMessage = {
       id: `temp-${Date.now()}`,
       userId: user?.id || 'me',
       role: 'user',
@@ -82,7 +96,7 @@ export const AIMentor: React.FC = () => {
         setSuggestedFollowUps(res.suggestedFollowUps);
       }
     } catch (err: any) {
-      alert(err?.message || 'Failed to send message to Mentor.');
+      alert(err?.message || 'Failed to send message.');
     } finally {
       setIsSending(false);
     }
@@ -98,171 +112,215 @@ export const AIMentor: React.FC = () => {
     }
   };
 
-  const modes = [
-    { key: 'general', label: 'General Mentorship', icon: MessageSquare },
-    { key: 'code_explanation', label: 'Code Diagnostics', icon: Code2 },
-    { key: 'interview_prep', label: 'Technical Interview', icon: Briefcase },
-    { key: 'roadmap_help', label: 'Roadmap Guidance', icon: MapPin },
-    { key: 'quiz', label: 'Concept Drill', icon: HelpCircle },
-  ] as const;
+  const slashCommands = [
+    { cmd: '/mock-interview', label: 'Mock Interview', desc: 'Socratic technical scenario drill' },
+    { cmd: '/explain-gap', label: 'Explain Gaps', desc: 'Why specific skills are prioritized' },
+    { cmd: '/pivot-career', label: 'Pivot Career', desc: 'Analyze adjacent career role overlaps' },
+    { cmd: '/reassess', label: 'Reassess Profile', desc: 'Sync telemetry and recalculate gaps' }
+  ];
 
   return (
-    <div className="h-[calc(100vh-140px)] flex flex-col space-y-4 max-w-5xl mx-auto">
+    <div className="h-[calc(100vh-130px)] flex flex-col space-y-3 max-w-6xl mx-auto">
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-surface-border dark:border-surface-dark-border shrink-0">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-charcoal dark:text-slate-100 tracking-tight">
-              AI Technical Mentor
+            <h1 className="text-xl font-bold text-charcoal dark:text-slate-100 tracking-tight font-sans">
+              Multi-Agent AI Mentor & Collaboration Console
             </h1>
-            <span className="text-[11px] font-medium text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 rounded border border-brand-200 dark:border-brand-900">
-              Target: Full Stack Developer
+            <span className="text-[11px] font-mono font-semibold text-stitch-blue bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900">
+              4-Agent Orchestration
             </span>
           </div>
           <p className="text-xs text-charcoal-muted dark:text-slate-400 mt-0.5">
-            Contextual advisory tailored to your verified skills, current gaps (Node.js, PostgreSQL), and weekly roadmap.
+            Socratic interview coaching, gap explanation, and real-time reasoning trace inspection.
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleClearHistory}
-          disabled={messages.length === 0}
-          leftIcon={<Trash2 className="w-3.5 h-3.5" />}
-        >
-          Clear Chat
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleClearHistory}
+            disabled={messages.length === 0}
+            leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+          >
+            Clear Chat
+          </Button>
+        </div>
       </div>
 
-      {/* Mode Selector Tabs */}
-      <div className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
-        {modes.map(m => {
-          const Icon = m.icon;
-          const isSelected = selectedMode === m.key;
-
-          return (
-            <button
-              key={m.key}
-              type="button"
-              onClick={() => setSelectedMode(m.key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                isSelected
-                  ? 'bg-brand-600 text-white font-semibold'
-                  : 'bg-white dark:bg-surface-dark-card border border-surface-border dark:border-surface-dark-border text-charcoal-muted dark:text-slate-300 hover:text-charcoal dark:hover:text-slate-100 hover:border-slate-300'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              <span>{m.label}</span>
-            </button>
-          );
-        })}
+      {/* Slash Command Quick Pills */}
+      <div className="flex gap-2 overflow-x-auto pb-1 shrink-0">
+        {slashCommands.map(sc => (
+          <button
+            key={sc.cmd}
+            type="button"
+            onClick={() => handleSendMessage(sc.cmd)}
+            disabled={isSending}
+            className="px-2.5 py-1.5 rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-xs font-mono text-charcoal hover:border-stitch-blue hover:text-stitch-blue transition-all flex items-center gap-1.5 shrink-0"
+          >
+            <span className="font-bold text-stitch-blue">{sc.cmd}</span>
+            <span className="text-[11px] text-charcoal-subtle dark:text-slate-400">· {sc.label}</span>
+          </button>
+        ))}
       </div>
 
-      {/* Chat Messages Panel */}
-      <Card className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 flex flex-col justify-between">
-        <div className="space-y-4">
-          {isLoadingHistory ? (
-            <div className="h-64 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="py-12 text-center max-w-md mx-auto space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-surface-subtle dark:bg-slate-800 mx-auto flex items-center justify-center text-brand-600 dark:text-brand-400 border border-surface-border dark:border-surface-dark-border">
-                <Compass className="w-5 h-5" />
+      {/* Main 2-Column Area: Chat Panel (Left) + Visible Agent Reasoning Trace Panel (Right) */}
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Chat Messages Panel (7 cols) */}
+        <Card className="lg:col-span-7 flex flex-col justify-between overflow-hidden p-0">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+            {isLoadingHistory ? (
+              <div className="h-48 flex items-center justify-center">
+                <div className="w-6 h-6 border-2 border-stitch-blue border-t-transparent rounded-full animate-spin" />
               </div>
-              <h2 className="text-sm font-bold text-charcoal dark:text-slate-100">
-                Welcome to Engineering Mentorship
-              </h2>
-              <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed">
-                Ask about specific engineering patterns, get code walkthroughs, practice mock technical interview questions, or ask how to close your current skill gaps.
-              </p>
-            </div>
-          ) : (
-            messages.map(msg => {
-              const isUser = msg.role === 'user';
-
-              return (
-                <div
-                  key={msg.id}
-                  className={`flex gap-3 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}
-                >
-                  {!isUser && (
-                    <div className="w-7 h-7 rounded-lg bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-900 text-brand-700 dark:text-brand-300 flex items-center justify-center shrink-0 mt-0.5 font-bold text-[11px]">
-                      SP
-                    </div>
-                  )}
-
-                  <div
-                    className={`max-w-2xl rounded-lg p-3.5 leading-relaxed ${
-                      isUser
-                        ? 'bg-brand-600 text-white'
-                        : 'bg-surface-subtle dark:bg-slate-800/60 border border-surface-border dark:border-surface-dark-border text-charcoal dark:text-slate-200'
-                    }`}
-                  >
-                    <div className="whitespace-pre-wrap font-sans text-xs">{msg.content}</div>
-                    <span
-                      className={`block text-[10px] mt-1.5 ${
-                        isUser ? 'text-brand-100 text-right' : 'text-charcoal-subtle dark:text-slate-500'
+            ) : messages.length === 0 ? (
+              <div className="py-12 text-center max-w-sm mx-auto space-y-3">
+                <div className="w-9 h-9 rounded-lg bg-surface-subtle dark:bg-slate-800 mx-auto flex items-center justify-center text-stitch-blue border border-surface-border dark:border-surface-dark-border">
+                  <Terminal className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-bold text-charcoal dark:text-slate-100">
+                  Welcome to AI Mentorship
+                </h3>
+                <p className="text-xs text-charcoal-muted dark:text-slate-400 leading-relaxed">
+                  Ask questions about event loops, state reconciliation, query indexing, or run a slash command like <code className="font-mono text-stitch-blue">/mock-interview</code>.
+                </p>
+              </div>
+            ) : (
+              messages.map(msg => {
+                const isUser = msg.role === 'user';
+                return (
+                  <div key={msg.id} className={`flex gap-3 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    {!isUser && (
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 text-stitch-blue flex items-center justify-center shrink-0 mt-0.5 font-mono font-bold text-[11px]">
+                        AI
+                      </div>
+                    )}
+                    <div
+                      className={`max-w-xl rounded-lg p-3.5 leading-relaxed ${
+                        isUser
+                          ? 'bg-stitch-blue text-white'
+                          : 'bg-surface-subtle dark:bg-slate-800/60 border border-surface-border dark:border-surface-dark-border text-charcoal dark:text-slate-200'
                       }`}
                     >
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+                      <div className="whitespace-pre-wrap font-sans text-xs">{msg.content}</div>
+                      <span className={`block text-[10px] mt-1.5 font-mono ${isUser ? 'text-blue-100 text-right' : 'text-charcoal-subtle dark:text-slate-500'}`}>
+                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Follow-up suggestions */}
+          {suggestedFollowUps.length > 0 && (
+            <div className="px-4 py-2 bg-surface-subtle dark:bg-surface-dark-subtle border-t border-surface-border dark:border-surface-dark-border flex gap-1.5 overflow-x-auto shrink-0">
+              {suggestedFollowUps.slice(0, 3).map((prompt, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => handleSendMessage(prompt)}
+                  disabled={isSending}
+                  className="text-left text-[11px] px-2 py-1 rounded border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark text-charcoal-muted hover:border-stitch-blue transition-colors shrink-0"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
           )}
-          <div ref={messagesEndRef} />
-        </div>
-      </Card>
 
-      {/* Suggested Prompts Ribbon */}
-      <div className="shrink-0 space-y-1.5">
-        <span className="text-[11px] font-semibold text-charcoal-subtle dark:text-slate-400 uppercase tracking-wider block">
-          Suggested Prompts
-        </span>
-        <div className="flex flex-wrap gap-1.5">
-          {suggestedFollowUps.slice(0, 4).map((prompt, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => handleSendMessage(prompt)}
+          {/* Input Box */}
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+            className="p-3 border-t border-surface-border dark:border-surface-dark-border flex gap-2 bg-white dark:bg-surface-dark shrink-0"
+          >
+            <input
+              type="text"
+              value={inputText}
+              onChange={e => setInputText(e.target.value)}
+              placeholder="Ask a technical question or type /mock-interview, /explain-gap..."
               disabled={isSending}
-              className="text-left text-xs px-2.5 py-1.5 rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal-muted dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-300 dark:hover:border-brand-800 transition-colors"
+              className="flex-1 px-3 py-2 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-surface-dark-subtle text-charcoal dark:text-slate-100 focus:outline-none focus:border-stitch-blue disabled:opacity-60"
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              disabled={!inputText.trim() || isSending}
+              rightIcon={<Send className="w-3.5 h-3.5" />}
             >
-              {prompt}
-            </button>
-          ))}
-        </div>
-      </div>
+              {isSending ? 'Synthesizing...' : 'Send'}
+            </Button>
+          </form>
+        </Card>
 
-      {/* Input Form */}
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          handleSendMessage();
-        }}
-        className="shrink-0 flex gap-2"
-      >
-        <input
-          type="text"
-          value={inputText}
-          onChange={e => setInputText(e.target.value)}
-          placeholder="Ask a technical question, paste code snippet, or request roadmap advice..."
-          disabled={isSending}
-          className="flex-1 px-3.5 py-2.5 text-xs rounded-lg border border-surface-border dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-charcoal dark:text-slate-100 placeholder-charcoal-subtle dark:placeholder-slate-500 focus:outline-none focus:border-brand-600 disabled:opacity-60"
-        />
-        <Button
-          type="submit"
-          variant="primary"
-          size="sm"
-          disabled={!inputText.trim() || isSending}
-          rightIcon={<Send className="w-3.5 h-3.5" />}
-        >
-          {isSending ? 'Thinking...' : 'Send'}
-        </Button>
-      </form>
+        {/* Visible Agent Reasoning Trace Panel (5 cols) */}
+        <Card className="lg:col-span-5 flex flex-col justify-between overflow-hidden p-0">
+          <div className="p-3 border-b border-surface-border dark:border-surface-dark-border flex items-center justify-between bg-surface-subtle dark:bg-surface-dark-subtle">
+            <div className="flex items-center gap-2">
+              <Activity className="w-3.5 h-3.5 text-stitch-blue animate-pulse" />
+              <span className="text-xs font-bold text-charcoal dark:text-slate-100 font-mono">
+                Live Agent Reasoning Traces ({traces.length})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsTraceExpanded(prev => !prev)}
+              className="p-1 rounded text-charcoal-subtle hover:text-charcoal"
+            >
+              {isTraceExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+          </div>
+
+          {isTraceExpanded ? (
+            <div className="flex-1 overflow-y-auto p-3.5 space-y-3 font-mono text-[11px]">
+              {traces.length === 0 ? (
+                <div className="py-12 text-center text-charcoal-subtle dark:text-slate-500 space-y-1">
+                  <Terminal className="w-6 h-6 mx-auto opacity-30" />
+                  <p className="font-sans text-xs">Awaiting agent interaction.</p>
+                </div>
+              ) : (
+                traces.slice(0, 8).map((t, i) => (
+                  <div
+                    key={i}
+                    className="p-2.5 rounded border border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-slate-800/40 space-y-1"
+                  >
+                    <div className="flex justify-between items-center text-[10px]">
+                      <span className="font-bold text-stitch-blue">{t.agentName}</span>
+                      <span className="text-charcoal-subtle dark:text-slate-500">
+                        {new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                      </span>
+                    </div>
+                    <p className="text-charcoal-muted dark:text-slate-300 font-sans text-xs">
+                      {t.thought}
+                    </p>
+                    <div className="pt-1 text-[10px] text-charcoal-subtle border-t border-surface-border dark:border-surface-dark-border">
+                      <strong className="text-charcoal dark:text-slate-200">Action: </strong>
+                      <span>{t.action}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          ) : (
+            <div className="p-4 text-center text-xs text-charcoal-subtle font-mono">
+              Trace panel collapsed. Click expand to inspect agent thoughts.
+            </div>
+          )}
+
+          <div className="p-2.5 border-t border-surface-border dark:border-surface-dark-border bg-surface-subtle dark:bg-surface-dark-subtle text-[10px] text-charcoal-subtle font-mono flex justify-between">
+            <span>4 Specialized Agents Synced</span>
+            <span className="text-status-success">Deterministic Offline Engine</span>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

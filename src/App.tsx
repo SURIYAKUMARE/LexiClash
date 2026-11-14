@@ -11,6 +11,7 @@ import { Onboarding } from './pages/Onboarding';
 import { DashboardOverview } from './pages/DashboardOverview';
 import { Profile } from './pages/Profile';
 import { SkillAnalysis } from './pages/SkillAnalysis';
+import { SkillDiagnostics } from './pages/SkillDiagnostics';
 import { CareerExplorer } from './pages/CareerExplorer';
 import { LearningRoadmap } from './pages/LearningRoadmap';
 import { ResourceLibrary } from './pages/ResourceLibrary';
@@ -122,7 +123,8 @@ export const App: React.FC = () => {
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardOverview />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="skills" element={<SkillAnalysis />} />
+            <Route path="diagnostics" element={<SkillDiagnostics />} />
+            <Route path="skills" element={<SkillDiagnostics />} />
             <Route path="careers" element={<CareerExplorer />} />
             <Route path="roadmap" element={<LearningRoadmap />} />
             <Route path="resources" element={<ResourceLibrary />} />

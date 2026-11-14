@@ -13,7 +13,8 @@ import {
   Layers,
   FolderGit2,
   Award,
-  Settings
+  Settings,
+  User
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -23,7 +24,8 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
   const navItems = [
     { name: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-    { name: 'Skill Analysis', to: '/skills', icon: BrainCircuit },
+    { name: 'Profile & Vault', to: '/profile', icon: User },
+    { name: 'Gap Diagnostics', to: '/diagnostics', icon: BrainCircuit },
     { name: 'Career Match', to: '/careers', icon: Compass },
     { name: 'Learning Roadmap', to: '/roadmap', icon: MapPin },
     { name: 'Resource Library', to: '/resources', icon: BookOpen },
@@ -31,8 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
     { name: 'Progress', to: '/analytics', icon: BarChart3 },
     { name: 'AI Mentor', to: '/mentor', icon: MessageSquareCode },
     { name: 'Agent Activity', to: '/agents', icon: Layers },
-    { name: 'Projects', to: '/projects', icon: FolderGit2 },
-    { name: 'Certificates', to: '/certificates', icon: Award },
+    { name: 'Project Studio', to: '/projects', icon: FolderGit2 },
     { name: 'Settings', to: '/settings', icon: Settings },
   ];
 

@@ -21,21 +21,31 @@ export default {
           900: '#08303F',
           950: '#051F2A',
         },
+        stitch: {
+          blue: '#0B57D0',
+          hover: '#0842A0',
+          subtle: '#E8F0FE',
+        },
+        forest: {
+          DEFAULT: '#1B5E20',
+          subtle: '#E8F5E9',
+          border: '#C8E6C9',
+        },
         surface: {
           DEFAULT: '#FFFFFF',
-          subtle: '#F8F9FA',
-          muted: '#F1F3F5',
-          border: '#E5E7EB',
-          dark: '#111827',
-          'dark-subtle': '#0B0F17',
-          'dark-muted': '#1F2937',
-          'dark-border': '#334155',
+          subtle: '#FAF9F6', // Warm alabaster canvas
+          muted: '#F4F3EF',
+          border: '#E2E5E9', // Hairline 1px border
+          dark: '#16181B',
+          'dark-subtle': '#0E1013',
+          'dark-muted': '#1F2328',
+          'dark-border': '#2D3135',
         },
         charcoal: {
-          DEFAULT: '#111827',
-          muted: '#4B5563',
-          subtle: '#6B7280',
-          light: '#9CA3AF',
+          DEFAULT: '#1A1C1E', // Deep ink typography
+          muted: '#444746',
+          subtle: '#747775',
+          light: '#C4C7C5',
         },
         status: {
           success: '#16A34A',
@@ -53,7 +63,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       borderRadius: {
         DEFAULT: '8px',

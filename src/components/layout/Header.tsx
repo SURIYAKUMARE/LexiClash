@@ -127,8 +127,8 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
           }`}
           title={isOnline ? 'System is online and connected' : 'System is currently offline'}
         >
-          <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-status-success' : 'bg-status-danger'}`} />
-          <span>{isOnline ? 'Online' : 'Offline'}</span>
+          <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-status-success' : 'bg-amber-500'}`} />
+          <span>{isOnline ? 'Online' : 'Offline (IndexedDB Active)'}</span>
         </div>
 
         {/* Theme Toggle (Light / Dark) */}
