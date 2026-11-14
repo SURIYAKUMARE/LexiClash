@@ -112,7 +112,7 @@ export const PlacementDiagnostic: React.FC = () => {
               className="gap-2"
               onClick={() => {
                 if (placementResult.recommendedMode === 'professional') {
-                  window.location.href = 'https://rebon123.vercel.app/';
+                  window.location.href = 'https://lexi-clash-learning.vercel.app/';
                 } else {
                   navigate('/roadmap');
                 }
@@ -204,7 +204,7 @@ export const PlacementDiagnostic: React.FC = () => {
                   </span>
                   {placementResult.recommendedMode === 'professional' && (
                     <button
-                      onClick={() => { window.location.href = 'https://rebon123.vercel.app/'; }}
+                      onClick={() => { window.location.href = 'https://lexi-clash-learning.vercel.app/'; }}
                       className="text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
                     >
                       <span>Open Professional Portal</span>
@@ -217,7 +217,7 @@ export const PlacementDiagnostic: React.FC = () => {
                 </span>
                 <p className="text-[11px] text-charcoal-muted dark:text-slate-400 mt-1">
                   {placementResult.recommendedMode === 'professional'
-                    ? 'Immediate access to cloud console simulations, SRE incident drills, and advanced CLI terminal quests on Rebon Professional.'
+                    ? 'Immediate access to cloud console simulations, SRE incident drills, and advanced CLI terminal quests on LexiClash Professional.'
                     : 'Interactive concept whiteboards, guided architecture diagrams, step-by-step tutorials, and foundational knowledge checks.'}
                 </p>
               </div>

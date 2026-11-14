@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
     setLearningMode(mode);
     await api.updateLearningPreference({ mode });
     if (mode === 'professional') {
-      window.location.href = 'https://rebon123.vercel.app/';
+      window.location.href = 'https://lexi-clash-learning.vercel.app/';
     }
   };
 
@@ -156,7 +156,7 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
                 ? 'bg-white dark:bg-slate-900 font-bold text-brand-600 dark:text-brand-400 shadow-xs'
                 : 'text-charcoal-muted dark:text-slate-400 hover:text-charcoal'
             }`}
-            title="Professional Mode: Launch Rebon Professional Cloud Platform (https://rebon123.vercel.app/)"
+            title="Professional Mode: Launch LexiClash Professional Platform (https://lexi-clash-learning.vercel.app/)"
           >
             <span>Professional Mode</span>
             <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 opacity-70" />

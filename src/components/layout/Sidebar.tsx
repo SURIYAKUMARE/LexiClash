@@ -104,10 +104,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
         <button
           onClick={() => {
             if (onItemClick) onItemClick();
-            window.location.href = 'https://rebon123.vercel.app/';
+            window.location.href = 'https://lexi-clash-learning.vercel.app/';
           }}
           className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg bg-white dark:bg-surface-dark border border-brand-200 dark:border-brand-800 text-[11px] font-bold text-brand-700 dark:text-brand-300 hover:border-brand-400 hover:shadow-xs transition-all text-left"
-          title="Switch to Professional Mode on Rebon (https://rebon123.vercel.app/)"
+          title="Switch to Professional Mode on LexiClash (https://lexi-clash-learning.vercel.app/)"
         >
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
